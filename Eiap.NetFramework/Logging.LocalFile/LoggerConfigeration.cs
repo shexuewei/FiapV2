@@ -1,0 +1,64 @@
+﻿
+namespace Eiap.NetFramework
+{
+    /// <summary>
+    /// 日志配置接口实现
+    /// </summary>
+    public class LoggerConfigeration : ILoggerConfigeration
+    {
+        private string _LogPathFormat;
+        private long _LogSize;
+        private string _LogContentFormat;
+
+        /// <summary>
+        /// 初始化
+        /// </summary>
+        public LoggerConfigeration()
+        {
+            InitializationLogPathFormat();
+            InitializationLogSize();
+            InitializationLogContentFormat();
+        }
+
+        /// <summary>
+        /// 初始化日志路径
+        /// </summary>
+        private void InitializationLogPathFormat()
+        {
+            _LogPathFormat = ConfigurationManager.Instance.Get("LogPathFormat");
+            //TODO:需要验证格式
+            if (_LogPathFormat == null || _LogPathFormat == "")
+            {
+                _LogPathFormat = @"c:\loggers\{AppCode}\{LogLevel}\{YYYY}\{MM}\{DD}\{HH}.log";
+            }
+        }
+
+        /// <summary>
+        /// 初始化日志内容
+        /// </summary>
+        private void InitializationLogContentFormat()
+        {
+            //TODO:初始化日志内容
+        }
+
+        /// <summary>
+        /// 初始化日志大小
+        /// </summary>
+        private void InitializationLogSize()
+        {
+            string tmpLogSize = ConfigurationManager.Instance.Get("LogSize");
+            //TODO:需要验证格式
+            if (tmpLogSize == null || tmpLogSize == "")
+            {
+                tmpLogSize = "204800000";
+            }
+            _LogSize = long.Parse(tmpLogSize);
+        }
+
+        public string LogPathFormat => _LogPathFormat;
+
+        public long LogSize => _LogSize;
+
+        public string LogContentFormat => _LogContentFormat;
+    }
+}
