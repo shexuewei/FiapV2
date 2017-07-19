@@ -17,7 +17,7 @@ namespace Eiap
         /// </summary>
         /// <param name="configurationContainer"></param>
         /// <returns></returns>
-        ConfigurationContainer GetConfigurationContainer(string key);
+        ConfigurationContainer GetConfigurationContainer(string key, string environment);
 
         /// <summary>
         /// 判断配置是否存在

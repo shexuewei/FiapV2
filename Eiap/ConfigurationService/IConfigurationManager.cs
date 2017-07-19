@@ -32,5 +32,12 @@ namespace Eiap
         /// </summary>
         /// <returns></returns>
         IConfigurationManager Register();
+
+        /// <summary>
+        /// 获取配置值
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        string Get(string key);
     }
 }

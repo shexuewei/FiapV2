@@ -39,9 +39,9 @@ namespace Eiap
         /// </summary>
         /// <param name="configurationContainer"></param>
         /// <returns></returns>
-        public ConfigurationContainer GetConfigurationContainer(string key)
+        public ConfigurationContainer GetConfigurationContainer(string key, string environment)
         {
-            return _ConfigurationContainerList.FirstOrDefault(item => item.Key == key);
+            return _ConfigurationContainerList.FirstOrDefault(item => item.Key == key && item.Environment == environment);
         }
 
         /// <summary>
@@ -50,18 +50,6 @@ namespace Eiap
         /// <param name="configurationContainer"></param>
         public void RegisterConfigurationContainer(ConfigurationContainer configurationContainer)
         {
-            if (string.IsNullOrWhiteSpace(configurationContainer.Key))
-            {
-                throw new Exception("Configuration Key IsNullOrWhiteSpace");
-            }
-            if (string.IsNullOrWhiteSpace(configurationContainer.Value))
-            {
-                throw new Exception("Configuration Value IsNullOrWhiteSpace");
-            }
-            if (_ConfigurationContainerList.Any(item => item.Key == configurationContainer.Key))
-            {
-                throw new Exception("Configuration Key Is Exist, Key:" + configurationContainer.Key);
-            }
             _ConfigurationContainerList.Add(configurationContainer);
         }
 
