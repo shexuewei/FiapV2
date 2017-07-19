@@ -46,6 +46,11 @@
     <Compile Include="AssemblyService\AssemblyManager.cs" />
     <Compile Include="AssemblyService\IComponentModule.cs" />
     <Compile Include="CacheService\ICacheManager.cs" />
+    <Compile Include="ConfigurationService\ConfigurationContainerManager.cs" />
+    <Compile Include="ConfigurationService\ConfigurationContainer.cs" />
+    <Compile Include="ConfigurationService\ConfigurationManager.cs" />
+    <Compile Include="ConfigurationService\IConfigurationContainerManager.cs" />
+    <Compile Include="ConfigurationService\IConfigurationManager.cs" />
     <Compile Include="DataAccessService\SQL\IDataAccessConnectionString.cs" />
     <Compile Include="DataAccessService\SQL\ISQLCommandDataAccessConnection.cs" />
     <Compile Include="DataAccessService\SQL\ISQLDataAccess.cs" />
@@ -137,5 +142,6 @@
     <Compile Include="UnitTestService\UnitTestCaseContainer.cs" />
     <Compile Include="UnitTestService\UnitTestResultContainer.cs" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
