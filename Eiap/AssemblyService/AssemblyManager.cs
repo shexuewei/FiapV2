@@ -104,12 +104,14 @@ namespace Eiap
         /// <param name="assembly"></param>
         private void ModuleInitialize(Assembly assembly)
         {
-            Type componentModuleType = assembly.GetTypes().Where(m => typeof(IComponentModule).IsAssignableFrom(m)).FirstOrDefault();
-            if (componentModuleType != null && !componentModuleType.IsInterface)
-            {
-                IComponentModule componentModule = (IComponentModule)Activator.CreateInstance(componentModuleType);
-                componentModule.AssemblyInitialize();
-            }
+            List<Type> componentModuleTypeList = assembly.GetTypes().Where(m => typeof(IComponentModule).IsAssignableFrom(m)).ToList();
+            componentModuleTypeList.ForEach(componentModuleType => {
+                if (componentModuleType != null && !componentModuleType.IsInterface)
+                {
+                    IComponentModule componentModule = (IComponentModule)Activator.CreateInstance(componentModuleType);
+                    componentModule.AssemblyInitialize();
+                }
+            });
         }
 
         /// <summary>

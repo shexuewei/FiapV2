@@ -4,15 +4,16 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{C5A3C3FB-7A1F-49D6-A72D-EC7A3E26408A}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Eiap.NetFramework</RootNamespace>
-    <AssemblyName>Eiap.NetFramework</AssemblyName>
+    <ProjectGuid>{45E9B59A-3ABB-46A3-86CF-B7B07FF6B64C}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>Eiap.Test</RootNamespace>
+    <AssemblyName>Eiap.Test</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -22,6 +23,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -30,6 +32,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -40,21 +45,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="EiapNetFrameworkModule.cs" />
-    <Compile Include="Logging.LocalFile\ILoggerConfigeration.cs" />
-    <Compile Include="Logging.LocalFile\Logger.cs" />
-    <Compile Include="Logging.LocalFile\LoggerConfigeration.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Serialization\DeserializeObjectContainer.cs" />
-    <Compile Include="Serialization\DeserializeObjectContainerType.cs" />
-    <Compile Include="Serialization\JsonDeserializeEventArgs.cs" />
-    <Compile Include="Serialization\JsonDeserializeProcess.cs" />
-    <Compile Include="Serialization\JsonProcessExtend.cs" />
-    <Compile Include="Serialization\JsonSerializeProcess.cs" />
-    <Compile Include="Serialization\JsonSymbol.cs" />
-    <Compile Include="Serialization\SerializationManager.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="App.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Eiap.NetFramework\Eiap.NetFramework.csproj">
+      <Project>{c5a3c3fb-7a1f-49d6-a72d-ec7a3e26408a}</Project>
+      <Name>Eiap.NetFramework</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Eiap\Eiap.csproj">
       <Project>{6cf1b8a5-15f8-41a9-9b29-7b54c163efa9}</Project>
       <Name>Eiap</Name>
