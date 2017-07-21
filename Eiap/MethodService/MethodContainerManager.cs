@@ -37,15 +37,21 @@ namespace Eiap
         }
 
         /// <summary>
-        /// 根据方法和实例对象返回方法全名（可删除）
+        /// 根据方法和实例对象返回方法全名
         /// </summary>
-        /// <param name="instance"></param>
         /// <param name="methodinfo"></param>
         /// <returns></returns>
-        public string GetMethodFullName(object instance, MethodInfo methodinfo)
+        public string GetMethodFullName(object instance, MethodInfo methodinfo, string instanceTypeName = null)
         {
             StringBuilder methidFullNameStrBui = new StringBuilder();
-            methidFullNameStrBui.Append(instance.GetType().FullName);
+            if (string.IsNullOrWhiteSpace(instanceTypeName))
+            {
+                methidFullNameStrBui.Append(instance.GetType().FullName);
+            }
+            else
+            {
+                methidFullNameStrBui.Append(instanceTypeName);
+            }
             methidFullNameStrBui.Append(".");
             methidFullNameStrBui.Append(methodinfo.Name);
             ParameterInfo[] parametersList = methodinfo.GetParameters();
@@ -64,11 +70,9 @@ namespace Eiap
         /// <returns></returns>
         public Func<object, object[], object> GetMethodByMethodFullName(string methodFullName)
         {
-            if (_methodContainerList.ContainsKey(methodFullName))
-            {
-                return _methodContainerList[methodFullName];
-            }
-            return null;
+            Func<object, object[], object> retMethod = null;
+            _methodContainerList.TryGetValue(methodFullName, out retMethod);
+            return retMethod;
         }
 
         /// <summary>

@@ -1,4 +1,5 @@
 ﻿
+using System;
 using System.Reflection;
 
 namespace Eiap
@@ -15,6 +16,6 @@ namespace Eiap
         /// <param name="paramsValue"></param>
         /// <param name="methodInfo"></param>
         /// <returns></returns>
-        object MethodInvoke(object instance, object[] paramsValue, MethodInfo methodInfo);
+        object MethodInvoke(object instance, object[] paramsValue, MethodInfo methodInfo, string instanceTypeName = null);
     }
 }

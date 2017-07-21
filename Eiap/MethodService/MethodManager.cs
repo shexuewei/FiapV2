@@ -26,9 +26,9 @@ namespace Eiap.MethodService
         /// <param name="methodFullName"></param>
         /// <param name="methodInfo"></param>
         /// <returns></returns>
-        public object MethodInvoke(object instance,object[] paramsValue, MethodInfo methodInfo)
+        public object MethodInvoke(object instance,object[] paramsValue, MethodInfo methodInfo, string instanceTypeName = null)
         {
-            string methidFullName = _methodContainerManager.GetMethodFullName(instance, methodInfo);
+            string methidFullName = _methodContainerManager.GetMethodFullName(instance, methodInfo, instanceTypeName);
             Func<object, object[], object> methodFun = _methodContainerManager.GetMethodByMethodFullName(methidFullName);
             if (methodFun == null)
             {

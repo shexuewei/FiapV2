@@ -38,6 +38,7 @@ namespace Eiap.NetFramework
                 return;
             }
             Type serializeObjectType = serializeObject.GetType();
+            string serializeObjectTypeName = serializeObjectType.FullName;
             if (typeof(IEnumerable).IsAssignableFrom(serializeObjectType) && serializeObjectType != typeof(String) && !typeof(IDictionary).IsAssignableFrom(serializeObjectType))
             {
                 IEnumerable objectValue = (IEnumerable)serializeObject;
@@ -125,13 +126,20 @@ namespace Eiap.NetFramework
                     valueSb.Append(JsonSymbol.JsonPropertySymbol);
                 }
                 valueSb.Append(JsonSymbol.JsonObjectSymbol_Begin);
-                PropertyInfo[] propertyInfoList = serializeObject.GetType().GetProperties();
+                PropertyInfo[] propertyInfoList = serializeObjectType.GetProperties();
                 int propertyCount = propertyInfoList.Length;
                 int propertyIndex = 0;
                 foreach (PropertyInfo propertyInfoItem in propertyInfoList)
                 {
-                    object objectValue = methodManager.MethodInvoke(serializeObject, new object[] { }, propertyInfoItem.GetGetMethod());
-                    Serialize(objectValue, setting, true, valueSb, methodManager, propertyInfoItem.Name);
+                    object objectValue = methodManager.MethodInvoke(serializeObject, new object[] { }, propertyInfoItem.GetGetMethod(), serializeObjectTypeName);
+                    if (propertyInfoItem.PropertyType.IsNormalType())
+                    {
+                        Process(objectValue, valueSb, setting, true, propertyInfoItem.Name);
+                    }
+                    else
+                    {
+                        Serialize(objectValue, setting, true, valueSb, methodManager, propertyInfoItem.Name);
+                    }
                     propertyIndex++;
                     if (propertyIndex < propertyCount)
                     {
@@ -165,7 +173,9 @@ namespace Eiap.NetFramework
                 if (objectType == typeof(DateTime))
                 {
                     valueSb.Append(JsonSymbol.JsonQuotesSymbol);
-                    valueSb.Append(Convert.ToDateTime(objectValue).ToString(setting.DataTimeFomatter));
+                    DateTime objectValueDateTime = (DateTime)objectValue;
+                    string objectValueDateTimeString = objectValueDateTime.ToString(setting.DataTimeFomatter);
+                    valueSb.Append(objectValueDateTimeString);
                     valueSb.Append(JsonSymbol.JsonQuotesSymbol);
                 }
                 else if (objectType == typeof(Int32)
