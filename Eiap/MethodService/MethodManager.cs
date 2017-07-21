@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -33,7 +34,8 @@ namespace Eiap.MethodService
             {
                 methodFun = _methodContainerManager.AddMethodContainer(methidFullName, methodInfo);
             }
-            return methodFun(instance, paramsValue);
+            var retvalue = methodFun(instance, paramsValue);
+            return retvalue;
         }
     }
 }

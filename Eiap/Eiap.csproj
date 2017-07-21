@@ -119,7 +119,6 @@
     <Compile Include="LoggingService\LogLevel.cs" />
     <Compile Include="LoggingService\LogMessage.cs" />
     <Compile Include="MethodService\IMethodManager.cs" />
-    <Compile Include="MethodService\MethodContainer.cs" />
     <Compile Include="DynamicProxyService\IDynamicProxyContainerManager.cs" />
     <Compile Include="DynamicProxyService\IDynamicProxyInterceptor.cs" />
     <Compile Include="DynamicProxyService\IDynamicProxyManager.cs" />

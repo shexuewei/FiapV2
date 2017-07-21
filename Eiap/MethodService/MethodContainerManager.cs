@@ -9,11 +9,11 @@ namespace Eiap
 {
     public class MethodContainerManager : IMethodContainerManager
     {
-        private ConcurrentDictionary<string, MethodContainer> _methodContainerList = null;
+        private ConcurrentDictionary<string, Func<object, object[], object>> _methodContainerList = null;
 
         public MethodContainerManager()
         {
-            _methodContainerList = new ConcurrentDictionary<string, MethodContainer>();
+            _methodContainerList = new ConcurrentDictionary<string, Func<object, object[], object>>();
         }
 
         /// <summary>
@@ -22,24 +22,22 @@ namespace Eiap
         /// <param name="container"></param>
         public Func<object, object[], object> AddMethodContainer(string methodFullName, MethodInfo methodInfo)
         {
-            MethodContainer container = null;
+            Func<object, object[], object> method = null;
             if (!_methodContainerList.ContainsKey(methodFullName))
             {
-                container = new MethodContainer
-                {
-                    Method = GetExecuteDelegate(methodInfo)
-                };
-                _methodContainerList.TryAdd(methodFullName, container);
+
+                method = GetExecuteDelegate(methodInfo);
+                _methodContainerList.TryAdd(methodFullName, method);
             }
             else
             {
-                container = _methodContainerList[methodFullName];
+                method = _methodContainerList[methodFullName];
             }
-            return container.Method;
+            return method;
         }
 
         /// <summary>
-        /// 根据方法和实例对象返回方法全名
+        /// 根据方法和实例对象返回方法全名（可删除）
         /// </summary>
         /// <param name="instance"></param>
         /// <param name="methodinfo"></param>
@@ -68,7 +66,7 @@ namespace Eiap
         {
             if (_methodContainerList.ContainsKey(methodFullName))
             {
-                return _methodContainerList[methodFullName].Method;
+                return _methodContainerList[methodFullName];
             }
             return null;
         }

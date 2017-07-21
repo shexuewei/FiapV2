@@ -24,7 +24,7 @@ namespace Eiap
         Func<object, object[], object> GetMethodByMethodFullName(string methodFullName);
 
         /// <summary>
-        /// 根据方法和实例对象返回方法全名
+        /// 根据方法和实例对象返回方法全名（可删除）
         /// </summary>
         /// <param name="instance"></param>
         /// <param name="methodinfo"></param>

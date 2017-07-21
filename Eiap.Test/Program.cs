@@ -130,54 +130,57 @@ namespace Eiap.Test
 
 
             int count = 10000000;
-            Stopwatch stopwatch = null;
-            stopwatch = new Stopwatch();
-            stopwatch.Start();
+            Stopwatch stopwatch1 = new Stopwatch();
+            stopwatch1.Start();
             for (int i = 0; i < count; i++)
             {
                 Student s1 = (Student)Activator.CreateInstance(typeof(Student));
                 s1.A = 5;
             }
-            stopwatch.Stop();
-            Console.WriteLine("直接调用：" + stopwatch.Elapsed.TotalMilliseconds);
+            stopwatch1.Stop();
+            Console.WriteLine("直接调用：" + stopwatch1.Elapsed.TotalMilliseconds);
 
-            stopwatch = new Stopwatch();
-            stopwatch.Start();
+            Stopwatch stopwatch4 = new Stopwatch();
+            stopwatch4.Start();
             for (int i = 0; i < count; i++)
             {
                 Student s2 = (Student)Activator.CreateInstance(typeof(Student));
                 s2.GetType().GetProperty("A").SetValue(s2, 1);
             }
-            stopwatch.Stop();
-            Console.WriteLine("反射调用：" + stopwatch.Elapsed.TotalMilliseconds);
+            stopwatch4.Stop();
+            Console.WriteLine("反射调用：" + stopwatch4.Elapsed.TotalMilliseconds);
 
-            stopwatch = new Stopwatch();
-            stopwatch.Start();
+            Stopwatch stopwatch3 = new Stopwatch();
+            stopwatch3.Start();
             MethodInfo methodinfo1 = typeof(Student).GetProperty("A").GetSetMethod();
             for (int i = 0; i < count; i++)
             {
                 Student s3 = (Student)Activator.CreateInstance(typeof(Student));
                 methodinfo1.Invoke(s3, new object[] { 1 });
             }
-            stopwatch.Stop();
-            Console.WriteLine("反射 方法缓存：" + stopwatch.Elapsed.TotalMilliseconds);
+            stopwatch3.Stop();
+            Console.WriteLine("反射 方法缓存：" + stopwatch3.Elapsed.TotalMilliseconds);
 
-            stopwatch = new Stopwatch();
-            stopwatch.Start();
             MethodInfo methodinfo2 = typeof(Student).GetProperty("A").GetSetMethod();
             IMethodManager methodamanger = DependencyManager.Instance.Resolver<IMethodManager>();
             //Func<object, object[], object> xx = DynamicMethodFactory.GetExecuteDelegate(methodinfo2);
+            double sum2 = 0;
             for (int i = 0; i < count; i++)
             {
+                Stopwatch stopwatch2 = new Stopwatch();
+                stopwatch2.Start();
                 Student s3 = (Student)Activator.CreateInstance(typeof(Student));
-                object x = methodamanger.MethodInvoke(s3, new object[] { 1, 2 }, methodinfo2);
+                object x = methodamanger.MethodInvoke(s3, new object[] { 1 }, methodinfo2);
                 //object x = xx(s3, new object[] { 2 });
                 //methodinfo2.Invoke(s3, new object[] { 1, 2 });
+                stopwatch2.Stop();
+                sum2 += stopwatch2.Elapsed.TotalMilliseconds;
             }
-            stopwatch.Stop();
-            Console.WriteLine("表达式树：" + stopwatch.Elapsed.TotalMilliseconds);
-
-            Console.ReadLine();
+            Console.WriteLine("表达式树：" + sum2);
+            //Console.WriteLine("GetAllTime1：" + methodamanger.GetAllTime1());
+            //Console.WriteLine("GetAllTime2：" + methodamanger.GetAllTime2());
+            //Console.WriteLine("GetAllTime3：" + methodamanger.GetAllTime3());
+            //Console.WriteLine("GetAllTime4：" + methodamanger.GetAllTime4());
 
             Console.ReadLine();
         }
