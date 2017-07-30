@@ -1,4 +1,5 @@
 ﻿
+using Eiap.NetFramework;
 using Newtonsoft.Json;
 using System;
 using System.Collections;
@@ -29,9 +30,9 @@ namespace Eiap.Test
                 StudentOne = student1,
                 StudentList = new List<Students> { student3, student2, student1 }
             };
-            Dictionary<string, string> dict = new Dictionary<string, string>();
-            dict.Add("123", "321");
-            dict.Add("456", "654");
+            Dictionary<string, Students> dict = new Dictionary<string, Students>();
+            dict.Add("123", student1);
+            dict.Add("456", student2);
             ISchool school1 = new Schools2
             {
                 SchoolName = "school1",
@@ -42,42 +43,47 @@ namespace Eiap.Test
                 ClassList = new List<Classes> { class1, class2 },
                 IsPriSchool = true,
                 Building = new string[] { "1", "2", "3" },
-                //ClassList2 = new ArrayList { class1, 2 },
                 Dict = dict,
                 SchoolFirstStu = student1
             };
             List<ISchool> schoolList = new List<ISchool>();
             schoolList.Add(school1);
 
+
+            //serliz.GetOrAddSerializeObject(school1.GetType());
             #region 序列化
             int count = 10;
             int num = 10000;
             double sum4 = 0;
             ISerializationManager serliz = DependencyManager.Instance.Resolver<ISerializationManager>();
+            //var yy = JsonConvert.SerializeObject(school1);
+            //var xx = serliz.SerializeObject(school1);
 
-            Stopwatch stopwatch = new Stopwatch();
+            Stopwatch stopwatch1 = new Stopwatch();
             for (int m = 0; m < count; m++)
             {
-                stopwatch.Restart();
+                stopwatch1.Start();
                 for (int i = 0; i < num; i++)
                 {
                     var xx = JsonConvert.SerializeObject(school1);
                 }
-                stopwatch.Stop();
-                sum4 += stopwatch.Elapsed.TotalMilliseconds;
+                stopwatch1.Stop();
+                sum4 += stopwatch1.Elapsed.TotalMilliseconds;
             }
             Console.WriteLine("Avg:" + sum4 / count);
             Console.WriteLine("-----------------------------");
+
             double sum3 = 0;
+            Stopwatch stopwatch2 = new Stopwatch();
             for (int m = 0; m < count; m++)
             {
-                stopwatch.Restart();
+                stopwatch2.Start();
                 for (int i = 0; i < num; i++)
                 {
                     var xx = serliz.SerializeObject(school1);
                 }
-                stopwatch.Stop();
-                sum3 += stopwatch.Elapsed.TotalMilliseconds;
+                stopwatch2.Stop();
+                sum3 += stopwatch2.Elapsed.TotalMilliseconds;
             }
             Console.WriteLine("Avg:" + sum3 / count);
             #endregion
@@ -134,8 +140,7 @@ namespace Eiap.Test
         public decimal Amt { get; set; }
         public Classes ClassOne { get; set; }
         public IEnumerable<Classes> ClassList { get; set; }
-        public ArrayList ClassList2 { get; set; }
-        public Dictionary<string, string> Dict { get; set; }
+        public Dictionary<string, Students> Dict { get; set; }
         public Students SchoolFirstStu { get; set; }
     }
 

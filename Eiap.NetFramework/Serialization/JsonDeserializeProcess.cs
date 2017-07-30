@@ -34,11 +34,7 @@ namespace Eiap.NetFramework
                 {
                     if (JsonDeserializeArraySymbol_Begin_Event != null)
                     {
-                        Stopwatch stopwatch = new Stopwatch();
-                        stopwatch.Start();
                         JsonDeserializeArraySymbol_Begin_Event(null, args);
-                        stopwatch.Stop();
-                        ProcessTime.ArraySymbol_Begin_Time += stopwatch.Elapsed.TotalMilliseconds;
                     }
                 }
                 //数组结束
@@ -46,11 +42,7 @@ namespace Eiap.NetFramework
                 {
                     if (JsonDeserializeArraySymbol_End_Event != null)
                     {
-                        Stopwatch stopwatch = new Stopwatch();
-                        stopwatch.Start();
                         JsonDeserializeArraySymbol_End_Event(null, args);
-                        stopwatch.Stop();
-                        ProcessTime.ArraySymbol_End_Time += stopwatch.Elapsed.TotalMilliseconds;
                     }
                 }
                 //对象开始
@@ -58,11 +50,7 @@ namespace Eiap.NetFramework
                 {
                     if (JsonDeserializeObjectSymbol_Begin_Event != null)
                     {
-                        Stopwatch stopwatch = new Stopwatch();
-                        stopwatch.Start();
                         JsonDeserializeObjectSymbol_Begin_Event(null, args);
-                        stopwatch.Stop();
-                        ProcessTime.ObjectSymbol_Begin_Time += stopwatch.Elapsed.TotalMilliseconds;
                     }
                 }
                 //属性名
@@ -70,11 +58,7 @@ namespace Eiap.NetFramework
                 {
                     if (JsonDeserializePropertySymbol_Event != null)
                     {
-                        Stopwatch stopwatch = new Stopwatch();
-                        stopwatch.Start();
                         JsonDeserializePropertySymbol_Event(null, args);
-                        stopwatch.Stop();
-                        ProcessTime.PropertySymbol_Time += stopwatch.Elapsed.TotalMilliseconds;
                     }
                 }
                 //对象结束
@@ -82,11 +66,7 @@ namespace Eiap.NetFramework
                 {
                     if (JsonDeserializeObjectSymbol_End_Event != null)
                     {
-                        Stopwatch stopwatch = new Stopwatch();
-                        stopwatch.Start();
                         JsonDeserializeObjectSymbol_End_Event(null, args);
-                        stopwatch.Stop();
-                        ProcessTime.ObjectSymbol_End_Time += stopwatch.Elapsed.TotalMilliseconds;
                     }
                 }
                 //逗号
@@ -94,11 +74,7 @@ namespace Eiap.NetFramework
                 {
                     if (JsonDeserializeSeparateSymbol_Event != null)
                     {
-                        Stopwatch stopwatch = new Stopwatch();
-                        stopwatch.Start();
                         JsonDeserializeSeparateSymbol_Event(null, args);
-                        stopwatch.Stop();
-                        ProcessTime.SeparateSymbol_Time += stopwatch.Elapsed.TotalMilliseconds;
                     }
                 }
             }
@@ -590,18 +566,5 @@ namespace Eiap.NetFramework
         {
             methodManager.MethodInvoke(instanceObj, new object[] { objvalue }, currentPropertyInfo.GetSetMethod());
         }
-    }
-
-    public static class ProcessTime
-    {
-        public static double ArraySymbol_Begin_Time { get; set; }
-        public static double ArraySymbol_End_Time { get; set; } 
-        public static double ObjectSymbol_Begin_Time { get; set; }
-        public static double ObjectSymbol_End_Time { get; set; }
-        public static double PropertySymbol_Time { get; set; }
-        public static double SeparateSymbol_Time { get; set; } 
-        public static double ForeachChar_Time { get; set; } 
-        public static double ForeachObject_Time { get; set; }
-
     }
 }

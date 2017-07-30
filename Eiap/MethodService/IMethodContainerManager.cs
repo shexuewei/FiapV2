@@ -28,6 +28,6 @@ namespace Eiap
         /// </summary>
         /// <param name="methodinfo"></param>
         /// <returns></returns>
-        string GetMethodFullName(object instance, MethodInfo methodinfo, string instanceTypeName = null);
+        string GetMethodFullName(object instance, MethodInfo methodinfo, string instanceTypeName);
     }
 }

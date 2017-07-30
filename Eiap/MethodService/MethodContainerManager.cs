@@ -22,17 +22,8 @@ namespace Eiap
         /// <param name="container"></param>
         public Func<object, object[], object> AddMethodContainer(string methodFullName, MethodInfo methodInfo)
         {
-            Func<object, object[], object> method = null;
-            if (!_methodContainerList.ContainsKey(methodFullName))
-            {
-
-                method = GetExecuteDelegate(methodInfo);
-                _methodContainerList.TryAdd(methodFullName, method);
-            }
-            else
-            {
-                method = _methodContainerList[methodFullName];
-            }
+            Func<object, object[], object> method = GetExecuteDelegate(methodInfo);
+            _methodContainerList.TryAdd(methodFullName, method);
             return method;
         }
 
@@ -41,7 +32,7 @@ namespace Eiap
         /// </summary>
         /// <param name="methodinfo"></param>
         /// <returns></returns>
-        public string GetMethodFullName(object instance, MethodInfo methodinfo, string instanceTypeName = null)
+        public string GetMethodFullName(object instance, MethodInfo methodinfo, string instanceTypeName)
         {
             StringBuilder methidFullNameStrBui = new StringBuilder();
             if (string.IsNullOrWhiteSpace(instanceTypeName))

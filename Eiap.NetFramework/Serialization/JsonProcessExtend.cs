@@ -15,12 +15,10 @@ namespace Eiap.NetFramework
         /// <returns></returns>
         public static bool IsNormalType(this Type objectType)
         {
-            if (objectType == typeof(DateTime)
-                        || objectType == typeof(Int32)
-                        || objectType == typeof(String)
-                        || objectType == typeof(Boolean)
-                        || objectType == typeof(Decimal)
-                        || objectType == typeof(Guid))
+            if (objectType.IsPrimitive 
+                || objectType == typeof(String) 
+                || objectType == typeof(Decimal)
+                || objectType == typeof(DateTime))
             {
                 return true;
             }

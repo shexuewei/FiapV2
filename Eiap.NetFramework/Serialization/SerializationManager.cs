@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text;
 
 namespace Eiap.NetFramework
@@ -10,10 +11,12 @@ namespace Eiap.NetFramework
     {
         private const string DefaultDataTimeFomatter = "yyyy-MM-dd HH:mm:ss";
         private readonly IMethodManager _MethodManager;
+        private readonly ISerializeContainerManager _SerializeContainerManager;
 
-        public SerializationManager(IMethodManager methodManager)
+        public SerializationManager(IMethodManager methodManager, ISerializeContainerManager serializeContainerManager)
         {
             _MethodManager = methodManager;
+            _SerializeContainerManager = serializeContainerManager;
             RegisterDeserializeHandleEvent();
         }
 
@@ -54,13 +57,14 @@ namespace Eiap.NetFramework
             }
             StringBuilder valueSb = new StringBuilder();
             setting = setting ?? new SerializationSetting { DataTimeFomatter = DefaultDataTimeFomatter, SerializationType = SerializationType.JSON };
+            //LinkedList<SerializeObjectContainer> containerQueue = _SerializeContainerManager.GetOrAddSerializeObject(serializeObject.GetType());
             switch (setting.SerializationType)
             {
                 case SerializationType.JSON:
-                    JsonSerializeProcess.Serialize(serializeObject, setting, false, valueSb, _MethodManager);
+                    JsonSerializeProcess.Serialize(serializeObject, setting, valueSb, _MethodManager);
                     break;
                 default:
-                    JsonSerializeProcess.Serialize(serializeObject, setting, false, valueSb, _MethodManager);
+                    JsonSerializeProcess.Serialize(serializeObject, setting, valueSb, _MethodManager);
                     break;
             }
             return valueSb.ToString();

@@ -15,5 +15,6 @@ namespace Eiap.NetFramework
         public const char JsonSeparateSymbol = ',';
         public const char JsonPropertySymbol = ':';
         public const char JsonSpaceSymbol = ' ';
+        public const string JsonSerializePropertySymbol ="\":";
     }
 }
