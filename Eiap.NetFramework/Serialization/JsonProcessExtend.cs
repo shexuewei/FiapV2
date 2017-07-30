@@ -24,20 +24,5 @@ namespace Eiap.NetFramework
             }
             return false;
         }
-
-        /// <summary>
-        /// 获取集合数
-        /// </summary>
-        /// <param name="enumeratorList"></param>
-        /// <returns></returns>
-        public static int GetEnumeratorCount(this IEnumerator enumeratorList)
-        {
-            int objCount = 0;
-            while (enumeratorList.MoveNext())
-            {
-                objCount++;
-            }
-            return objCount;
-        }
     }
 }

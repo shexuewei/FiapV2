@@ -46,16 +46,15 @@
     <Compile Include="Logging.LocalFile\LoggerConfigeration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Serialization\DeserializeObjectContainer.cs" />
-    <Compile Include="Serialization\ISerializeContainerManager.cs" />
-    <Compile Include="Serialization\SerializeContainerManager.cs" />
-    <Compile Include="Serialization\ObjectContainerType.cs" />
-    <Compile Include="Serialization\SerializeObjectContainer.cs" />
+    <Compile Include="Serialization\DeserializeObjectContainerType.cs" />
     <Compile Include="Serialization\JsonDeserializeEventArgs.cs" />
     <Compile Include="Serialization\JsonDeserializeProcess.cs" />
     <Compile Include="Serialization\JsonProcessExtend.cs" />
     <Compile Include="Serialization\JsonSerializeProcess.cs" />
     <Compile Include="Serialization\JsonSymbol.cs" />
     <Compile Include="Serialization\SerializationManager.cs" />
+    <Compile Include="Serialization\SerializeObjectContainer.cs" />
+    <Compile Include="Serialization\SerializeObjectFlag.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Eiap\Eiap.csproj">

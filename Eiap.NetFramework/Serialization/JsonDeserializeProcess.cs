@@ -186,6 +186,10 @@ namespace Eiap.NetFramework
                 {
                     currentObjectType = container.ContainerObject.GetType().GetGenericArguments()[0];
                 }
+                else if (container.ContainerType == DeserializeObjectContainerType.DictionaryKey)
+                {
+                    currentObjectType = container.ContainerObject.GetType().GetGenericArguments()[1];
+                }
             }
             object objectInstance = Activator.CreateInstance(currentObjectType);
             e.ContainerStack.Push(new DeserializeObjectContainer { ContainerType = DeserializeObjectContainerType.Object, ContainerObject = objectInstance });

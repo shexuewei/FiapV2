@@ -17,8 +17,7 @@ namespace Eiap.NetFramework
         /// <param name="objectValue"></param>
         /// <param name="valueSb"></param>
         /// <param name="setting"></param>
-        /// <param name="isShowPropertyName"></param>
-        /// <param name="propertyName"></param>
+        /// <param name="objectValueType"></param>
         private static void Process(object objectValue, StringBuilder valueSb, SerializationSetting setting, Type objectValueType)
         {
             if (objectValue != null)
@@ -54,27 +53,37 @@ namespace Eiap.NetFramework
             }
         }
 
+        /// <summary>
+        /// 序列化
+        /// </summary>
+        /// <param name="serializeObject"></param>
+        /// <param name="setting"></param>
+        /// <param name="valueSb"></param>
+        /// <param name="methodManager"></param>
         public static void Serialize(object serializeObject, SerializationSetting setting, StringBuilder valueSb, IMethodManager methodManager)
         {
             Type serializeObjectType = serializeObject.GetType();
-            Stack<ObjectAndFlag> serializeObjectList = new Stack<ObjectAndFlag>();
-            AddOrUpdateSerializeObjectList(serializeObject, valueSb, serializeObjectList, serializeObjectType);
+            Stack<SerializeObjectContainer> serializeObjectList = new Stack<SerializeObjectContainer>();
+            Stack<SerializeObjectContainer> tmpSerializeObjectList = new Stack<SerializeObjectContainer>();
+            AddOrUpdateSerializeObjectList(serializeObject, valueSb, serializeObjectList, serializeObjectType, tmpSerializeObjectList);
             Stack<object> currentObjectList = new Stack<object>();
             while (serializeObjectList.Count > 0)
             {
-                ObjectAndFlag currentObjectAndFlag = serializeObjectList.Pop();
-                switch (currentObjectAndFlag.Flag)
+                SerializeObjectContainer currentSerializeObjectContainer = serializeObjectList.Pop();
+                switch (currentSerializeObjectContainer.Flag)
                 {
-                    case ObjectFlag.Symbol:
-                        valueSb.Append(currentObjectAndFlag.CurrentObject);
-                        char currentSymbol = (char)currentObjectAndFlag.CurrentObject;
+                    case SerializeObjectFlag.Symbol:
+                        valueSb.Append(currentSerializeObjectContainer.CurrentObject);
+                        char currentSymbol = (char)currentSerializeObjectContainer.CurrentObject;
                         if (currentSymbol == JsonSymbol.JsonObjectSymbol_End)
                         {
                             currentObjectList.Pop();
                         }
                         break;
-                    case ObjectFlag.Property:
-                        PropertyInfo currentPropertyInfo = currentObjectAndFlag.CurrentObject as PropertyInfo;
+                    case SerializeObjectFlag.Property:
+                        PropertyInfo currentPropertyInfo = currentSerializeObjectContainer.CurrentObject as PropertyInfo;
+                        if (currentPropertyInfo.Name == "Dict")
+                        { }
                         valueSb.Append(JsonSymbol.JsonQuotesSymbol);
                         valueSb.Append(currentPropertyInfo.Name);
                         valueSb.Append(JsonSymbol.JsonSerializePropertySymbol);
@@ -90,62 +99,73 @@ namespace Eiap.NetFramework
                         }
                         else if (typeof(IDictionary).IsAssignableFrom(currentPropertyInfo.PropertyType))
                         {
-                            currentObjectList.Push(currentObjectAndFlag.CurrentObject);
-                            AddOrUpdateSerializeObjectList(objectValue, valueSb, serializeObjectList, currentPropertyInfo.PropertyType);
+                            currentObjectList.Push(currentSerializeObjectContainer.CurrentObject);
+                            AddOrUpdateSerializeObjectList(objectValue, valueSb, serializeObjectList, currentPropertyInfo.PropertyType, tmpSerializeObjectList);
                         }
                         else
                         {
-                            AddOrUpdateSerializeObjectList(objectValue, valueSb, serializeObjectList, currentPropertyInfo.PropertyType);
+                            AddOrUpdateSerializeObjectList(objectValue, valueSb, serializeObjectList, currentPropertyInfo.PropertyType, tmpSerializeObjectList);
                         }
                         break;
-                    case ObjectFlag.Object:
-                        currentObjectList.Push(currentObjectAndFlag.CurrentObject);
-                        PropertyInfo[] currentPropertyInfoList = currentObjectAndFlag.CurrentObject.GetType().GetProperties();
+                    case SerializeObjectFlag.Object:
+                        currentObjectList.Push(currentSerializeObjectContainer.CurrentObject);
+                        PropertyInfo[] currentPropertyInfoList = currentSerializeObjectContainer.CurrentObject.GetType().GetProperties();
                         int tmpObjCount = 0;
                         foreach (PropertyInfo propertyInfoItem in currentPropertyInfoList)
                         {
                             tmpObjCount++;
                             if (tmpObjCount > 1)
                             {
-                                serializeObjectList.Push(new ObjectAndFlag { CurrentObject = JsonSymbol.JsonSeparateSymbol, Flag = ObjectFlag.Symbol });
+                                tmpSerializeObjectList.Push(new SerializeObjectContainer { CurrentObject = JsonSymbol.JsonSeparateSymbol, Flag = SerializeObjectFlag.Symbol });
                             }
-                            serializeObjectList.Push(new ObjectAndFlag { CurrentObject = propertyInfoItem, Flag = ObjectFlag.Property });
+                            tmpSerializeObjectList.Push(new SerializeObjectContainer { CurrentObject = propertyInfoItem, Flag = SerializeObjectFlag.Property });
+                        }
+                        while (tmpSerializeObjectList.Count > 0)
+                        {
+                            serializeObjectList.Push(tmpSerializeObjectList.Pop());
                         }
                         break;
-                    case ObjectFlag.Value:
-                        Process(currentObjectAndFlag.CurrentObject, valueSb, setting, currentObjectAndFlag.CurrentObjectType);
+                    case SerializeObjectFlag.Value:
+                        Process(currentSerializeObjectContainer.CurrentObject, valueSb, setting, currentSerializeObjectContainer.CurrentObjectType);
                         break;
-                    case ObjectFlag.Dictionary:
-                        DictionaryEntry dicValue = (DictionaryEntry)currentObjectAndFlag.CurrentObject;
+                    case SerializeObjectFlag.Dictionary:
+                        DictionaryEntry dicValue = (DictionaryEntry)currentSerializeObjectContainer.CurrentObject;
                         valueSb.Append(JsonSymbol.JsonQuotesSymbol);
                         valueSb.Append(dicValue.Key.ToString());
                         valueSb.Append(JsonSymbol.JsonSerializePropertySymbol);
-                        if (dicValue.Value == null || currentObjectAndFlag.CurrentObjectType.IsNormalType())
+                        if (dicValue.Value == null || currentSerializeObjectContainer.CurrentObjectType.IsNormalType())
                         {
-                            Process(dicValue.Value, valueSb, setting, currentObjectAndFlag.CurrentObjectType);
+                            Process(dicValue.Value, valueSb, setting, currentSerializeObjectContainer.CurrentObjectType);
                         }
-                        else if (currentObjectAndFlag.CurrentObjectType.IsGenericType && (currentObjectAndFlag.CurrentObjectType.GetGenericTypeDefinition() == typeof(Nullable<>)))
+                        else if (currentSerializeObjectContainer.CurrentObjectType.IsGenericType && (currentSerializeObjectContainer.CurrentObjectType.GetGenericTypeDefinition() == typeof(Nullable<>)))
                         {
-                            Process(dicValue.Value, valueSb, setting, currentObjectAndFlag.CurrentObjectType);
+                            Process(dicValue.Value, valueSb, setting, currentSerializeObjectContainer.CurrentObjectType);
                         }
                         else
                         {
-                            AddOrUpdateSerializeObjectList(dicValue.Value, valueSb, serializeObjectList, currentObjectAndFlag.CurrentObjectType);
+                            AddOrUpdateSerializeObjectList(dicValue.Value, valueSb, serializeObjectList, currentSerializeObjectContainer.CurrentObjectType, tmpSerializeObjectList);
                         }
                         break;
                 }
             }
         }
 
-        private static void AddOrUpdateSerializeObjectList(object serializeObject, StringBuilder valueSb, Stack<ObjectAndFlag> serializeObjectList, Type serializeObjectType)
+        /// <summary>
+        /// 序列化对象列表
+        /// </summary>
+        /// <param name="serializeObject"></param>
+        /// <param name="valueSb"></param>
+        /// <param name="serializeObjectList"></param>
+        /// <param name="serializeObjectType"></param>
+        private static void AddOrUpdateSerializeObjectList(object serializeObject, StringBuilder valueSb, Stack<SerializeObjectContainer> serializeObjectList, Type serializeObjectType, Stack<SerializeObjectContainer> tmpSerializeObjectList)
         {
             if (serializeObjectType.IsNormalType())
             {
-                serializeObjectList.Push(new ObjectAndFlag { CurrentObject = serializeObject, Flag = ObjectFlag.Value, CurrentObjectType = serializeObjectType });
+                serializeObjectList.Push(new SerializeObjectContainer { CurrentObject = serializeObject, Flag = SerializeObjectFlag.Value, CurrentObjectType = serializeObjectType });
             }
             else if (typeof(IEnumerable).IsAssignableFrom(serializeObjectType) && serializeObjectType != typeof(String) && !typeof(IDictionary).IsAssignableFrom(serializeObjectType))
             {
-                serializeObjectList.Push(new ObjectAndFlag { CurrentObject = JsonSymbol.JsonArraySymbol_End, Flag = ObjectFlag.Symbol });
+                serializeObjectList.Push(new SerializeObjectContainer { CurrentObject = JsonSymbol.JsonArraySymbol_End, Flag = SerializeObjectFlag.Symbol });
                 IEnumerable objectValue = (IEnumerable)serializeObject;
                 IEnumerator enumeratorList = objectValue.GetEnumerator();
                 enumeratorList.Reset();
@@ -166,9 +186,13 @@ namespace Eiap.NetFramework
                         tmpObjCount++;
                         if (tmpObjCount > 1)
                         {
-                            serializeObjectList.Push(new ObjectAndFlag { CurrentObject = JsonSymbol.JsonSeparateSymbol, Flag = ObjectFlag.Symbol });
+                            tmpSerializeObjectList.Push(new SerializeObjectContainer { CurrentObject = JsonSymbol.JsonSeparateSymbol, Flag = SerializeObjectFlag.Symbol });
                         }
-                        serializeObjectList.Push(new ObjectAndFlag { CurrentObject = enumeratorList.Current, Flag = ObjectFlag.Value, CurrentObjectType = enumeratorCurrentType });
+                        tmpSerializeObjectList.Push(new SerializeObjectContainer { CurrentObject = enumeratorList.Current, Flag = SerializeObjectFlag.Value, CurrentObjectType = enumeratorCurrentType });
+                    }
+                    while (tmpSerializeObjectList.Count > 0)
+                    {
+                        serializeObjectList.Push(tmpSerializeObjectList.Pop());
                     }
                 }
                 else
@@ -178,18 +202,22 @@ namespace Eiap.NetFramework
                         tmpObjCount++;
                         if (tmpObjCount > 1)
                         {
-                            serializeObjectList.Push(new ObjectAndFlag { CurrentObject = JsonSymbol.JsonSeparateSymbol, Flag = ObjectFlag.Symbol });
+                            tmpSerializeObjectList.Push(new SerializeObjectContainer { CurrentObject = JsonSymbol.JsonSeparateSymbol, Flag = SerializeObjectFlag.Symbol });
                         }
-                        serializeObjectList.Push(new ObjectAndFlag { CurrentObject = JsonSymbol.JsonObjectSymbol_End, Flag = ObjectFlag.Symbol });
-                        serializeObjectList.Push(new ObjectAndFlag { CurrentObject = enumeratorList.Current, Flag = ObjectFlag.Object, CurrentObjectType = enumeratorCurrentType });
-                        serializeObjectList.Push(new ObjectAndFlag { CurrentObject = JsonSymbol.JsonObjectSymbol_Begin, Flag = ObjectFlag.Symbol });
+                        tmpSerializeObjectList.Push(new SerializeObjectContainer { CurrentObject = JsonSymbol.JsonObjectSymbol_Begin, Flag = SerializeObjectFlag.Symbol });
+                        tmpSerializeObjectList.Push(new SerializeObjectContainer { CurrentObject = enumeratorList.Current, Flag = SerializeObjectFlag.Object, CurrentObjectType = enumeratorCurrentType });
+                        tmpSerializeObjectList.Push(new SerializeObjectContainer { CurrentObject = JsonSymbol.JsonObjectSymbol_End, Flag = SerializeObjectFlag.Symbol }); 
+                    }
+                    while (tmpSerializeObjectList.Count > 0)
+                    {
+                        serializeObjectList.Push(tmpSerializeObjectList.Pop());
                     }
                 }
-                serializeObjectList.Push(new ObjectAndFlag { CurrentObject = JsonSymbol.JsonArraySymbol_Begin, Flag = ObjectFlag.Symbol });
+                serializeObjectList.Push(new SerializeObjectContainer { CurrentObject = JsonSymbol.JsonArraySymbol_Begin, Flag = SerializeObjectFlag.Symbol });
             }
             else if (typeof(IDictionary).IsAssignableFrom(serializeObjectType))
             {
-                serializeObjectList.Push(new ObjectAndFlag { CurrentObject = JsonSymbol.JsonObjectSymbol_End, Flag = ObjectFlag.Symbol });
+                serializeObjectList.Push(new SerializeObjectContainer { CurrentObject = JsonSymbol.JsonObjectSymbol_End, Flag = SerializeObjectFlag.Symbol });
                 IDictionary objectValue = (IDictionary)serializeObject;
                 IDictionaryEnumerator enumeratorList = objectValue.GetEnumerator();
                 int tmpObjCount = 0;
@@ -198,34 +226,22 @@ namespace Eiap.NetFramework
                     tmpObjCount++;
                     if (tmpObjCount > 1)
                     {
-                        serializeObjectList.Push(new ObjectAndFlag { CurrentObject = JsonSymbol.JsonSeparateSymbol, Flag = ObjectFlag.Symbol });
+                        tmpSerializeObjectList.Push(new SerializeObjectContainer { CurrentObject = JsonSymbol.JsonSeparateSymbol, Flag = SerializeObjectFlag.Symbol });
                     }
-                    serializeObjectList.Push(new ObjectAndFlag { CurrentObject = enumeratorList.Current, Flag = ObjectFlag.Dictionary, CurrentObjectType = serializeObjectType.GetGenericArguments()[1] });
+                    tmpSerializeObjectList.Push(new SerializeObjectContainer { CurrentObject = enumeratorList.Current, Flag = SerializeObjectFlag.Dictionary, CurrentObjectType = serializeObjectType.GetGenericArguments()[1] });
                 }
-                serializeObjectList.Push(new ObjectAndFlag { CurrentObject = JsonSymbol.JsonObjectSymbol_Begin, Flag = ObjectFlag.Symbol });
+                while (tmpSerializeObjectList.Count > 0)
+                {
+                    serializeObjectList.Push(tmpSerializeObjectList.Pop());
+                }
+                serializeObjectList.Push(new SerializeObjectContainer { CurrentObject = JsonSymbol.JsonObjectSymbol_Begin, Flag = SerializeObjectFlag.Symbol });
             }
             else
             {
-                serializeObjectList.Push(new ObjectAndFlag { CurrentObject = JsonSymbol.JsonObjectSymbol_End, Flag = ObjectFlag.Symbol });
-                serializeObjectList.Push(new ObjectAndFlag { CurrentObject = serializeObject, Flag = ObjectFlag.Object, CurrentObjectType = serializeObjectType });
-                serializeObjectList.Push(new ObjectAndFlag { CurrentObject = JsonSymbol.JsonObjectSymbol_Begin, Flag = ObjectFlag.Symbol });
+                serializeObjectList.Push(new SerializeObjectContainer { CurrentObject = JsonSymbol.JsonObjectSymbol_End, Flag = SerializeObjectFlag.Symbol });
+                serializeObjectList.Push(new SerializeObjectContainer { CurrentObject = serializeObject, Flag = SerializeObjectFlag.Object, CurrentObjectType = serializeObjectType });
+                serializeObjectList.Push(new SerializeObjectContainer { CurrentObject = JsonSymbol.JsonObjectSymbol_Begin, Flag = SerializeObjectFlag.Symbol });
             }
         }
-    }
-
-    public class ObjectAndFlag
-    {
-        public object CurrentObject { get; set; }
-        public ObjectFlag Flag { get; set; }
-        public Type CurrentObjectType { get; set; }
-    }
-
-    public enum ObjectFlag
-    {
-        Object,
-        Property,
-        Dictionary,
-        Value,
-        Symbol
     }
 }

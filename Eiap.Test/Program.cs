@@ -30,9 +30,9 @@ namespace Eiap.Test
                 StudentOne = student1,
                 StudentList = new List<Students> { student3, student2, student1 }
             };
-            Dictionary<string, Students> dict = new Dictionary<string, Students>();
-            dict.Add("123", student1);
-            dict.Add("456", student2);
+            Dictionary<string, string> dict = new Dictionary<string, string>();
+            dict.Add("123", "321");
+            dict.Add("456", "654");
             ISchool school1 = new Schools2
             {
                 SchoolName = "school1",
@@ -49,16 +49,15 @@ namespace Eiap.Test
             List<ISchool> schoolList = new List<ISchool>();
             schoolList.Add(school1);
 
-
-            //serliz.GetOrAddSerializeObject(school1.GetType());
-            #region 序列化
             int count = 10;
             int num = 10000;
-            double sum4 = 0;
             ISerializationManager serliz = DependencyManager.Instance.Resolver<ISerializationManager>();
+            //serliz.GetOrAddSerializeObject(school1.GetType());
+            #region 序列化
+            double sum4 = 0;
+            //
             //var yy = JsonConvert.SerializeObject(school1);
             //var xx = serliz.SerializeObject(school1);
-
             Stopwatch stopwatch1 = new Stopwatch();
             for (int m = 0; m < count; m++)
             {
@@ -89,7 +88,7 @@ namespace Eiap.Test
             #endregion
 
             #region 反序列化
-            //var testobject = serliz.SerializeObject(schoolList);
+            //var testobject = JsonConvert.SerializeObject(schoolList);
 
             //double sum1 = 0;
             //for (int m = 0; m < count; m++)
@@ -140,7 +139,7 @@ namespace Eiap.Test
         public decimal Amt { get; set; }
         public Classes ClassOne { get; set; }
         public IEnumerable<Classes> ClassList { get; set; }
-        public Dictionary<string, Students> Dict { get; set; }
+        public Dictionary<string, string> Dict { get; set; }
         public Students SchoolFirstStu { get; set; }
     }
 
