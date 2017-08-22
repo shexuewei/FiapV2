@@ -54,7 +54,7 @@ namespace Eiap.NetFramework
                     }
                 }
                 //属性名
-                else if (charitem == JsonSymbol.JsonPropertySymbol && IsPropertyHandler(args))
+                else if (charitem == JsonSymbol.JsonPropertySymbol && IsPropertyHandler(args.JsonStringStack))
                 {
                     if (JsonDeserializePropertySymbol_Event != null)
                     {
@@ -88,7 +88,7 @@ namespace Eiap.NetFramework
         /// <param name="e"></param>
         public static void JsonDeserializeProcess_JsonDeserializeArraySymbol_Begin_Event(object sender, JsonDeserializeEventArgs e)
         {
-            e.JsonStringStack.Pop();//]出栈
+            e.JsonStringStack.Pop();//[出栈
             Type currentObjectType = null;
             if (e.ContainerStack.Count() == 0)
             {
@@ -216,7 +216,7 @@ namespace Eiap.NetFramework
                 currentPropertyInfo = currentObjectContainer.ContainerObject as PropertyInfo;
                 if (currentPropertyInfo != null)
                 {
-                    PropertySetValue(e.ContainerStack.Peek().ContainerObject, currentPropertyInfo, objvalue, e.MethodManager);
+                    PropertySetValue(e.ContainerStack.Peek().ContainerObject, currentPropertyInfo, objvalue, e.MethodManager, e.ContainerStack.Peek().ContainerObjectTypeName);
                 }
             }
             else if (currentObjectContainer.ContainerType == DeserializeObjectContainerType.DictionaryKey)
@@ -273,7 +273,7 @@ namespace Eiap.NetFramework
                         objvalue = bool.Parse(valuestring);
                     }
                 }
-                PropertySetValue(e.ContainerStack.Peek().ContainerObject, currentPropertyInfo, objvalue, e.MethodManager);
+                PropertySetValue(e.ContainerStack.Peek().ContainerObject, currentPropertyInfo, objvalue, e.MethodManager, currentObjectContainer.ContainerObjectTypeName);
             }
         }
 
@@ -342,8 +342,10 @@ namespace Eiap.NetFramework
                 }
                 else
                 {
-                    PropertyInfo propertyinfo = GetCurrentObject(e).ContainerObject.GetType().GetProperty(propertyNameStr);
-                    e.ContainerStack.Push(new DeserializeObjectContainer { ContainerType = DeserializeObjectContainerType.Property, ContainerObject = propertyinfo });
+                    Type currentObjectType = GetCurrentObject(e.ContainerStack).ContainerObject.GetType();
+                    string currentObjectTypeName = currentObjectType.FullName;
+                    PropertyInfo propertyinfo = currentObjectType.GetProperty(propertyNameStr);
+                    e.ContainerStack.Push(new DeserializeObjectContainer { ContainerType = DeserializeObjectContainerType.Property, ContainerObject = propertyinfo, ContainerObjectTypeName = currentObjectTypeName });
                 }
             }
         }
@@ -376,7 +378,7 @@ namespace Eiap.NetFramework
                     if (currentObjectContainer.ContainerType == DeserializeObjectContainerType.Property)
                     {
                         currentPropertyInfo = currentObjectContainer.ContainerObject as PropertyInfo;
-                        PropertySetValue(e.ContainerStack.Peek().ContainerObject, currentPropertyInfo, objvalue, e.MethodManager);
+                        PropertySetValue(e.ContainerStack.Peek().ContainerObject, currentPropertyInfo, objvalue, e.MethodManager, e.ContainerStack.Peek().ContainerObjectTypeName);
                     }
                 }
             }
@@ -393,7 +395,7 @@ namespace Eiap.NetFramework
                 if (currentObjectContainer.ContainerType == DeserializeObjectContainerType.Property)
                 {
                     currentPropertyInfo = currentObjectContainer.ContainerObject as PropertyInfo;
-                    PropertySetValue(e.ContainerStack.Peek().ContainerObject, currentPropertyInfo, objvalue, e.MethodManager);
+                    PropertySetValue(e.ContainerStack.Peek().ContainerObject, currentPropertyInfo, objvalue, e.MethodManager, e.ContainerStack.Peek().ContainerObjectTypeName);
                 }
                 else if (currentObjectContainer.ContainerType == DeserializeObjectContainerType.List)
                 {
@@ -450,17 +452,17 @@ namespace Eiap.NetFramework
                         objvalue = bool.Parse(valuestring);
                     }
                 }
-                PropertySetValue(e.ContainerStack.Peek().ContainerObject, currentPropertyInfo, objvalue, e.MethodManager);
+                PropertySetValue(e.ContainerStack.Peek().ContainerObject, currentPropertyInfo, objvalue, e.MethodManager, currentObjectContainer.ContainerObjectTypeName);
             }
         }
 
-        private static DeserializeObjectContainer GetCurrentObject(JsonDeserializeEventArgs e)
+        private static DeserializeObjectContainer GetCurrentObject(Stack<DeserializeObjectContainer> containerStack)
         {
             DeserializeObjectContainer currentObjectContainer = null;
             Stack<DeserializeObjectContainer> tmpDeserializeObjectContainerStack = new Stack<DeserializeObjectContainer>();
             while (true)
             {
-                currentObjectContainer = e.ContainerStack.Pop();
+                currentObjectContainer = containerStack.Pop();
                 tmpDeserializeObjectContainerStack.Push(currentObjectContainer);
                 if (currentObjectContainer.ContainerType == DeserializeObjectContainerType.Object)
                 {
@@ -469,19 +471,19 @@ namespace Eiap.NetFramework
             }
             while (tmpDeserializeObjectContainerStack.Count() > 0)
             {
-                e.ContainerStack.Push(tmpDeserializeObjectContainerStack.Pop());
+                containerStack.Push(tmpDeserializeObjectContainerStack.Pop());
             }
             return currentObjectContainer;
         }
 
-        private static bool IsPropertyHandler(JsonDeserializeEventArgs e)
+        private static bool IsPropertyHandler(Stack<char> jsonStringStack)
         {
             bool res = false;
             bool isQuotesSymbol = false;
             Stack<char> charList = new Stack<char>();
             while (true)
             {
-                var currentChar = e.JsonStringStack.Pop();
+                var currentChar = jsonStringStack.Pop();
                 charList.Push(currentChar);
                 if (currentChar != JsonSymbol.JsonPropertySymbol && currentChar != JsonSymbol.JsonQuotesSymbol && currentChar != JsonSymbol.JsonSpaceSymbol)
                 {
@@ -498,7 +500,7 @@ namespace Eiap.NetFramework
             }
             while (charList.Count > 0)
             {
-                e.JsonStringStack.Push(charList.Pop());
+                jsonStringStack.Push(charList.Pop());
             }
             return res;
         }
@@ -566,9 +568,164 @@ namespace Eiap.NetFramework
             return arrayObj;
         }
 
-        private static void PropertySetValue(object instanceObj, PropertyInfo currentPropertyInfo, object objvalue, IMethodManager methodManager)
+        private static void PropertySetValue(object instanceObj, PropertyInfo currentPropertyInfo, object objvalue, IMethodManager methodManager, string instanceTypeName = null)
         {
-            methodManager.MethodInvoke(instanceObj, new object[] { objvalue }, currentPropertyInfo.GetSetMethod());
+            methodManager.MethodInvoke(instanceObj, new object[] { objvalue }, currentPropertyInfo.GetSetMethod(), instanceTypeName);
+        }
+
+        public static object Deserialize2(string jsonString, Type objectType, SerializationSetting setting, IMethodManager methodManager)
+        {
+            Stack<char> jsonStringStack = new Stack<char>();
+            Stack<DeserializeObjectContainer> containerStack = new Stack<DeserializeObjectContainer>();
+            char[] jsonCharList = jsonString.ToCharArray();
+            foreach (char charitem in jsonCharList)
+            {
+                jsonStringStack.Push(charitem);
+                //数组开始
+                if (charitem == JsonSymbol.JsonArraySymbol_Begin)
+                {
+                    jsonStringStack.Pop();//[出栈
+                    Type currentObjectType = null;
+                    if (containerStack.Count() == 0)
+                    {
+                        currentObjectType = objectType;
+                    }
+                    else
+                    {
+                        DeserializeObjectContainer container = containerStack.Peek();
+                        if (container.ContainerType == DeserializeObjectContainerType.Property)
+                        {
+                            PropertyInfo currentPropertyInfo = container.ContainerObject as PropertyInfo;
+                            if (currentPropertyInfo != null)
+                            {
+                                currentObjectType = currentPropertyInfo.PropertyType;
+                            }
+                        }
+                    }
+                    IList objectInstance = null;
+                    string typeName = null;
+                    if (currentObjectType.IsGenericType && !typeof(IDictionary).IsAssignableFrom(currentObjectType))
+                    {
+                        Type genType = currentObjectType.GetGenericTypeDefinition();
+                        Type[] genParaType = currentObjectType.GetGenericArguments();
+                        typeName = genParaType[0].FullName;
+                        Type objtype = typeof(List<>).MakeGenericType(genParaType);
+                        objectInstance = Activator.CreateInstance(objtype) as IList;
+                    }
+                    else if (currentObjectType.IsArray)
+                    {
+                        Type arrayElementType = currentObjectType.GetElementType();
+                        typeName = arrayElementType.FullName;
+                        Type[] genParaType = new Type[] { arrayElementType };
+                        Type objtype = typeof(List<>).MakeGenericType(genParaType);
+                        objectInstance = Activator.CreateInstance(objtype) as IList;
+                    }
+                    else if (typeof(IDictionary).IsAssignableFrom(currentObjectType))
+                    {
+                        //TODO:字典类型处理
+                        objectInstance = Activator.CreateInstance(currentObjectType) as IList;
+                    }
+                    else
+                    {
+                        objectInstance = Activator.CreateInstance(currentObjectType) as IList;
+                    }
+                    containerStack.Push(new DeserializeObjectContainer { ContainerType = DeserializeObjectContainerType.List, ContainerObject = objectInstance, ContainerObjectTypeName = typeName });
+                }
+                //对象开始
+                else if (charitem == JsonSymbol.JsonObjectSymbol_Begin)
+                {
+                    Type currentObjectType = null;
+                    if (containerStack.Count() == 0)
+                    {
+                        currentObjectType = objectType;
+                    }
+                    else
+                    {
+                        DeserializeObjectContainer container = containerStack.Peek();
+                        if (container.ContainerType == DeserializeObjectContainerType.Property)
+                        {
+                            PropertyInfo currentPropertyInfo = container.ContainerObject as PropertyInfo;
+                            if (currentPropertyInfo != null)
+                            {
+                                currentObjectType = currentPropertyInfo.PropertyType;
+                            }
+                        }
+                        else if (container.ContainerType == DeserializeObjectContainerType.List)
+                        {
+                            currentObjectType = container.ContainerObject.GetType().GetGenericArguments()[0];
+                        }
+                        else if (container.ContainerType == DeserializeObjectContainerType.DictionaryKey)
+                        {
+                            //TODO:字段类型待处理
+                        }
+                    }
+                    object objectInstance = Activator.CreateInstance(currentObjectType);
+                    containerStack.Push(new DeserializeObjectContainer { ContainerType = DeserializeObjectContainerType.Object, ContainerObject = objectInstance, ContainerObjectTypeName = currentObjectType.FullName });
+                    jsonStringStack.Pop();
+                }
+                //属性名
+                else if (charitem == JsonSymbol.JsonPropertySymbol && IsPropertyHandler(jsonStringStack))
+                {
+                    jsonStringStack.Pop();//属性分隔符出栈
+                    Stack<char> propertyNameList = new Stack<char>(); 
+
+                    //属性引号出栈
+                    while (true)
+                    {
+                        char beginQuotes = jsonStringStack.Pop();
+                        if (beginQuotes == JsonSymbol.JsonQuotesSymbol)
+                        {
+                            break;
+                        }
+                    }
+                    //属性引号出栈
+                    while (true)
+                    {
+                        char propertyNameChar = jsonStringStack.Pop();
+                        if (propertyNameChar == JsonSymbol.JsonQuotesSymbol)
+                        {
+                            break;
+                        }
+                        else if (propertyNameChar != JsonSymbol.JsonSpaceSymbol)
+                        {
+                            propertyNameList.Push(propertyNameChar);
+                        }
+                    }
+                    string propertyNameStr = new string(propertyNameList.ToArray());
+                    DeserializeObjectContainer currentObj = containerStack.Peek() as DeserializeObjectContainer;
+                    if (currentObj != null)
+                    {
+                        if (typeof(IDictionary).IsAssignableFrom(currentObj.ContainerObject.GetType()))
+                        {
+                            containerStack.Push(new DeserializeObjectContainer { ContainerType = DeserializeObjectContainerType.DictionaryKey, ContainerObject = propertyNameStr });
+                        }
+                        else
+                        {
+                            DeserializeObjectContainer currentObjectContainer = GetCurrentObject(containerStack);
+                            Type currentObjectType = currentObjectContainer.ContainerObject.GetType();
+                            string currentObjectTypeName = currentObjectContainer.ContainerObjectTypeName;
+                            PropertyInfo propertyinfo = currentObjectType.GetProperty(propertyNameStr);
+                            containerStack.Push(new DeserializeObjectContainer { ContainerType = DeserializeObjectContainerType.Property, ContainerObject = propertyinfo, ContainerObjectTypeName = currentObjectTypeName });
+                        }
+                    }
+                }
+                //逗号
+                else if (charitem == JsonSymbol.JsonSeparateSymbol)
+                {
+
+                }
+                //对象结束
+                else if (charitem == JsonSymbol.JsonObjectSymbol_End)
+                {
+
+                }
+                //数组结束
+                else if (charitem == JsonSymbol.JsonArraySymbol_End)
+                {
+                    
+                }
+            }
+            return null;
         }
     }
 }

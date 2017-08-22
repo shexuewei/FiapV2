@@ -15,5 +15,10 @@ namespace Eiap.NetFramework
         /// 容器存储对象
         /// </summary>
         public object ContainerObject { get; set; }
+
+        /// <summary>
+        /// 容器存储对象类型名称
+        /// </summary>
+        public string ContainerObjectTypeName { get; set; }
     }
 }
