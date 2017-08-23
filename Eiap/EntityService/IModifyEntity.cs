@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Eiap
 {
@@ -11,7 +7,7 @@ namespace Eiap
     /// </summary>
     /// <typeparam name="TUserId"></typeparam>
     /// <typeparam name="TPrimarykey"></typeparam>
-    public interface IModifyEntity<TUserId, TPrimarykey> : ICreationEntity<TUserId, TPrimarykey>
+    public interface IModifyEntity<TUserId, TPrimarykey>
         where TUserId : struct
         where TPrimarykey : struct
     {

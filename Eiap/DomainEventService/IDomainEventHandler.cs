@@ -5,7 +5,7 @@ namespace Eiap
     /// 领域事件处理接口
     /// </summary>
     /// <typeparam name="TDomainEventData"></typeparam>
-    public interface IDomainEventHandler<in TDomainEventData> : IRealtimeDependency, IDynamicProxyDisable 
+    public interface IDomainEventHandler<in TDomainEventData> : IRealtimeDependency, IDynamicProxyDisable
         where TDomainEventData : IDomainEventData
     {
         /// <summary>
@@ -13,5 +13,10 @@ namespace Eiap
         /// </summary>
         /// <param name="eventData"></param>
         void ProcessEvent(TDomainEventData eventData);
+
+        /// <summary>
+        /// 日志接口
+        /// </summary>
+        ILogger Log { get; set; }
     }
 }
