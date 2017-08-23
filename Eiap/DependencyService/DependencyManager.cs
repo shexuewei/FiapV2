@@ -212,11 +212,12 @@ namespace Eiap
                 if (count == paracount)
                 {
                     object obj = null;
+                    Type objtype = null;
                     if (genArguments == null)
                     {
                         if (entiType.IsGenericType)
                         {
-                            Type objtype = entiType.GetGenericTypeDefinition().MakeGenericType(genArgumentList);
+                            objtype = entiType.GetGenericTypeDefinition().MakeGenericType(genArgumentList);
                             obj = Activator.CreateInstance(objtype, paraobj);
                         }
                         else
@@ -228,14 +229,14 @@ namespace Eiap
                     {
                         //TODO:匹配泛型参数类型
                         Type genType = consinfo.DeclaringType.GetGenericTypeDefinition();
-                        Type objtype = genType.MakeGenericType(genArguments);
+                        objtype = genType.MakeGenericType(genArguments);
                         obj = Activator.CreateInstance(objtype, paraobj);
                     }
                     t = obj;
                     #region  属性注入
                     if (t != null)
                     {
-                        PropertyInfo[] propList = t.GetType().GetProperties();
+                        PropertyInfo[] propList = objtype.GetProperties();
                         foreach (PropertyInfo propInfo in propList)
                         {
                             if ((typeof(IRealtimeDependency).IsAssignableFrom(propInfo.PropertyType) || typeof(ISingletonDependency).IsAssignableFrom(propInfo.PropertyType) || typeof(IContextDependency).IsAssignableFrom(propInfo.PropertyType)) && typeof(IPropertyDependency).IsAssignableFrom(propInfo.PropertyType))
