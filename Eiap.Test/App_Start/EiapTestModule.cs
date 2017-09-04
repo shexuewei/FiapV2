@@ -1,12 +1,9 @@
 ﻿
 using System.Reflection;
 
-namespace Eiap
+namespace Eiap.Test
 {
-    /// <summary>
-    /// Eiap框架组件
-    /// </summary>
-    public class EiapModule : IComponentModule
+    public class EiapTestModule : IComponentModule
     {
         public void AssemblyInitialize()
         {
@@ -18,7 +15,7 @@ namespace Eiap
         /// </summary>
         public void RegisterInitialize()
         {
-
+            DependencyManager.Instance.Resolver<IConfigurationManager>().Register();
         }
     }
 }

@@ -41,6 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Configuration.ConfigFile\ConfigurationContainerManager.cs" />
     <Compile Include="Configuration.ConfigFile\ConfigurationManager.cs" />
     <Compile Include="DataAccess.SQLServer\DataAccessConnectionString.cs" />
     <Compile Include="DataAccess.SQLServer\SQLServerCommandDataAccessConnection.cs" />

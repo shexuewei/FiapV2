@@ -67,7 +67,7 @@ namespace Eiap
         /// <returns></returns>
         public AssemblyManager AssemblyInitialize()
         {
-            var loadDllList = Directory.GetFiles(AppDomain.CurrentDomain.BaseDirectory).Where(m => m.EndsWith(".dll") || m.EndsWith(".exe")).ToList();
+            var loadDllList = Directory.GetFiles(AppDomain.CurrentDomain.RelativeSearchPath).Where(m => m.EndsWith(".dll") || m.EndsWith(".exe")).ToList();
             //初始化组件
             foreach (string dllname in loadDllList)
             {

@@ -1,37 +1,19 @@
 ﻿
-using System;
 using System.Collections.Generic;
-using System.Collections;
 using System.Linq;
 
-namespace Eiap
+namespace Eiap.NetFramework
 {
     /// <summary>
     /// 配置信息容器管理接口实现
     /// </summary>
     public class ConfigurationContainerManager : IConfigurationContainerManager
     {
-        protected static IConfigurationContainerManager _ConfigurationContainerManager = null;
-        protected List<ConfigurationContainer> _ConfigurationContainerList = null;
+        private List<ConfigurationContainer> _ConfigurationContainerList = null;
 
-        private ConfigurationContainerManager()
+        public ConfigurationContainerManager()
         {
             _ConfigurationContainerList = new List<ConfigurationContainer>();
-        }
-
-        /// <summary>
-        /// 单例
-        /// </summary>
-        public static IConfigurationContainerManager Instance
-        {
-            get
-            {
-                if (_ConfigurationContainerManager == null)
-                {
-                    _ConfigurationContainerManager = new ConfigurationContainerManager();
-                }
-                return _ConfigurationContainerManager;
-            }
         }
 
         /// <summary>

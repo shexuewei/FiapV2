@@ -47,7 +47,6 @@
     <Compile Include="AssemblyService\AssemblyManager.cs" />
     <Compile Include="AssemblyService\IComponentModule.cs" />
     <Compile Include="CacheService\ICacheManager.cs" />
-    <Compile Include="ConfigurationService\ConfigurationContainerManager.cs" />
     <Compile Include="ConfigurationService\ConfigurationContainer.cs" />
     <Compile Include="ConfigurationService\IConfigurationContainerManager.cs" />
     <Compile Include="ConfigurationService\IConfigurationManager.cs" />
@@ -91,7 +90,6 @@
     <Compile Include="DynamicProxyService\DynamicProxyContainerManager.cs" />
     <Compile Include="DynamicProxyService\DynamicProxyInterceptor.cs" />
     <Compile Include="DynamicProxyService\DynamicProxyManager.cs" />
-    <Compile Include="EiapModule.cs" />
     <Compile Include="EntityService\DefaultEntity.cs" />
     <Compile Include="EntityService\CreationAuditedEntity.cs" />
     <Compile Include="EntityService\ModifyAuditedEntity.cs" />

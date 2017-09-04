@@ -8,6 +8,13 @@ namespace Eiap.NetFramework
     {
         private ISQLDataQueryDataAccessConnection _SQLDataAccessConnection;
 
+        /// <summary>
+        /// 获取只读数据集
+        /// </summary>
+        /// <param name="cmdText">SQL语句</param>
+        /// <param name="cmdType">执行类型</param>
+        /// <param name="paramters">SQL参数</param>
+        /// <returns>返回只读数据集</returns>
         public virtual IDataReader ExcuteGetDataReader(string cmdText, CommandType cmdType, IDataParameter[] paramters)
         {
             IDataReader dr = null;
@@ -23,6 +30,13 @@ namespace Eiap.NetFramework
             return dr;
         }
 
+        /// <summary>
+        /// 获取数据集第一行第一列对象
+        /// </summary>
+        /// <param name="cmdText">SQL语句</param>
+        /// <param name="cmdType">执行类型</param>
+        /// <param name="paramters">SQL参数</param>
+        /// <returns>返回数据集第一行第一列对象</returns>
         public virtual object ExecuteScalar(string cmdText, CommandType cmdType, IDataParameter[] paramters)
         {
             object retuObj = null;

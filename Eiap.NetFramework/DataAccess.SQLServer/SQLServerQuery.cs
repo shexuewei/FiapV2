@@ -15,6 +15,13 @@ namespace Eiap.NetFramework
             _ReadSQLDataAccessConnection = ReadSQLDataAccessConnection;
         }
 
+        /// <summary>
+        /// 获取数据集
+        /// </summary>
+        /// <param name="cmdText">SQL语句</param>
+        /// <param name="cmdType">执行类型</param>
+        /// <param name="paramters">SQL参数</param>
+        /// <returns></returns>
         public virtual DataSet ExcuteGetDateSet(string cmdText, CommandType cmdType, IDataParameter[] paramters)
         {
             _ReadSQLDataAccessConnection.Create();

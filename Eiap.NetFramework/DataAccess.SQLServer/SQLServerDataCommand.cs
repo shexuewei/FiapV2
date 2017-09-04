@@ -8,6 +8,13 @@ namespace Eiap.NetFramework
     {
         private ISQLCommandDataAccessConnection _SQLDataAccessConnection;
 
+        /// <summary>
+        /// 获取返回影响行数
+        /// </summary>
+        /// <param name="cmdText">SQL语句</param>
+        /// <param name="cmdType">执行类型</param>
+        /// <param name="paramters">SQL参数</param>
+        /// <returns>返回影响行数</returns>
         public virtual int ExcuteNonQuery(string cmdText, System.Data.CommandType cmdType, System.Data.IDataParameter[] paramters)
         {
             int res = 0;

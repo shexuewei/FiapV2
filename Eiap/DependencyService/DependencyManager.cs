@@ -334,6 +334,9 @@ namespace Eiap
                 List<Type> classTypeList = assemblyItem.GetTypes().Where(m => m.IsClass && !m.IsAbstract).ToList();
                 classTypeList.ForEach(classItem =>
                 {
+                    if (classItem.Name.IndexOf("ConfigurationContainerManager") >= 0)
+                    {
+                    }
                     List<Type> interfaceTypeList = classItem.GetInterfaces()
                         .Where(m => (typeof(IRealtimeDependency).IsAssignableFrom(m) && typeof(IRealtimeDependency).FullName != m.FullName)
                        || (typeof(ISingletonDependency).IsAssignableFrom(m) && typeof(ISingletonDependency).FullName != m.FullName)

@@ -5,6 +5,9 @@ using System.Data.SqlClient;
 
 namespace Eiap.Framework.DataFramework
 {
+    /// <summary>
+    /// SQLServer数据库链接
+    /// </summary>
     public class SQLServerDataAccess : ISQLDataAccess
     {
         private readonly ISQLDataAccessConnection _SQLDataAccessConnection;
@@ -14,6 +17,13 @@ namespace Eiap.Framework.DataFramework
             _SQLDataAccessConnection = SQLDataAccessConnection;
         }
 
+        /// <summary>
+        /// 获取返回影响行数
+        /// </summary>
+        /// <param name="cmdText">SQL语句</param>
+        /// <param name="cmdType">执行类型</param>
+        /// <param name="paramters">SQL参数</param>
+        /// <returns></returns>
         public virtual int ExcuteNonQuery(string cmdText, CommandType cmdType, IDataParameter[] paramters)
         {
             int res = 0;
@@ -34,6 +44,13 @@ namespace Eiap.Framework.DataFramework
             return res;
         }
 
+        /// <summary>
+        /// 获取数据集
+        /// </summary>
+        /// <param name="cmdText">SQL语句</param>
+        /// <param name="cmdType">执行类型</param>
+        /// <param name="paramters">SQL参数</param>
+        /// <returns></returns>
         public virtual DataSet ExcuteGetDateSet(string cmdText, CommandType cmdType, IDataParameter[] paramters)
         {
             IDbCommand _DBCommand = _SQLDataAccessConnection.CreateCommand();
@@ -65,6 +82,13 @@ namespace Eiap.Framework.DataFramework
             return ds;
         }
 
+        /// <summary>
+        /// 获取只读数据集
+        /// </summary>
+        /// <param name="cmdText">SQL语句</param>
+        /// <param name="cmdType">执行类型</param>
+        /// <param name="paramters">SQL参数</param>
+        /// <returns></returns>
         public virtual IDataReader ExcuteGetDataReader(string cmdText, CommandType cmdType, IDataParameter[] paramters)
         {
             IDataReader dr = null;
@@ -81,6 +105,13 @@ namespace Eiap.Framework.DataFramework
             return dr;
         }
 
+        /// <summary>
+        /// 获取数据集第一行第一列对象
+        /// </summary>
+        /// <param name="cmdText">SQL语句</param>
+        /// <param name="cmdType">执行类型</param>
+        /// <param name="paramters">SQL参数</param>
+        /// <returns></returns>
         public virtual object ExecuteScalar(string cmdText, CommandType cmdType, IDataParameter[] paramters)
         {
             object retuObj = null;
@@ -125,6 +156,9 @@ namespace Eiap.Framework.DataFramework
             return retuObj;
         }
 
+        /// <summary>
+        /// 链接字符串
+        /// </summary>
         public virtual string ConnectionString
         {
             get
@@ -137,21 +171,34 @@ namespace Eiap.Framework.DataFramework
             }
         }
 
+        /// <summary>
+        /// 创建数据库链接
+        /// </summary>
+        /// <returns></returns>
         public virtual void Create()
         {
             _SQLDataAccessConnection.Create();
         }
 
+        /// <summary>
+        /// 关闭数据库链接
+        /// </summary>
         public virtual void DBClose()
         {
             _SQLDataAccessConnection.DBClose();
         }
 
+        /// <summary>
+        /// 启用数据库事物
+        /// </summary>
         public virtual void BeginTransaction()
         {
             _SQLDataAccessConnection.BeginTransaction();
         }
 
+        /// <summary>
+        /// 提交事物
+        /// </summary>
         public virtual void Commit()
         {
             _SQLDataAccessConnection.Commit();

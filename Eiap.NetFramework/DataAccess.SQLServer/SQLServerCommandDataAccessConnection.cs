@@ -4,6 +4,9 @@ using System.Data.SqlClient;
 
 namespace Eiap.NetFramework
 {
+    /// <summary>
+    /// SQLServer命令数据库链接
+    /// </summary>
     public class SQLServerCommandDataAccessConnection : ISQLCommandDataAccessConnection
     {
         private string _ConnectionString;
@@ -18,6 +21,9 @@ namespace Eiap.NetFramework
             _ConnectionString = _SQLDataAccessConnectionString.CommandConnectionString();
         }
 
+        /// <summary>
+        /// 链接字符串
+        /// </summary>
         public virtual string ConnectionString
         { 
             get { return _ConnectionString; }
@@ -40,6 +46,9 @@ namespace Eiap.NetFramework
             }
         }
 
+        /// <summary>
+        /// 打开数据库链接
+        /// </summary>
         public virtual void DBOpen()
         {
             CheckDbConnection();
@@ -49,6 +58,9 @@ namespace Eiap.NetFramework
             }
         }
 
+        /// <summary>
+        /// 关闭数据库链接
+        /// </summary>
         public virtual void DBClose()
         {
             CheckDbConnection();
@@ -59,6 +71,9 @@ namespace Eiap.NetFramework
             }
         }
 
+        /// <summary>
+        /// 启用数据库事物
+        /// </summary>
         public virtual void BeginTransaction()
         {
             CheckDbConnection();
@@ -73,6 +88,9 @@ namespace Eiap.NetFramework
             }
         }
 
+        /// <summary>
+        /// 提交事物
+        /// </summary>
         public virtual void Commit()
         {
             CheckDbTransaction();
@@ -83,6 +101,9 @@ namespace Eiap.NetFramework
             }
         }
 
+        /// <summary>
+        /// 回滚事物
+        /// </summary>
         public virtual void Rollback()
         {
             CheckDbTransaction();
@@ -93,17 +114,27 @@ namespace Eiap.NetFramework
             }
         }
 
+        /// <summary>
+        /// 创建命令
+        /// </summary>
+        /// <returns></returns>
         public virtual IDbCommand CreateCommand()
         {
             return _DbConnection.CreateCommand();
         }
 
+        /// <summary>
+        /// 获取事务
+        /// </summary>
+        /// <returns></returns>
         public virtual IDbTransaction GetTransaction()
         {
             return _DbTransaction;
         }
 
-
+        /// <summary>
+        /// 是否启动事物
+        /// </summary>
         public virtual bool IsTransaction
         {
             get { return _IsTransaction; }
