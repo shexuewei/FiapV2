@@ -4,7 +4,7 @@ namespace Eiap
     /// <summary>
     /// 配置信息容器管理接口
     /// </summary>
-    public interface IConfigurationContainerManager
+    public interface IConfigurationContainerManager : ISingletonDependency
     {
         /// <summary>
         /// 注册配置信息

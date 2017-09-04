@@ -4,34 +4,20 @@ namespace Eiap
     /// <summary>
     /// 配置信息管理接口
     /// </summary>
-    public interface IConfigurationManager
+    public interface IConfigurationManager: ISingletonDependency
     {
         /// <summary>
-        /// 设置配置的Key
-        /// </summary>
-        /// <param name="key"></param>
-        /// <returns></returns>
-        IConfigurationManager SetKey(string key);
-
-        /// <summary>
-        /// 设置配置的Value
-        /// </summary>
-        /// <param name="value"></param>
-        /// <returns></returns>
-        IConfigurationManager SetValue(string value);
-
-        /// <summary>
-        /// 设置配置的环境
+        /// 当前配置的环境
         /// </summary>
         /// <param name="environment"></param>
         /// <returns></returns>
-        IConfigurationManager SetEnvironment(string environment);
+        string CurrentEnvironment { get; }
 
         /// <summary>
         /// 注册配置
         /// </summary>
         /// <returns></returns>
-        IConfigurationManager Register();
+        void Register();
 
         /// <summary>
         /// 获取配置值

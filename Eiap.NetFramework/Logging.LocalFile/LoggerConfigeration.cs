@@ -9,12 +9,14 @@ namespace Eiap.NetFramework
         private string _LogPathFormat;
         private long _LogSize;
         private string _LogContentFormat;
+        private IConfigurationManager _ConfigurationManager;
 
         /// <summary>
         /// 初始化
         /// </summary>
-        public LoggerConfigeration()
+        public LoggerConfigeration(IConfigurationManager configurationManager)
         {
+            _ConfigurationManager = configurationManager;
             InitializationLogPathFormat();
             InitializationLogSize();
             InitializationLogContentFormat();
@@ -25,7 +27,7 @@ namespace Eiap.NetFramework
         /// </summary>
         private void InitializationLogPathFormat()
         {
-            _LogPathFormat = ConfigurationManager.Instance.Get("LogPathFormat");
+            _LogPathFormat = _ConfigurationManager.Get("LogPathFormat");
             //TODO:需要验证格式
             if (_LogPathFormat == null || _LogPathFormat == "")
             {
@@ -46,7 +48,7 @@ namespace Eiap.NetFramework
         /// </summary>
         private void InitializationLogSize()
         {
-            string tmpLogSize = ConfigurationManager.Instance.Get("LogSize");
+            string tmpLogSize = _ConfigurationManager.Get("LogSize");
             //TODO:需要验证格式
             if (tmpLogSize == null || tmpLogSize == "")
             {

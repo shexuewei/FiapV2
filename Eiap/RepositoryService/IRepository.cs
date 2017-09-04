@@ -47,5 +47,10 @@ namespace Eiap
         /// <param name="paramters"></param>
         /// <returns></returns>
         TResult Query<TResult>(string cmdText, CommandType cmdType, IDataParameter[] paramters = null);
+
+        /// <summary>
+        /// 日志接口
+        /// </summary>
+        ILogger Log { get; set; }
     }
 }

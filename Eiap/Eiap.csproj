@@ -49,7 +49,6 @@
     <Compile Include="CacheService\ICacheManager.cs" />
     <Compile Include="ConfigurationService\ConfigurationContainerManager.cs" />
     <Compile Include="ConfigurationService\ConfigurationContainer.cs" />
-    <Compile Include="ConfigurationService\ConfigurationManager.cs" />
     <Compile Include="ConfigurationService\IConfigurationContainerManager.cs" />
     <Compile Include="ConfigurationService\IConfigurationManager.cs" />
     <Compile Include="DataAccessService\SQL\IDataAccessConnectionString.cs" />

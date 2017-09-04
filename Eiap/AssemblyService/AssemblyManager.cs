@@ -42,11 +42,7 @@ namespace Eiap
         /// <returns></returns>
         public AssemblyManager Register(Action<List<Assembly>> reg)
         {
-            //Stopwatch stopwatch = new Stopwatch();
-            //stopwatch.Start();
             reg(assemblyList);
-            //stopwatch.Stop();
-            //Console.WriteLine("AssemblyManager Register:" + stopwatch.ElapsedMilliseconds);
             return Instance;
         }
 

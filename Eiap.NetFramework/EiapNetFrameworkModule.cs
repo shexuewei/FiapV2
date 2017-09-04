@@ -18,11 +18,7 @@ namespace Eiap.NetFramework
         /// </summary>
         public void RegisterInitialize()
         {
-            ConfigurationManager.Instance
-                .SetEnvironment("Test").SetKey("LogPathFormat").SetValue(@"c:\loggers\{AppCode}\{LogLevel}\{YYYY}\{MM}\{DD}\{HH}.log").Register()
-                .SetEnvironment("PRD").SetKey("LogPathFormat").SetValue(@"c:\loggers\{AppCode}\{LogLevel}\{YYYY}\{MM}\{DD}\{HH}.log").Register()
-                .SetEnvironment("Test").SetKey("LogSize").SetValue(@"204800000").Register()
-                .SetEnvironment("PRD").SetKey("LogSize").SetValue(@"204800000").Register();
+            DependencyManager.Instance.Resolver<IConfigurationManager>().Register();
         }
     }
 }

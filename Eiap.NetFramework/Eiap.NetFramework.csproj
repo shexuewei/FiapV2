@@ -31,6 +31,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -40,6 +41,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Configuration.ConfigFile\ConfigurationManager.cs" />
+    <Compile Include="DataAccess.SQLServer\DataAccessConnectionString.cs" />
+    <Compile Include="DataAccess.SQLServer\SQLServerCommandDataAccessConnection.cs" />
+    <Compile Include="DataAccess.SQLServer\SQLServerDataAccess.cs" />
+    <Compile Include="DataAccess.SQLServer\SQLServerDataCommand.cs" />
+    <Compile Include="DataAccess.SQLServer\SQLServerDataQuery.cs" />
+    <Compile Include="DataAccess.SQLServer\SQLServerDataQueryDataAccessConnection.cs" />
+    <Compile Include="DataAccess.SQLServer\SQLServerQuery.cs" />
+    <Compile Include="DataAccess.SQLServer\SQLServerQueryDataAccessConnection.cs" />
     <Compile Include="EiapNetFrameworkModule.cs" />
     <Compile Include="Logging.LocalFile\ILoggerConfigeration.cs" />
     <Compile Include="Logging.LocalFile\Logger.cs" />
