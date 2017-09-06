@@ -234,7 +234,7 @@ namespace Eiap
                     }
                     t = obj;
                     #region  属性注入
-                    if (t != null)
+                    if (t != null && objtype != null)
                     {
                         PropertyInfo[] propList = objtype.GetProperties();
                         foreach (PropertyInfo propInfo in propList)

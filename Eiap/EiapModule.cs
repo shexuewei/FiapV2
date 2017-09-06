@@ -1,9 +1,12 @@
 ﻿
 using System.Reflection;
 
-namespace Eiap.Test
+namespace Eiap
 {
-    public class EiapTestModule : IComponentModule
+    /// <summary>
+    /// Eiap框架组件
+    /// </summary>
+    public class EiapModule : IComponentModule
     {
         public void AssemblyInitialize()
         {

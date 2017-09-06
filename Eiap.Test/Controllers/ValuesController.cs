@@ -8,7 +8,7 @@ namespace Eiap.Test.Controllers
         // GET api/values
         public string Get()
         {
-            return DependencyManager.Instance.Resolver<IConfigurationManager>().CurrentEnvironment;
+            return DependencyManager.Instance.Resolver<IConfigurationManager>().Get("DefaultConnectionString");
         }
     }
 }

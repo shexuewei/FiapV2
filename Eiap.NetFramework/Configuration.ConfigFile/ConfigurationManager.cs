@@ -1,6 +1,7 @@
 ﻿
 using System;
 using System.Collections.Specialized;
+using System.Xml;
 
 namespace Eiap.NetFramework
 {
@@ -9,6 +10,7 @@ namespace Eiap.NetFramework
         private IConfigurationContainerManager _ConfigurationContainerManager = null;
         private ConfigurationContainer _CurrentConfigurationContainer = new ConfigurationContainer();
         private readonly string _ConfigPath = @"Configs\{Environment}\appSettings.config";
+        private const string _ConfigTagName = "add";
 
         public string CurrentEnvironment {
             get {
@@ -29,7 +31,15 @@ namespace Eiap.NetFramework
         /// <returns></returns>
         public void Register()
         {
-            System.Configuration.ConfigurationManager.OpenExeConfiguration(_ConfigPath);
+            XmlDocument xmlDoc = new XmlDocument();
+            xmlDoc.Load(AppDomain.CurrentDomain.BaseDirectory + "\\" + _ConfigPath);
+            NameValueCollection appsettingsitem = new NameValueCollection();
+            foreach (XmlElement element in xmlDoc.GetElementsByTagName(_ConfigTagName))
+            {
+
+                appsettingsitem.Add(element.GetAttribute("key"), element.GetAttribute("value"));
+            }
+            System.Configuration.ConfigurationManager.AppSettings.Add(appsettingsitem);
         }
 
 

@@ -90,6 +90,7 @@
     <Compile Include="DynamicProxyService\DynamicProxyContainerManager.cs" />
     <Compile Include="DynamicProxyService\DynamicProxyInterceptor.cs" />
     <Compile Include="DynamicProxyService\DynamicProxyManager.cs" />
+    <Compile Include="EiapModule.cs" />
     <Compile Include="EntityService\DefaultEntity.cs" />
     <Compile Include="EntityService\CreationAuditedEntity.cs" />
     <Compile Include="EntityService\ModifyAuditedEntity.cs" />
