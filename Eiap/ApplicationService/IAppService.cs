@@ -16,5 +16,10 @@ namespace Eiap
         /// 对象转换接口
         /// </summary>
         IDTOMapper Mapper { get; set; }
+
+        /// <summary>
+        /// 应用程序配置
+        /// </summary>
+        IConfigurationManager Config { get; set; }
     }
 }

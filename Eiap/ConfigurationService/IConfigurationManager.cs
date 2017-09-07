@@ -4,7 +4,7 @@ namespace Eiap
     /// <summary>
     /// 配置信息管理接口
     /// </summary>
-    public interface IConfigurationManager: ISingletonDependency, IDynamicProxyDisable
+    public interface IConfigurationManager: ISingletonDependency, IPropertyDependency, IDynamicProxyDisable
     {
         /// <summary>
         /// 当前配置的环境
