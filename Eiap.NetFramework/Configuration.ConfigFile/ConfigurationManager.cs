@@ -14,7 +14,6 @@ namespace Eiap.NetFramework
             }
         }
 
-
         /// <summary>
         /// 注册配置
         /// </summary>
@@ -23,7 +22,6 @@ namespace Eiap.NetFramework
         {
             
         }
-
 
         /// <summary>
         /// 获取配置值

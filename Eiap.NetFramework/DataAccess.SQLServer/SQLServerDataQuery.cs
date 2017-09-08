@@ -20,7 +20,10 @@ namespace Eiap.NetFramework
             IDataReader dr = null;
             try
             {
+                CreateSQLDataQueryDataAccessConnection();
+                _SQLDataAccessConnection.Create();
                 IDbCommand _DbCommand = _SQLDataAccessConnection.CreateCommand();
+                _SQLDataAccessConnection.DBOpen();
                 dr = _DbCommand.ExcuteCommand<IDataReader>(_DbCommand.ExecuteReader, cmdText, cmdType, paramters);
             }
             catch (Exception ex)
@@ -42,12 +45,18 @@ namespace Eiap.NetFramework
             object retuObj = null;
             try
             {
+                CreateSQLDataQueryDataAccessConnection();
+                _SQLDataAccessConnection.Create();
                 IDbCommand _DbCommand = _SQLDataAccessConnection.CreateCommand();
                 retuObj = _DbCommand.ExcuteCommand<object>(_DbCommand.ExecuteScalar, cmdText, cmdType, paramters);
             }
             catch (Exception ex)
             {
                 throw ex;
+            }
+            finally
+            {
+                _SQLDataAccessConnection.DBClose();
             }
             return retuObj;
         }
@@ -60,6 +69,14 @@ namespace Eiap.NetFramework
             }
 
             get { return _SQLDataAccessConnection; }
+        }
+
+        private void CreateSQLDataQueryDataAccessConnection()
+        {
+            if (_SQLDataAccessConnection == null)
+            {
+                _SQLDataAccessConnection = (ISQLDataQueryDataAccessConnection)DependencyManager.Instance.Resolver(typeof(ISQLDataQueryDataAccessConnection));
+            }
         }
     }
 }

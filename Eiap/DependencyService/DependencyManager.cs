@@ -234,9 +234,9 @@ namespace Eiap
                     }
                     t = obj;
                     #region  属性注入
-                    if (t != null && objtype != null)
+                    if (t != null)
                     {
-                        PropertyInfo[] propList = objtype.GetProperties();
+                        PropertyInfo[] propList = t.GetType().GetProperties();
                         foreach (PropertyInfo propInfo in propList)
                         {
                             if ((typeof(IRealtimeDependency).IsAssignableFrom(propInfo.PropertyType) || typeof(ISingletonDependency).IsAssignableFrom(propInfo.PropertyType) || typeof(IContextDependency).IsAssignableFrom(propInfo.PropertyType)) && typeof(IPropertyDependency).IsAssignableFrom(propInfo.PropertyType))

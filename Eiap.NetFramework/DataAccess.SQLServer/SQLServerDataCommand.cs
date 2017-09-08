@@ -15,16 +15,19 @@ namespace Eiap.NetFramework
         /// <param name="cmdType">执行类型</param>
         /// <param name="paramters">SQL参数</param>
         /// <returns>返回影响行数</returns>
-        public virtual int ExcuteNonQuery(string cmdText, System.Data.CommandType cmdType, System.Data.IDataParameter[] paramters)
+        public virtual int ExcuteNonQuery(string cmdText, CommandType cmdType,IDataParameter[] paramters)
         {
             int res = 0;
             try
             {
+                CreateSQLCommandDataAccessConnection();
+                _SQLDataAccessConnection.Create();
                 IDbCommand _DbCommand = _SQLDataAccessConnection.CreateCommand();
                 if (_SQLDataAccessConnection.IsTransaction)
                 {
                     _DbCommand.Transaction = _SQLDataAccessConnection.GetTransaction();
                 }
+                _SQLDataAccessConnection.DBOpen();
                 res = _DbCommand.ExcuteCommand<int>(_DbCommand.ExecuteNonQuery, cmdText, cmdType, paramters);
             }
             catch (Exception ex)
@@ -34,6 +37,10 @@ namespace Eiap.NetFramework
                     _SQLDataAccessConnection.Rollback();
                 }
                 throw ex;
+            }
+            finally
+            {
+                _SQLDataAccessConnection.DBClose();
             }
             return res;
         }
@@ -46,6 +53,14 @@ namespace Eiap.NetFramework
             }
 
             get { return _SQLDataAccessConnection; }
+        }
+
+        private void CreateSQLCommandDataAccessConnection()
+        {
+            if (_SQLDataAccessConnection == null)
+            {
+                _SQLDataAccessConnection = (ISQLCommandDataAccessConnection)DependencyManager.Instance.Resolver(typeof(ISQLCommandDataAccessConnection));
+            }
         }
     }
 }

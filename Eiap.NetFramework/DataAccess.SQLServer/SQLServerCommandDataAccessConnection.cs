@@ -68,6 +68,7 @@ namespace Eiap.NetFramework
             {
                 _IsTransaction = false;
                 _DbConnection.Close();
+                _DbConnection.Dispose();
             }
         }
 

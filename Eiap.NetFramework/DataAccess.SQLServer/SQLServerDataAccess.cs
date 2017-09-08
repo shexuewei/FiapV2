@@ -29,6 +29,7 @@ namespace Eiap.Framework.DataFramework
             int res = 0;
             try
             {
+                _SQLDataAccessConnection.Create();
                 _SQLDataAccessConnection.DBOpen();
                 IDbCommand _DbCommand = _SQLDataAccessConnection.CreateCommand();
                 if (_SQLDataAccessConnection.IsTransaction)
