@@ -4,6 +4,9 @@ using System.Data;
 
 namespace Eiap.NetFramework
 {
+    /// <summary>
+    /// 数据查询
+    /// </summary>
     public class SQLServerDataQuery : ISQLDataQuery
     {
         private ISQLDataQueryDataAccessConnection _SQLDataAccessConnection;
@@ -61,6 +64,9 @@ namespace Eiap.NetFramework
             return retuObj;
         }
 
+        /// <summary>
+        /// 数据库链接
+        /// </summary>
         public virtual ISQLDataQueryDataAccessConnection SQLDataAccessConnection
         {
             set
@@ -71,6 +77,9 @@ namespace Eiap.NetFramework
             get { return _SQLDataAccessConnection; }
         }
 
+        /// <summary>
+        /// 创建数据库链接
+        /// </summary>
         private void CreateSQLDataQueryDataAccessConnection()
         {
             if (_SQLDataAccessConnection == null)

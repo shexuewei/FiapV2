@@ -30,6 +30,9 @@ namespace Eiap.NetFramework
             set { _ConnectionString = value; }
         }
 
+        /// <summary>
+        /// 创建数据库链接
+        /// </summary>
         public virtual void Create()
         {
             try

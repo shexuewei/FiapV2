@@ -51,6 +51,12 @@
     <Compile Include="DataAccess.SQLServer\SQLServerDataQueryDataAccessConnection.cs" />
     <Compile Include="DataAccess.SQLServer\SQLServerQuery.cs" />
     <Compile Include="DataAccess.SQLServer\SQLServerQueryDataAccessConnection.cs" />
+    <Compile Include="DataMapping.SQLServer\DataDescription.cs" />
+    <Compile Include="DataMapping.SQLServer\DataExtension.cs" />
+    <Compile Include="DataMapping.SQLServer\DataManager.cs" />
+    <Compile Include="DataMapping.SQLServer\SQLDataMappingExtension.cs" />
+    <Compile Include="DataMapping.SQLServer\SQLServerCommandMapping.cs" />
+    <Compile Include="DataMapping.SQLServer\SQLServerQueryMapping.cs" />
     <Compile Include="EiapNetFrameworkModule.cs" />
     <Compile Include="Logging.LocalFile\ILoggerConfigeration.cs" />
     <Compile Include="Logging.LocalFile\Logger.cs" />
@@ -73,5 +79,6 @@
       <Name>Eiap</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

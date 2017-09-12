@@ -9,9 +9,7 @@ namespace Eiap
     /// </summary>
     /// <typeparam name="tEntity"></typeparam>
     /// <typeparam name="TPrimarykey"></typeparam>
-    public interface ISQLDataMappingExtension<tEntity, TPrimarykey> : IRealtimeDependency, IDynamicProxyDisable
-        where tEntity : IEntity<TPrimarykey>
-        where TPrimarykey : struct
+    public interface ISQLDataMappingExtension : IRealtimeDependency, IDynamicProxyDisable
     {
         /// <summary>
         /// 根据表达式获取操作符
@@ -26,6 +24,6 @@ namespace Eiap
         /// <param name="entity"></param>
         /// <param name="index"></param>
         /// <returns></returns>
-        IDataParameter[] GetDataParameter(tEntity entity, int index = 0);
+        IDataParameter[] GetDataParameter(IEntity entity, int index = 0);
     }
 }

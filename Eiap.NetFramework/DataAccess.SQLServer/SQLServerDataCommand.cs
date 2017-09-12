@@ -15,7 +15,7 @@ namespace Eiap.NetFramework
         /// <param name="cmdType">执行类型</param>
         /// <param name="paramters">SQL参数</param>
         /// <returns>返回影响行数</returns>
-        public virtual int ExcuteNonQuery(string cmdText, CommandType cmdType,IDataParameter[] paramters)
+        public virtual int ExcuteNonQuery(string cmdText, CommandType cmdType, IDataParameter[] paramters)
         {
             int res = 0;
             try
@@ -45,6 +45,9 @@ namespace Eiap.NetFramework
             return res;
         }
 
+        /// <summary>
+        /// 数据库链接
+        /// </summary>
         public virtual ISQLCommandDataAccessConnection SQLDataAccessConnection
         {
             set
@@ -55,6 +58,9 @@ namespace Eiap.NetFramework
             get { return _SQLDataAccessConnection; }
         }
 
+        /// <summary>
+        /// 创建数据库链接
+        /// </summary>
         private void CreateSQLCommandDataAccessConnection()
         {
             if (_SQLDataAccessConnection == null)

@@ -11,8 +11,12 @@ namespace Eiap.Test.Controllers
         [HttpGet]
         public string SQLDataCommandTest()
         {
-            ISQLDataCommand test = (ISQLDataCommand)DependencyManager.Instance.Resolver(typeof(ISQLDataCommand));
-            int res = test.ExcuteNonQuery("insert into student values('Sxw'," + DateTime.Now.Millisecond.ToString() + ",'1984-03-02 00:00:00')", CommandType.Text, null);
+            int res = 0;
+            for (int i = 0; i < 100; i++)
+            {
+                ISQLDataCommand test = (ISQLDataCommand)DependencyManager.Instance.Resolver(typeof(ISQLDataCommand));
+                res += test.ExcuteNonQuery("insert into student values('Sxw'," + DateTime.Now.Millisecond.ToString() + ",'1984-03-02 00:00:00')", CommandType.Text, null);
+            }
             return res.ToString();
         }
 
@@ -21,7 +25,7 @@ namespace Eiap.Test.Controllers
         {
             ISQLDataQuery test = (ISQLDataQuery)DependencyManager.Instance.Resolver(typeof(ISQLDataQuery));
             StringBuilder res = new StringBuilder();
-            using (IDataReader reader = test.ExcuteGetDataReader("select top 100 * from student", CommandType.Text, null))
+            using (IDataReader reader = test.ExcuteGetDataReader("select top 10000 * from student", CommandType.Text, null))
             {
                 int rownum = 0;
                 int column = 3;
@@ -36,6 +40,35 @@ namespace Eiap.Test.Controllers
                     res.Append("\r\n");
                 }
             }
+            return res.ToString();
+        }
+
+        [HttpGet]
+        public string SQLQueryTest()
+        {
+            ISQLQuery test = (ISQLQuery)DependencyManager.Instance.Resolver(typeof(ISQLQuery));
+            StringBuilder res = new StringBuilder();
+            DataSet dataset = test.ExcuteGetDateSet("select top 100 * from student", CommandType.Text, null);
+            foreach (DataRow dr in dataset.Tables[0].Rows)
+            {
+                int rownum = 0;
+                int column = 3;
+                rownum++;
+                res.Append(rownum + ":");
+                for (int i = 0; i < column; i++)
+                {
+                    res.Append(dr[i].ToString() + "_");
+                }
+            }
+            return res.ToString();
+        }
+
+        [HttpPost]
+        public string SQLCommandMappingTest(Student student)
+        {
+
+            ISQLCommandMapping<Student,int> test = (ISQLCommandMapping<Student, int>)DependencyManager.Instance.Resolver(typeof(ISQLCommandMapping<Student, int>));
+            int res = test.InsertEntity(student);
             return res.ToString();
         }
     }
