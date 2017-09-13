@@ -6,7 +6,7 @@ using System.Data.SqlClient;
 
 namespace Eiap.NetFramework
 {
-    public class SQLServerQuery : ISQLQuery
+    public class SQLServerQuery : ISQLQuery,IDisposable
     {
         private ISQLQueryDataAccessConnection _ReadSQLDataAccessConnection;
 
@@ -59,6 +59,16 @@ namespace Eiap.NetFramework
             return ds;
         }
 
+        /// <summary>
+        /// 释放资源
+        /// </summary>
+        public void Dispose()
+        {
+            if (_ReadSQLDataAccessConnection != null)
+            {
+                _ReadSQLDataAccessConnection.Dispose();
+            }
+        }
 
         public virtual string SetConnectionString
         {

@@ -160,5 +160,13 @@ namespace Eiap.Framework
             }
             return eff;
         }
+
+        public void Dispose()
+        {
+            if (_SQLDataCommand != null)
+            {
+                _SQLDataCommand.Dispose();
+            }
+        }
     }
 }

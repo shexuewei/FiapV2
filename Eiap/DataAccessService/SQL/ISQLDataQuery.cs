@@ -1,4 +1,5 @@
 ﻿
+using System;
 using System.Data;
 
 namespace Eiap
@@ -6,7 +7,7 @@ namespace Eiap
     /// <summary>
     /// SQL数据库查询接口
     /// </summary>
-    public interface ISQLDataQuery : IRealtimeDependency
+    public interface ISQLDataQuery : IRealtimeDependency, IDisposable
     {
 
         /// <summary>

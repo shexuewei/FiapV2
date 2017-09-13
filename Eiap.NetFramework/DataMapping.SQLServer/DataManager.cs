@@ -70,25 +70,21 @@ namespace Eiap.Framework
         private string GetInsertSQL(DataDescription datadescription, Type t)
         {
             string sql = "insert into " + datadescription.TableName + " ({0}) values ({1});";
-            PropertyInfo[] pi = t.GetProperties().Where(m => !m.IsComplexClass() && m.PropertyType.Name == typeof(int).Name).ToArray();
+            PropertyInfo[] pi = t.GetProperties().Where(m => !m.IsPrimaryKey() && !m.IsComplexClass()).ToArray();
             StringBuilder fields = new StringBuilder();
             StringBuilder values = new StringBuilder();
             int index = -1;
             foreach (PropertyInfo info in pi)
             {
                 index++;
-                if (!info.IsComplexClass())
+                fields.Append(info.GetColumnName(datadescription.TableName));
+                values.Append("@");
+                values.Append(info.Name);
+                values.Append("_{0}");
+                if (index != pi.Length - 1)
                 {
-                    fields.Append(info.GetColumnName(datadescription.TableName));
-                    values.Append("@");
-                    values.Append(info.Name);
-                    values.Append("_{0}");
-                    if (index != pi.Length - 1)
-                    {
-                        fields.Append(",");
-                        values.Append(",");
-                    }
-
+                    fields.Append(",");
+                    values.Append(",");
                 }
             }
             return string.Format(sql, fields.ToString(), values.ToString());

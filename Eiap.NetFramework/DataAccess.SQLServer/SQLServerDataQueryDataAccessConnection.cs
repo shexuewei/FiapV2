@@ -56,7 +56,7 @@ namespace Eiap.NetFramework
             {
                 _IsTransaction = false;
                 _DbConnection.Close();
-                _DbConnection.Dispose();
+                //_DbConnection.Dispose();
             }
         }
 
@@ -124,6 +124,17 @@ namespace Eiap.NetFramework
             {
                 //TODO:抛出自定义异常
                 throw new Exception("DbTransaction Is Null");
+            }
+        }
+
+        /// <summary>
+        /// 释放资源
+        /// </summary>
+        public void Dispose()
+        {
+            if (_DbConnection != null)
+            {
+                _DbConnection.Dispose();
             }
         }
     }

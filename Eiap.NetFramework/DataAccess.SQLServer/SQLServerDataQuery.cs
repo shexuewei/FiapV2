@@ -87,5 +87,16 @@ namespace Eiap.NetFramework
                 _SQLDataAccessConnection = (ISQLDataQueryDataAccessConnection)DependencyManager.Instance.Resolver(typeof(ISQLDataQueryDataAccessConnection));
             }
         }
+
+        /// <summary>
+        /// 释放资源
+        /// </summary>
+        public void Dispose()
+        {
+            if (_SQLDataAccessConnection != null)
+            {
+                _SQLDataAccessConnection.Dispose();
+            }
+        }
     }
 }

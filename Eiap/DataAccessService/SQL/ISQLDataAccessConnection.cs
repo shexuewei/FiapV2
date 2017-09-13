@@ -1,4 +1,5 @@
 ﻿
+using System;
 using System.Data;
 
 namespace Eiap
@@ -6,7 +7,7 @@ namespace Eiap
     /// <summary>
     /// SQL链接接口
     /// </summary>
-    public interface ISQLDataAccessConnection : IRealtimeDependency, IDynamicProxyDisable
+    public interface ISQLDataAccessConnection : IRealtimeDependency, IDynamicProxyDisable, IDisposable
     {
         /// <summary>
         /// 创建数据库链接

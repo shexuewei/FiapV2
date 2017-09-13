@@ -342,6 +342,14 @@ namespace Eiap.Framework
             return DataManager.Instance.GetDataDescription(typeof(tEntity)).PrimaryKeyParameterName;
         }
 
+        public void Dispose()
+        {
+            if (_ReadSQLDataAccessConnection != null )
+            {
+                _ReadSQLDataAccessConnection.Dispose();
+            }
+        }
+
         private void InitializationParameter()
         {
             PropertyInfoList.Clear();

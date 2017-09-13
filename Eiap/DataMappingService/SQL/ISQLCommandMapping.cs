@@ -1,4 +1,5 @@
 ﻿
+using System;
 using System.Collections.Generic;
 
 namespace Eiap
@@ -8,7 +9,7 @@ namespace Eiap
     /// </summary>
     /// <typeparam name="tEntity"></typeparam>
     /// <typeparam name="TPrimarykey"></typeparam>
-    public interface ISQLCommandMapping<tEntity, TPrimarykey> : IRealtimeDependency,IDynamicProxyDisable
+    public interface ISQLCommandMapping<tEntity, TPrimarykey> : IRealtimeDependency,IDynamicProxyDisable, IDisposable
         where tEntity : IEntity<TPrimarykey>
         where TPrimarykey : struct
     {
