@@ -60,7 +60,7 @@ namespace Eiap.Framework
             try
             {
                 string deleteSql = string.Format(GetDeleteSQL(), _DefaultIndex.ToString());
-                IDataParameter[] para = new SqlParameter[] { new SqlParameter() { ParameterName = "@" + GetPrimaryKeyName() + "_" + _DefaultIndex, Value = Id } };
+                IDataParameter[] para = new SqlParameter[] { new SqlParameter() { ParameterName = "@" + PrimaryKeyParameterName() + "_" + _DefaultIndex, Value = Id } };
                 eff = _SQLDataCommand.ExcuteNonQuery(deleteSql, CommandType.Text, para);
             }
             catch (Exception ex)
@@ -94,6 +94,11 @@ namespace Eiap.Framework
         private string GetPrimaryKeyName()
         {
             return DataManager.Instance.GetDataDescription(typeof(tEntity)).PrimaryKeyName;
+        }
+
+        private string PrimaryKeyParameterName()
+        {
+            return DataManager.Instance.GetDataDescription(typeof(tEntity)).PrimaryKeyParameterName;
         }
 
 

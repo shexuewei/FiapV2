@@ -95,21 +95,18 @@ namespace Eiap.Framework
             StringBuilder sql = new StringBuilder("update ");
             sql.Append(datadescription.TableName);
             sql.Append(" set ");
-            PropertyInfo[] pi = t.GetProperties().Where(m => !m.IsPrimaryKey()).ToArray();
+            PropertyInfo[] pi = t.GetProperties().Where(m => !m.IsPrimaryKey() && !m.IsComplexClass()).ToArray();
             int index = -1;
             foreach (PropertyInfo info in pi)
             {
                 index++;
-                if (!info.IsComplexClass())
+                sql.Append(info.GetColumnName(datadescription.TableName));
+                sql.Append(" = @");
+                sql.Append(info.Name);
+                sql.Append("_{0}");
+                if (index != pi.Length - 1)
                 {
-                    sql.Append(info.GetColumnName(datadescription.TableName));
-                    sql.Append(" = @");
-                    sql.Append(info.Name);
-                    sql.Append("_{0}");
-                    if (index != pi.Length - 1)
-                    {
-                        sql.Append(",");
-                    }
+                    sql.Append(",");
                 }
             }
             return sql.ToString() + " where " + datadescription.PrimaryKeyName + " = @" + datadescription.PrimaryKeyParameterName + "_{0};";

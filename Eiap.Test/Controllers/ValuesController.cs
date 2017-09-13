@@ -70,7 +70,7 @@ namespace Eiap.Test.Controllers
         }
 
         [HttpPost]
-        public string SQLCommandMappingTest(Student student)
+        public string InsertEntitySQLCommandMappingTest(Student student)
         {
             int res = 0;
             using (ISQLCommandMapping<Student, int> test = (ISQLCommandMapping<Student, int>)DependencyManager.Instance.Resolver(typeof(ISQLCommandMapping<Student, int>)))
@@ -79,6 +79,28 @@ namespace Eiap.Test.Controllers
                 {
                     res += test.InsertEntity(student);
                 }
+            }
+            return res.ToString();
+        }
+
+        [HttpPost]
+        public string UpdateEntitySQLCommandMappingTest(Student student)
+        {
+            int res = 0;
+            using (ISQLCommandMapping<Student, int> test = (ISQLCommandMapping<Student, int>)DependencyManager.Instance.Resolver(typeof(ISQLCommandMapping<Student, int>)))
+            {
+                res = test.UpdateEntity(student);
+            }
+            return res.ToString();
+        }
+
+        [HttpGet]
+        public string DeleteEntitySQLCommandMappingTest(int id)
+        {
+            int res = 0;
+            using (ISQLCommandMapping<Student, int> test = (ISQLCommandMapping<Student, int>)DependencyManager.Instance.Resolver(typeof(ISQLCommandMapping<Student, int>)))
+            {
+                res = test.DeleteEntity(id);
             }
             return res.ToString();
         }
