@@ -80,5 +80,10 @@ namespace Eiap
         /// </summary>
         /// <returns></returns>
         ISQLDataQueryMapping<tEntity, TPrimarykey> Nolock();
+
+        /// <summary>
+        /// SQL查询链接接口
+        /// </summary>
+        ISQLDataQueryDataAccessConnection ReadSQLDataAccessConnection { get; set; }
     }
 }

@@ -24,6 +24,6 @@ namespace Eiap
         /// <param name="entity"></param>
         /// <param name="index"></param>
         /// <returns></returns>
-        IDataParameter[] GetDataParameter(IEntity entity, int index = 0);
+        IDataParameter[] GetDataParameter(IMethodManager methodManager, IEntity entity, int index = 0);
     }
 }

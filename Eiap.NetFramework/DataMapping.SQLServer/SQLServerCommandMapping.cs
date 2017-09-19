@@ -11,15 +11,17 @@ namespace Eiap.Framework
         where tEntity : IEntity<TPrimarykey>
         where TPrimarykey : struct
     {
-
         private readonly ISQLDataCommand _SQLDataCommand;
         private readonly ISQLDataMappingExtension _SQLDataMappingExtension;
+        private readonly IMethodManager _MethodManager;
         private int _DefaultIndex = 0;
+
         public SQLServerCommandMapping(ISQLDataCommand SQLDataCommand, 
-            ISQLDataMappingExtension SQLDataMappingExtension)
+            ISQLDataMappingExtension SQLDataMappingExtension, IMethodManager methodManager)
         {
             _SQLDataCommand = SQLDataCommand;
             _SQLDataMappingExtension = SQLDataMappingExtension;
+            _MethodManager = methodManager;
         }
 
         public virtual int InsertEntity(tEntity entity)
@@ -29,7 +31,7 @@ namespace Eiap.Framework
             try
             {
                 string insertSql = string.Format(GetInsertSQL(), _DefaultIndex.ToString());
-                IDataParameter[] para = _SQLDataMappingExtension.GetDataParameter(entity, _DefaultIndex);
+                IDataParameter[] para = _SQLDataMappingExtension.GetDataParameter(_MethodManager, entity, _DefaultIndex);
                 eff = _SQLDataCommand.ExcuteNonQuery(insertSql, CommandType.Text, para);
             }
             catch (Exception ex)
@@ -46,7 +48,7 @@ namespace Eiap.Framework
             try
             {
                 string updateSql = string.Format(GetUpdateSQL(), _DefaultIndex.ToString());
-                IDataParameter[] para = _SQLDataMappingExtension.GetDataParameter(entity, _DefaultIndex);
+                IDataParameter[] para = _SQLDataMappingExtension.GetDataParameter(_MethodManager, entity, _DefaultIndex);
                 eff = _SQLDataCommand.ExcuteNonQuery(updateSql, CommandType.Text, para);
             }
             catch (Exception ex)
@@ -115,7 +117,7 @@ namespace Eiap.Framework
                 for (int i = 0; i < tEntityList.Count; i++)
                 {
                     insertSql += string.Format(GetInsertSQL(), i.ToString());
-                    paraList.AddRange(_SQLDataMappingExtension.GetDataParameter(tEntityList[i], i));
+                    paraList.AddRange(_SQLDataMappingExtension.GetDataParameter(_MethodManager, tEntityList[i], i));
                 }
                 eff = _SQLDataCommand.ExcuteNonQuery(insertSql, CommandType.Text, paraList.ToArray());
             }
@@ -136,7 +138,7 @@ namespace Eiap.Framework
                 for (int i = 0; i < tEntityList.Count; i++)
                 {
                     updateSql += string.Format(GetUpdateSQL(), i.ToString());
-                    paraList.AddRange(_SQLDataMappingExtension.GetDataParameter(tEntityList[i], i));
+                    paraList.AddRange(_SQLDataMappingExtension.GetDataParameter(_MethodManager, tEntityList[i], i));
                 }
                 eff = _SQLDataCommand.ExcuteNonQuery(updateSql, CommandType.Text, paraList.ToArray());
             }

@@ -22,22 +22,21 @@ namespace Eiap.Framework
         private List<PropertyInfo> PropertyInfoList;
         private int _Top;
         private int _Skip;
-        private readonly ISQLDataQueryDataAccessConnection _ReadSQLDataAccessConnection;
         private bool _IsNolock;
         private const string RowIdName = "RowId";
         private readonly ISQLDataMappingExtension _SQLDataMappingExtension;
+        private readonly IMethodManager _MethodManager;
 
-        public SQLServerQueryMapping(ISQLDataQuery SQLDataQuery, 
-            ISQLDataQueryDataAccessConnection ReadSQLDataAccessConnection,
-            ISQLDataMappingExtension SQLDataMappingExtension)
+        public SQLServerQueryMapping(ISQLDataQuery SQLDataQuery,
+            ISQLDataMappingExtension SQLDataMappingExtension, IMethodManager methodManager)
         {
             _SQLDataQuery = SQLDataQuery;
             _SQLDataMappingExtension = SQLDataMappingExtension;
             _WhereExpressionList = new List<Expression>();
             _DataParameter = new List<IDataParameter>();
             _SqlOrderBy = "";
-            _ReadSQLDataAccessConnection = ReadSQLDataAccessConnection;
             _IsNolock = false;
+            _MethodManager = methodManager;
         }
 
         public virtual List<tEntity> GetEntityList()
@@ -54,9 +53,6 @@ namespace Eiap.Framework
             _Skip = _Skip + 1;
             string sql = (sqlSelect.Length == 0 ? GetSelectAllSQL() : sqlSelect).Replace("select", "") + " " + sqlJoin + " where 1 = 1 " + sqlWhere;
             sql = " with tmpTable as (select ROW_NUMBER() over(" + sqlOrderby + ") as " + RowIdName + ", " + sql + ") select * from tmpTable " + withNolock + " where " + RowIdName + " between " + _Skip + " and " + _Top;
-            _SQLDataQuery.SQLDataAccessConnection = _ReadSQLDataAccessConnection;
-            _ReadSQLDataAccessConnection.Create();
-            _ReadSQLDataAccessConnection.DBOpen();
             using (SqlDataReader dr = (SqlDataReader)_SQLDataQuery.ExcuteGetDataReader(sql, CommandType.Text, _DataParameter.ToArray()))
             {
                 while (dr.Read())
@@ -67,7 +63,6 @@ namespace Eiap.Framework
                 }
                 dr.Close();
             }
-            _ReadSQLDataAccessConnection.DBClose();
             InitializationParameter();
             return entityList;
         }
@@ -129,9 +124,6 @@ namespace Eiap.Framework
             string sqlSelect = GetSqlSelect(GetTableName());
             string sqlJoin = GetJoinSQL();
             string sql = (sqlSelect.Length == 0 ? GetSelectAllSQL() : sqlSelect) + sqlJoin + sqlOrderby;
-            _SQLDataQuery.SQLDataAccessConnection = _ReadSQLDataAccessConnection;
-            _ReadSQLDataAccessConnection.Create();
-            _ReadSQLDataAccessConnection.DBOpen();
             using (SqlDataReader dr = (SqlDataReader)_SQLDataQuery.ExcuteGetDataReader(sql, CommandType.Text, null))
             {
                 while (dr.Read())
@@ -142,7 +134,6 @@ namespace Eiap.Framework
                 }
                 dr.Close();
             }
-            _ReadSQLDataAccessConnection.DBClose();
             InitializationParameter();
             return entityList;
         }
@@ -152,9 +143,6 @@ namespace Eiap.Framework
             tEntity entity = (tEntity)Activator.CreateInstance(typeof(tEntity));
             PropertyInfoList = typeof(tEntity).GetProperties().ToList();
             IDataParameter[] para = new SqlParameter[] { new SqlParameter() { ParameterName = "@" + GetPrimaryKeyParameterName(), Value = Id } };
-            _SQLDataQuery.SQLDataAccessConnection = _ReadSQLDataAccessConnection;
-            _ReadSQLDataAccessConnection.Create();
-            _ReadSQLDataAccessConnection.DBOpen();
             using (SqlDataReader dr = (SqlDataReader)_SQLDataQuery.ExcuteGetDataReader(GetSelectSQL(), CommandType.Text, para))
             {
                 while (dr.Read())
@@ -163,7 +151,6 @@ namespace Eiap.Framework
                 }
                 dr.Close();
             }
-            _ReadSQLDataAccessConnection.DBClose();
             InitializationParameter();
             return entity;
         }
@@ -306,7 +293,8 @@ namespace Eiap.Framework
             {
                 if (!propertyinfo.IsComplexClass())
                 {
-                    propertyinfo.SetValue(entity, dr.GetValue(tmpcount).GetDefaultValue(propertyinfo.PropertyType.GetProType()), null);
+                    _MethodManager.MethodInvoke(entity, new object[] { dr.GetValue(tmpcount).GetDefaultValue(propertyinfo.PropertyType.GetProType()) }, propertyinfo.GetSetMethod(), propertyinfo.DeclaringType.FullName);
+                    //propertyinfo.SetValue(entity, dr.GetValue(tmpcount).GetDefaultValue(propertyinfo.PropertyType.GetProType()), null);
                     tmpcount++;
                 }
             }
@@ -344,9 +332,21 @@ namespace Eiap.Framework
 
         public void Dispose()
         {
-            if (_ReadSQLDataAccessConnection != null )
+            if (_SQLDataQuery != null )
             {
-                _ReadSQLDataAccessConnection.Dispose();
+                _SQLDataQuery.Dispose();
+            }
+        }
+
+        public ISQLDataQueryDataAccessConnection ReadSQLDataAccessConnection
+        {
+            get
+            {
+                return _SQLDataQuery.SQLDataAccessConnection;
+            }
+            set
+            {
+                _SQLDataQuery.SQLDataAccessConnection = value;
             }
         }
 

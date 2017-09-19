@@ -9,6 +9,7 @@ namespace Eiap.Test.Controllers
 {
     public class ValuesController : ApiController
     {
+        #region DataAccess
         [HttpGet]
         public string SQLDataCommandTest()
         {
@@ -69,7 +70,9 @@ namespace Eiap.Test.Controllers
             }
             return res.ToString();
         }
+        #endregion
 
+        #region DataMapping
         [HttpPost]
         public string InsertEntitySQLCommandMappingTest(Student student)
         {
@@ -152,5 +155,28 @@ namespace Eiap.Test.Controllers
             }
             return res.ToString();
         }
+
+        [HttpGet]
+        public string SQLDataQueryGetEntityAllListMappingTest()
+        {
+            List<Student> list = null;
+            using (ISQLDataQueryMapping<Student, int> test = (ISQLDataQueryMapping<Student, int>)DependencyManager.Instance.Resolver(typeof(ISQLDataQueryMapping<Student, int>)))
+            {
+                list = test.GetEntityAllList();
+            }
+            return "";
+        }
+
+        [HttpGet]
+        public string SQLDataQueryGetEntityListMappingTest()
+        {
+            List<Student> list = null;
+            using (ISQLDataQueryMapping<Student, int> test = (ISQLDataQueryMapping<Student, int>)DependencyManager.Instance.Resolver(typeof(ISQLDataQueryMapping<Student, int>)))
+            {
+                list = test.GetEntityList();
+            }
+            return "";
+        }
+        #endregion
     }
 }

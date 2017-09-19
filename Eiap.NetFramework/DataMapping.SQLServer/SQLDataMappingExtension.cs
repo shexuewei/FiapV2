@@ -33,13 +33,13 @@ namespace Eiap.Framework
             }
         }
 
-        public IDataParameter[] GetDataParameter(IEntity entity, int index = 0)
+        public IDataParameter[] GetDataParameter(IMethodManager methodManager, IEntity entity, int index = 0)
         {
             PropertyInfo[] pi = entity.GetType().GetProperties().Where(prop => !prop.IsComplexClass()).ToArray();
             IDataParameter[] para = new SqlParameter[pi.Length];
             for (int i = 0; i < pi.Length; i++)
             {
-                object objvalue = pi[i].GetValue(entity, null);
+                object objvalue = methodManager.MethodInvoke(entity, new object[] { }, pi[i].GetGetMethod(), pi[i].DeclaringType.FullName); //pi[i].GetValue(entity, null);
                 if (objvalue == null)
                 {
 
