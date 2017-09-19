@@ -14,7 +14,7 @@ namespace Eiap.Framework
 
         private readonly ISQLDataCommand _SQLDataCommand;
         private readonly ISQLDataMappingExtension _SQLDataMappingExtension;
-        private const int _DefaultIndex = 0;
+        private int _DefaultIndex = 0;
         public SQLServerCommandMapping(ISQLDataCommand SQLDataCommand, 
             ISQLDataMappingExtension SQLDataMappingExtension)
         {
@@ -25,6 +25,7 @@ namespace Eiap.Framework
         public virtual int InsertEntity(tEntity entity)
         {
             int eff = 0;
+            _DefaultIndex = 0;
             try
             {
                 string insertSql = string.Format(GetInsertSQL(), _DefaultIndex.ToString());
@@ -41,6 +42,7 @@ namespace Eiap.Framework
         public virtual int UpdateEntity(tEntity entity)
         {
             int eff = 0;
+            _DefaultIndex = 0;
             try
             {
                 string updateSql = string.Format(GetUpdateSQL(), _DefaultIndex.ToString());
@@ -57,6 +59,7 @@ namespace Eiap.Framework
         public virtual int DeleteEntity(TPrimarykey Id)
         {
             int eff = 0;
+            _DefaultIndex = 0;
             try
             {
                 string deleteSql = string.Format(GetDeleteSQL(), _DefaultIndex.ToString());
@@ -149,12 +152,13 @@ namespace Eiap.Framework
             int eff = 0;
             string deleteSql = "";
             List<IDataParameter> paraList = new List<IDataParameter>();
+            _DefaultIndex = 0;
             try
             {
-                for (int i = 0; i < idList.Count; i++)
+                for (int i = 0; i < idList.Count; i++, _DefaultIndex++)
                 {
                     deleteSql += string.Format(GetDeleteSQL(), i.ToString());
-                    paraList.Add(new SqlParameter() { ParameterName = "@" + GetPrimaryKeyName() + "_" + _DefaultIndex, Value = idList[i] });
+                    paraList.Add(new SqlParameter() { ParameterName = "@" + PrimaryKeyParameterName() + "_" + _DefaultIndex, Value = idList[i] });
                 }
 
                 eff = _SQLDataCommand.ExcuteNonQuery(deleteSql, CommandType.Text, paraList.ToArray());

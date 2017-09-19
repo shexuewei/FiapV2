@@ -1,5 +1,6 @@
 ﻿
 using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Text;
 using System.Web.Http;
@@ -101,6 +102,53 @@ namespace Eiap.Test.Controllers
             using (ISQLCommandMapping<Student, int> test = (ISQLCommandMapping<Student, int>)DependencyManager.Instance.Resolver(typeof(ISQLCommandMapping<Student, int>)))
             {
                 res = test.DeleteEntity(id);
+            }
+            return res.ToString();
+        }
+
+        [HttpPost]
+        public string BatchInsertEntitySQLCommandMappingTest(Student student)
+        {
+            int res = 0;
+            List<Student> list = new List<Student>();
+            list.Add(student);
+            list.Add(student);
+            list.Add(student);
+            list.Add(student);
+            using (ISQLCommandMapping<Student, int> test = (ISQLCommandMapping<Student, int>)DependencyManager.Instance.Resolver(typeof(ISQLCommandMapping<Student, int>)))
+            {
+                for (int i = 0; i < 100; i++)
+                {
+                    res += test.BatchInsertEntity(list);
+                }
+            }
+            return res.ToString();
+        }
+
+        [HttpGet]
+        public string BatchUpdateEntitySQLCommandMappingTest()
+        {
+            int res = 0;
+            List<Student> list = new List<Student>();
+            list.Add(new Student { Id=2, Age = 10 });
+            list.Add(new Student {Id =3, Age = 20 });
+            list.Add(new Student { Id = 4, Age = 30 });
+            list.Add(new Student { Id = 5, Age = 40 });
+            using (ISQLCommandMapping<Student, int> test = (ISQLCommandMapping<Student, int>)DependencyManager.Instance.Resolver(typeof(ISQLCommandMapping<Student, int>)))
+            {
+                res = test.BatchUpdateEntity(list);
+            }
+            return res.ToString();
+        }
+
+        [HttpGet]
+        public string BatchDeleteEntitySQLCommandMappingTest()
+        {
+            int res = 0;
+            List<int> list = new List<int> { 2, 3, 4, 5 };
+            using (ISQLCommandMapping<Student, int> test = (ISQLCommandMapping<Student, int>)DependencyManager.Instance.Resolver(typeof(ISQLCommandMapping<Student, int>)))
+            {
+                res = test.BatchDeleteEntity(list);
             }
             return res.ToString();
         }
