@@ -45,7 +45,6 @@
     <Compile Include="Configuration.ConfigFile\ConfigurationManager.cs" />
     <Compile Include="DataAccess.SQLServer\DataAccessConnectionString.cs" />
     <Compile Include="DataAccess.SQLServer\SQLServerCommandDataAccessConnection.cs" />
-    <Compile Include="DataAccess.SQLServer\SQLServerDataAccess.cs" />
     <Compile Include="DataAccess.SQLServer\SQLServerDataCommand.cs" />
     <Compile Include="DataAccess.SQLServer\SQLServerDataQuery.cs" />
     <Compile Include="DataAccess.SQLServer\SQLServerDataQueryDataAccessConnection.cs" />
