@@ -173,8 +173,20 @@ namespace Eiap.Test.Controllers
             List<Student> list = null;
             using (ISQLDataQueryMapping<Student, int> test = (ISQLDataQueryMapping<Student, int>)DependencyManager.Instance.Resolver(typeof(ISQLDataQueryMapping<Student, int>)))
             {
-                list = test.GetEntityList();
+                list = test
+                    .Where(m => m.Age > 200)
+                    .OrderByDesc(m => m.Birthday)
+                    .Top(20).Skip(10)
+                    .Select(m => new Student { Birthday = m.Birthday })
+                    .GetEntityList();
             }
+            return "";
+        }
+
+        [HttpGet]
+        public string SQLDataQueryGetEntityListJoinMappingTest()
+        {
+            
             return "";
         }
         #endregion
