@@ -24,21 +24,35 @@ namespace Eiap.Framework
             _MethodManager = methodManager;
         }
 
-        public virtual int InsertEntity(tEntity entity)
+        public virtual tEntity InsertEntity(tEntity entity)
         {
-            int eff = 0;
+            TPrimarykey eff = default(TPrimarykey);
             _DefaultIndex = 0;
             try
             {
+                if (typeof(TPrimarykey) == typeof(Guid))
+                {
+                    Guid newId = Guid.NewGuid();
+                    entity.Id = (TPrimarykey)Convert.ChangeType(newId, typeof(TPrimarykey));
+                }
                 string insertSql = string.Format(GetInsertSQL(), _DefaultIndex.ToString());
                 IDataParameter[] para = _SQLDataMappingExtension.GetDataParameter(_MethodManager, entity, _DefaultIndex);
-                eff = _SQLDataCommand.ExcuteNonQuery(insertSql, CommandType.Text, para);
+                if (typeof(TPrimarykey) == typeof(int) || typeof(TPrimarykey) == typeof(long))
+                {
+                    eff = _SQLDataCommand.ExcuteNonQuery<TPrimarykey>(insertSql, CommandType.Text, para);
+                    entity.Id = eff;
+                }
+                else 
+                {
+                    _SQLDataCommand.ExcuteNonQuery(insertSql, CommandType.Text, para);
+                }
+                
             }
             catch (Exception ex)
             {
                 throw ex;
             }
-            return eff;
+            return entity;
         }
 
         public virtual int UpdateEntity(tEntity entity)

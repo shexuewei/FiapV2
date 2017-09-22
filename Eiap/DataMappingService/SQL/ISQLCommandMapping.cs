@@ -18,7 +18,7 @@ namespace Eiap
         /// </summary>
         /// <param name="t"></param>
         /// <returns></returns>
-        int InsertEntity(tEntity t);
+        tEntity InsertEntity(tEntity t);
 
         /// <summary>
         /// 更新实体

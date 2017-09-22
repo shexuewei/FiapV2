@@ -69,8 +69,8 @@ namespace Eiap.Framework
 
         private string GetInsertSQL(DataDescription datadescription, Type t)
         {
-            string sql = "insert into " + datadescription.TableName + " ({0}) values ({1});";
-            PropertyInfo[] pi = t.GetProperties().Where(m => !m.IsPrimaryKey() && !m.IsComplexClass()).ToArray();
+            string sql = "insert into " + datadescription.TableName + " ({0}) values ({1});select @@IDENTITY;";
+            PropertyInfo[] pi = t.GetProperties().Where(m => (!m.IsPrimaryKey() || (m.IsPrimaryKey() && typeof(Guid) == m.PropertyType)) && !m.IsComplexClass()).ToArray();
             StringBuilder fields = new StringBuilder();
             StringBuilder values = new StringBuilder();
             int index = -1;

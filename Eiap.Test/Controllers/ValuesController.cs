@@ -73,18 +73,20 @@ namespace Eiap.Test.Controllers
         #endregion
 
         #region DataMapping
-        [HttpPost]
-        public string InsertEntitySQLCommandMappingTest(Student student)
+        [HttpGet]
+        public void InsertEntitySQLCommandMappingTest()
         {
-            int res = 0;
-            using (ISQLCommandMapping<Student, int> test = (ISQLCommandMapping<Student, int>)DependencyManager.Instance.Resolver(typeof(ISQLCommandMapping<Student, int>)))
+            School school = new School { Name = "School1" };
+            using (ISQLCommandMapping<School, int> test = (ISQLCommandMapping<School, int>)DependencyManager.Instance.Resolver(typeof(ISQLCommandMapping<School, int>)))
             {
-                for (int i = 0; i < 100; i++)
-                {
-                    res += test.InsertEntity(student);
-                }
+                school = test.InsertEntity(school);
             }
-            return res.ToString();
+
+            SchoolGuid schoolguid = new SchoolGuid { Name = "SchoolGuid1" };
+            using (ISQLCommandMapping<SchoolGuid, Guid> test = (ISQLCommandMapping<SchoolGuid, Guid>)DependencyManager.Instance.Resolver(typeof(ISQLCommandMapping<SchoolGuid, Guid>)))
+            {
+                schoolguid = test.InsertEntity(schoolguid);
+            }
         }
 
         [HttpPost]
@@ -109,23 +111,17 @@ namespace Eiap.Test.Controllers
             return res.ToString();
         }
 
-        [HttpPost]
-        public string BatchInsertEntitySQLCommandMappingTest(Student student)
+        [HttpGet]
+        public void BatchInsertEntitySQLCommandMappingTest()
         {
-            int res = 0;
-            List<Student> list = new List<Student>();
-            list.Add(student);
-            list.Add(student);
-            list.Add(student);
-            list.Add(student);
-            using (ISQLCommandMapping<Student, int> test = (ISQLCommandMapping<Student, int>)DependencyManager.Instance.Resolver(typeof(ISQLCommandMapping<Student, int>)))
+            School school = new School { Name = "School1" };
+            using (ISQLCommandMapping<School, int> test = (ISQLCommandMapping<School, int>)DependencyManager.Instance.Resolver(typeof(ISQLCommandMapping<School, int>)))
             {
                 for (int i = 0; i < 100; i++)
                 {
-                    res += test.BatchInsertEntity(list);
+                    test.InsertEntity(school);
                 }
             }
-            return res.ToString();
         }
 
         [HttpGet]
