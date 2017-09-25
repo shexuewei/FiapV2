@@ -7,6 +7,7 @@ namespace Eiap.NetFramework
     public class DataAccessConnectionString : ISQLDataAccessConnectionString
     {
         private readonly IConfigurationManager _ConfigurationManager;
+
         public DataAccessConnectionString(IConfigurationManager configurationManager)
         {
             _ConfigurationManager = configurationManager;

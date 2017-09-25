@@ -10,6 +10,8 @@ namespace Eiap.NetFramework
     {
         private ISQLQueryDataAccessConnection _ReadSQLDataAccessConnection;
 
+        public ILogger Logger { get; set; }
+
         public SQLServerQuery(ISQLQueryDataAccessConnection ReadSQLDataAccessConnection)
         {
             _ReadSQLDataAccessConnection = ReadSQLDataAccessConnection;
@@ -67,14 +69,6 @@ namespace Eiap.NetFramework
             if (_ReadSQLDataAccessConnection != null)
             {
                 _ReadSQLDataAccessConnection.Dispose();
-            }
-        }
-
-        public virtual string SetConnectionString
-        {
-            set 
-            { 
-                _ReadSQLDataAccessConnection.ConnectionString = value; 
             }
         }
     }

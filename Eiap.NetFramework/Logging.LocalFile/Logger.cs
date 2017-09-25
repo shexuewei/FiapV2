@@ -22,6 +22,37 @@ namespace Eiap.NetFramework
         }
 
         /// <summary>
+        /// 根据日志级别输出
+        /// </summary>
+        /// <param name="message">日志内容</param>
+        /// <param name="logKey">日志Key</param>
+        /// <param name="logSource">日志来源</param>
+        /// <param name="logName">日志名称</param>
+        /// <param name="logTrace">日志跟踪对象</param>
+        /// <param name="level"></param>
+        public void Print(string message, string logKey, LogLevel level = LogLevel.INFO, int logSource = 0, string logName = null, LoggerTrace logTrace = null)
+        {
+            switch (level)
+            {
+                case LogLevel.DEBUG:
+                    Debug(message, logKey, logSource, logName, logTrace);
+                    break;
+                case LogLevel.ERROR:
+                    Error(message, logKey, logSource, logName, logTrace);
+                    break;
+                case LogLevel.FATAL:
+                    Fatal(message, logKey, logSource, logName, logTrace);
+                    break;
+                case LogLevel.INFO:
+                    Info(message, logKey, logSource, logName, logTrace);
+                    break;
+                case LogLevel.WARN:
+                    Warn(message, logKey, logSource, logName, logTrace);
+                    break;
+            }
+        }
+
+        /// <summary>
         /// 调试
         /// </summary>
         /// <param name="message">日志内容</param>

@@ -4,7 +4,7 @@ namespace Eiap
     /// <summary>
     /// 链接字符串
     /// </summary>
-    public interface IDataAccessConnectionString : IRealtimeDependency, IDynamicProxyDisable
+    public interface IDataAccessConnectionString : ISingletonDependency, IDynamicProxyDisable
     {
         /// <summary>
         /// 命令链接

@@ -98,5 +98,7 @@ namespace Eiap.NetFramework
                 _SQLDataAccessConnection.Dispose();
             }
         }
+
+        public ILogger Logger { get; set; }
     }
 }

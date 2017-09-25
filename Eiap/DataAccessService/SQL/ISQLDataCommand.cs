@@ -7,7 +7,7 @@ namespace Eiap
     /// <summary>
     /// SQL数据库命令接口
     /// </summary>
-    public interface ISQLDataCommand : IRealtimeDependency, IDisposable
+    public interface ISQLDataCommand : IRealtimeDependency, ISQLBase
     {
         /// <summary>
         /// 获取返回影响行数

@@ -6,6 +6,8 @@ namespace Eiap
     /// </summary>
     public interface ILogger : ISingletonDependency, IPropertyDependency, IDynamicProxyDisable
     {
+        void Print(string message, string logKey, LogLevel level = LogLevel.INFO, int logSource = 0,  string logName = null, LoggerTrace logTrace = null);
+
         /// <summary>
         /// 调试
         /// </summary>

@@ -7,7 +7,7 @@ namespace Eiap
     /// <summary>
     /// 数据库查询接口
     /// </summary>
-    public interface ISQLQuery : IRealtimeDependency, IDisposable
+    public interface ISQLQuery : IRealtimeDependency, ISQLBase
     {
         /// <summary>
         /// 获取数据集
@@ -17,8 +17,6 @@ namespace Eiap
         /// <param name="paramters">SQL参数</param>
         /// <returns></returns>
         DataSet ExcuteGetDateSet(string cmdText, CommandType cmdType, IDataParameter[] paramters);
-
-        string SetConnectionString { set; }
 
     }
 }

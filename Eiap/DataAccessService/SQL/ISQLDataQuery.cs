@@ -7,7 +7,7 @@ namespace Eiap
     /// <summary>
     /// SQL数据库查询接口
     /// </summary>
-    public interface ISQLDataQuery : IRealtimeDependency, IDisposable
+    public interface ISQLDataQuery : IRealtimeDependency, ISQLBase
     {
 
         /// <summary>
@@ -28,6 +28,9 @@ namespace Eiap
         /// <returns>返回数据集第一行第一列对象</returns>
         object ExecuteScalar(string cmdText, CommandType cmdType, IDataParameter[] paramters);
 
+        /// <summary>
+        /// 数据库访问连接
+        /// </summary>
         ISQLDataQueryDataAccessConnection SQLDataAccessConnection { set; get; }
     }
 }
