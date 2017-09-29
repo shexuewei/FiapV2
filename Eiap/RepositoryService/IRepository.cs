@@ -1,4 +1,5 @@
 ﻿
+using System;
 using System.Data;
 
 namespace Eiap
@@ -8,7 +9,7 @@ namespace Eiap
     /// </summary>
     /// <typeparam name="tEntity"></typeparam>
     /// <typeparam name="TPrimarykey"></typeparam>
-    public interface IRepository<tEntity, TPrimarykey> : IRepositoryCommit, IUnitOfWorkCommandConnection, IRealtimeDependency
+    public interface IRepository<tEntity, TPrimarykey> : IRepositoryCommit, IUnitOfWorkCommandConnection, IRealtimeDependency, IRepositoryLog, IDisposable
         where tEntity : IEntity<TPrimarykey>
         where TPrimarykey : struct
     {
@@ -48,9 +49,5 @@ namespace Eiap
         /// <returns></returns>
         TResult Query<TResult>(string cmdText, CommandType cmdType, IDataParameter[] paramters = null);
 
-        /// <summary>
-        /// 日志接口
-        /// </summary>
-        ILogger Log { get; set; }
     }
 }
