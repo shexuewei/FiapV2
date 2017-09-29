@@ -7,7 +7,7 @@ namespace Eiap
     /// <summary>
     /// SQL数据库查询接口
     /// </summary>
-    public interface ISQLDataQuery : IRealtimeDependency, ISQLBase
+    public interface ISQLDataQuery : IRealtimeDependency, ISQLDataAccessLog, IDisposable
     {
 
         /// <summary>

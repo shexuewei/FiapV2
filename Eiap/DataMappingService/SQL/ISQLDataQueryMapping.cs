@@ -10,7 +10,7 @@ namespace Eiap
     /// </summary>
     /// <typeparam name="tEntity"></typeparam>
     /// <typeparam name="TPrimarykey"></typeparam>
-    public interface ISQLDataQueryMapping<tEntity, TPrimarykey> : IRealtimeDependency, IDynamicProxyDisable, IDisposable
+    public interface ISQLDataQueryMapping<tEntity, TPrimarykey> : IRealtimeDependency, IDynamicProxyDisable, ISQLMappingLog, IDisposable
         where tEntity : IEntity<TPrimarykey>
         where TPrimarykey : struct
     {

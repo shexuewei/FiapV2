@@ -95,6 +95,21 @@ namespace Eiap.Framework
             get { return _SQLDataCommand.SQLDataAccessConnection; }
         }
 
+        /// <summary>
+        /// 日志输出方法
+        /// </summary>
+        public Action<string> Log
+        {
+            get
+            {
+                return _SQLDataCommand.Log;
+            }
+            set
+            {
+                _SQLDataCommand.Log = value;
+            }
+        }
+
         private string GetInsertSQL()
         {
             return DataManager.Instance.GetDataDescription(typeof(tEntity)).InsertSQL;

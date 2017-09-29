@@ -39,7 +39,7 @@ namespace Eiap.Framework
             IDataParameter[] para = new SqlParameter[pi.Length];
             for (int i = 0; i < pi.Length; i++)
             {
-                object objvalue = methodManager.MethodInvoke(entity, new object[] { }, pi[i].GetGetMethod(), pi[i].DeclaringType.FullName); //pi[i].GetValue(entity, null);
+                object objvalue = methodManager.MethodInvoke(entity, new object[] { }, pi[i].GetGetMethod()); //pi[i].GetValue(entity, null);
                 if (objvalue == null)
                 {
 

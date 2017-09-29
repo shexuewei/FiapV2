@@ -88,7 +88,7 @@ namespace Eiap.NetFramework
                         valueSb.Append(currentPropertyInfo.Name);
                         valueSb.Append(JsonSymbol.JsonSerializePropertySymbol);
                         //object objectValue = currentPropertyInfo.GetGetMethod().Invoke(currentObjectList.Peek(), new object[] { });
-                        object objectValue =  methodManager.MethodInvoke(currentObjectList.Peek(), new object[] { }, currentPropertyInfo.GetGetMethod(), currentPropertyInfo.DeclaringType.FullName);
+                        object objectValue =  methodManager.MethodInvoke(currentObjectList.Peek(), new object[] { }, currentPropertyInfo.GetGetMethod());
                         if (objectValue == null || currentPropertyInfo.PropertyType.IsNormalType())
                         {
                             Process(objectValue, valueSb, setting, currentPropertyInfo.PropertyType);

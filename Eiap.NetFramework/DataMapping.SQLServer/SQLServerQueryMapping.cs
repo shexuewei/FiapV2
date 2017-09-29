@@ -293,7 +293,7 @@ namespace Eiap.Framework
             {
                 if (!propertyinfo.IsComplexClass())
                 {
-                    _MethodManager.MethodInvoke(entity, new object[] { dr.GetValue(tmpcount).GetDefaultValue(propertyinfo.PropertyType.GetProType()) }, propertyinfo.GetSetMethod(), propertyinfo.DeclaringType.FullName);
+                    _MethodManager.MethodInvoke(entity, new object[] { dr.GetValue(tmpcount).GetDefaultValue(propertyinfo.PropertyType.GetProType()) }, propertyinfo.GetSetMethod());
                     //propertyinfo.SetValue(entity, dr.GetValue(tmpcount).GetDefaultValue(propertyinfo.PropertyType.GetProType()), null);
                     tmpcount++;
                 }
@@ -335,6 +335,21 @@ namespace Eiap.Framework
             if (_SQLDataQuery != null )
             {
                 _SQLDataQuery.Dispose();
+            }
+        }
+
+        /// <summary>
+        /// 日志输出方法
+        /// </summary>
+        public Action<string> Log
+        {
+            get
+            {
+                return _SQLDataQuery.Log;
+            }
+            set
+            {
+                _SQLDataQuery.Log = value;
             }
         }
 

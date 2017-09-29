@@ -57,12 +57,13 @@
     <Compile Include="DataAccessService\SQL\ISQLDataCommand.cs" />
     <Compile Include="DataAccessService\SQL\ISQLDataQuery.cs" />
     <Compile Include="DataAccessService\SQL\ISQLDataQueryDataAccessConnection.cs" />
-    <Compile Include="DataAccessService\SQL\ISQLBase.cs" />
+    <Compile Include="DataAccessService\SQL\ISQLDataAccessLog.cs" />
     <Compile Include="DataAccessService\SQL\ISQLQuery.cs" />
     <Compile Include="DataAccessService\SQL\ISQLQueryDataAccessConnection.cs" />
     <Compile Include="DataAccessService\SQL\SQLServerDataExtension .cs" />
     <Compile Include="DataMappingService\SQL\EntityAttribute.cs" />
     <Compile Include="DataMappingService\SQL\ISQLCommandMapping.cs" />
+    <Compile Include="DataMappingService\SQL\ISQLMappingLog.cs" />
     <Compile Include="DataMappingService\SQL\ISQLDataMappingExtension.cs" />
     <Compile Include="DataMappingService\SQL\ISQLDataQueryMapping.cs" />
     <Compile Include="DataMappingService\SQL\PropertyAttribute.cs" />

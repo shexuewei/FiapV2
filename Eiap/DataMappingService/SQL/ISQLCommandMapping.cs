@@ -9,7 +9,7 @@ namespace Eiap
     /// </summary>
     /// <typeparam name="tEntity"></typeparam>
     /// <typeparam name="TPrimarykey"></typeparam>
-    public interface ISQLCommandMapping<tEntity, TPrimarykey> : IRealtimeDependency,IDynamicProxyDisable, IDisposable
+    public interface ISQLCommandMapping<tEntity, TPrimarykey> : IRealtimeDependency,IDynamicProxyDisable, ISQLMappingLog, IDisposable
         where tEntity : IEntity<TPrimarykey>
         where TPrimarykey : struct
     {

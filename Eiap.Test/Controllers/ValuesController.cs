@@ -76,16 +76,20 @@ namespace Eiap.Test.Controllers
         [HttpGet]
         public void InsertEntitySQLCommandMappingTest()
         {
-            School school = new School { Name = "School1" };
-            using (ISQLCommandMapping<School, int> test = (ISQLCommandMapping<School, int>)DependencyManager.Instance.Resolver(typeof(ISQLCommandMapping<School, int>)))
-            {
-                school = test.InsertEntity(school);
-            }
 
-            SchoolGuid schoolguid = new SchoolGuid { Name = "SchoolGuid1" };
-            using (ISQLCommandMapping<SchoolGuid, Guid> test = (ISQLCommandMapping<SchoolGuid, Guid>)DependencyManager.Instance.Resolver(typeof(ISQLCommandMapping<SchoolGuid, Guid>)))
+            using (ISQLCommandMapping<School, int> testschool = (ISQLCommandMapping<School, int>)DependencyManager.Instance.Resolver(typeof(ISQLCommandMapping<School, int>)))
             {
-                schoolguid = test.InsertEntity(schoolguid);
+                for (int i = 0; i < 5; i++)
+                {
+                    School school = testschool.InsertEntity(new School { Name = "School"+i.ToString() });
+                    using (ISQLCommandMapping<Class, int> testclass = (ISQLCommandMapping<Class, int>)DependencyManager.Instance.Resolver(typeof(ISQLCommandMapping<Class, int>)))
+                    {
+                        for (int j = 0; j < 5; j++)
+                        {
+                            Class cla = testclass.InsertEntity(new Class { Name = "Class" + j.ToString(), SchoolId = school.Id });
+                        }
+                    }
+                }
             }
         }
 
@@ -166,23 +170,19 @@ namespace Eiap.Test.Controllers
         [HttpGet]
         public string SQLDataQueryGetEntityListMappingTest()
         {
-            List<Student> list = null;
-            using (ISQLDataQueryMapping<Student, int> test = (ISQLDataQueryMapping<Student, int>)DependencyManager.Instance.Resolver(typeof(ISQLDataQueryMapping<Student, int>)))
+            List<Class> list = null;
+            using (ISQLDataQueryMapping<Class, int> test = (ISQLDataQueryMapping<Class, int>)DependencyManager.Instance.Resolver(typeof(ISQLDataQueryMapping<Class, int>)))
             {
+                test.Log = (c) => System.Diagnostics.Debug.Write(c);
                 list = test
-                    .Where(m => m.Age > 200)
-                    .OrderByDesc(m => m.Birthday)
-                    .Top(20).Skip(10)
-                    .Select(m => new Student { Birthday = m.Birthday })
+                    .Where(m => m.Id > 9)
+                    .OrderByDesc(m => m.SchoolId)
+                    .OrderBy(m=>m.Id)
+                    .Top(20)
+                    .Skip(10)
+                    .Select(m => new Class { Id = m.Id, Name = m.Name, SchoolId = m.SchoolId })
                     .GetEntityList();
             }
-            return "";
-        }
-
-        [HttpGet]
-        public string SQLDataQueryGetEntityListJoinMappingTest()
-        {
-            
             return "";
         }
         #endregion

@@ -20,8 +20,6 @@ namespace Eiap.Test.Controllers
     {
         public string Name { get; set; }
 
-        public List<Student> StudentList { get; set; }
-
         public int SchoolId { get; set; }
     }
 
@@ -29,7 +27,6 @@ namespace Eiap.Test.Controllers
     {
         public string Name { get; set; }
 
-        public List<Class> ClassList { get; set; }
     }
 
     public class SchoolGuid : DefaultEntity<Guid>
