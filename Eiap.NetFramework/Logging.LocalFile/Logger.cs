@@ -30,7 +30,7 @@ namespace Eiap.NetFramework
         /// <param name="logName">日志名称</param>
         /// <param name="logTrace">日志跟踪对象</param>
         /// <param name="level"></param>
-        public void Print(string message, string logKey, LogLevel level = LogLevel.INFO, int logSource = 0, string logName = null, LoggerTrace logTrace = null)
+        public void Print(string message, string logKey = "", LogLevel level = LogLevel.INFO, int logSource = 0, string logName = null, LoggerTrace logTrace = null)
         {
             switch (level)
             {
@@ -60,7 +60,7 @@ namespace Eiap.NetFramework
         /// <param name="logSource">日志来源</param>
         /// <param name="logName">日志名称</param>
         /// <param name="logTrace">日志跟踪对象</param>
-        public void Debug(string message, string logKey, int logSource = 0, string logName = null, LoggerTrace logTrace = null)
+        public void Debug(string message, string logKey = "", int logSource = 0, string logName = null, LoggerTrace logTrace = null)
         {
             LogMessage logMessage = GetLogMessage(message, logKey, LogLevel.DEBUG, logName, logSource, logTrace);
             PublishLogMessage(logMessage);
@@ -74,7 +74,7 @@ namespace Eiap.NetFramework
         /// <param name="logSource">日志来源</param>
         /// <param name="logName">日志名称</param>
         /// <param name="logTrace">日志跟踪对象</param>
-        public void Error(string message, string logKey, int logSource = 0, string logName = null, LoggerTrace logTrace = null)
+        public void Error(string message, string logKey = "", int logSource = 0, string logName = null, LoggerTrace logTrace = null)
         {
             LogMessage logMessage = GetLogMessage(message, logKey, LogLevel.ERROR, logName, logSource, logTrace);
             PublishLogMessage(logMessage);
@@ -88,7 +88,7 @@ namespace Eiap.NetFramework
         /// <param name="logSource">日志来源</param>
         /// <param name="logName">日志名称</param>
         /// <param name="logTrace">日志跟踪对象</param>
-        public void Fatal(string message, string logKey, int logSource = 0, string logName = null, LoggerTrace logTrace = null)
+        public void Fatal(string message, string logKey = "", int logSource = 0, string logName = null, LoggerTrace logTrace = null)
         {
             LogMessage logMessage = GetLogMessage(message, logKey, LogLevel.FATAL, logName, logSource, logTrace);
             PublishLogMessage(logMessage);
@@ -102,7 +102,7 @@ namespace Eiap.NetFramework
         /// <param name="logSource">日志来源</param>
         /// <param name="logName">日志名称</param>
         /// <param name="logTrace">日志跟踪对象</param>
-        public void Info(string message, string logKey, int logSource = 0, string logName = null, LoggerTrace logTrace = null)
+        public void Info(string message, string logKey = "", int logSource = 0, string logName = null, LoggerTrace logTrace = null)
         {
             LogMessage logMessage = GetLogMessage(message, logKey, LogLevel.INFO, logName, logSource, logTrace);
             PublishLogMessage(logMessage);
@@ -116,7 +116,7 @@ namespace Eiap.NetFramework
         /// <param name="logSource">日志来源</param>
         /// <param name="logName">日志名称</param>
         /// <param name="logTrace">日志跟踪对象</param>
-        public void Warn(string message, string logKey, int logSource = 0, string logName = null, LoggerTrace logTrace = null)
+        public void Warn(string message, string logKey = "", int logSource = 0, string logName = null, LoggerTrace logTrace = null)
         {
             LogMessage logMessage = GetLogMessage(message, logKey, LogLevel.WARN, logName, logSource, logTrace);
             PublishLogMessage(logMessage);

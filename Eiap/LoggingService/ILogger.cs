@@ -6,7 +6,7 @@ namespace Eiap
     /// </summary>
     public interface ILogger : ISingletonDependency, IPropertyDependency, IDynamicProxyDisable
     {
-        void Print(string message, string logKey, LogLevel level = LogLevel.INFO, int logSource = 0,  string logName = null, LoggerTrace logTrace = null);
+        void Print(string message, string logKey = "", LogLevel level = LogLevel.INFO, int logSource = 0, string logName = null, LoggerTrace logTrace = null);
 
         /// <summary>
         /// 调试
@@ -16,7 +16,7 @@ namespace Eiap
         /// <param name="logSource">日志来源</param>
         /// <param name="logName">日志名称</param>
         /// <param name="logTrace">日志跟踪对象</param>
-        void Debug(string message, string logKey, int logSource = 0, string logName = null, LoggerTrace logTrace = null);
+        void Debug(string message, string logKey = "", int logSource = 0, string logName = null, LoggerTrace logTrace = null);
 
         /// <summary>
         /// 错误
@@ -26,7 +26,7 @@ namespace Eiap
         /// <param name="logSource">日志来源</param>
         /// <param name="logName">日志名称</param>
         /// <param name="logTrace">日志跟踪对象</param>
-        void Error(string message, string logKey, int logSource = 0, string logName = null, LoggerTrace logTrace = null);
+        void Error(string message, string logKey = "", int logSource = 0, string logName = null, LoggerTrace logTrace = null);
 
         /// <summary>
         /// 致命
@@ -36,7 +36,7 @@ namespace Eiap
         /// <param name="logSource">日志来源</param>
         /// <param name="logName">日志名称</param>
         /// <param name="logTrace">日志跟踪对象</param>
-        void Fatal(string message, string logKey, int logSource = 0, string logName = null, LoggerTrace logTrace = null);
+        void Fatal(string message, string logKey = "", int logSource = 0, string logName = null, LoggerTrace logTrace = null);
 
         /// <summary>
         /// 信息
@@ -46,7 +46,7 @@ namespace Eiap
         /// <param name="logSource">日志来源</param>
         /// <param name="logName">日志名称</param>
         /// <param name="logTrace">日志跟踪对象</param>
-        void Info(string message, string logKey, int logSource = 0, string logName = null, LoggerTrace logTrace = null);
+        void Info(string message, string logKey = "", int logSource = 0, string logName = null, LoggerTrace logTrace = null);
 
         /// <summary>
         /// 警告
@@ -56,7 +56,7 @@ namespace Eiap
         /// <param name="logSource">日志来源</param>
         /// <param name="logName">日志名称</param>
         /// <param name="logTrace">日志跟踪对象</param>
-        void Warn(string message, string logKey, int logSource = 0, string logName = null, LoggerTrace logTrace = null);
+        void Warn(string message, string logKey = "", int logSource = 0, string logName = null, LoggerTrace logTrace = null);
 
     }
 }

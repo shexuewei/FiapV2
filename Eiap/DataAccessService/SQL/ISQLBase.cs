@@ -10,9 +10,9 @@ namespace Eiap
     public interface ISQLBase : IDisposable
     {
         /// <summary>
-        /// 日志组件
+        /// 日志输出
         /// </summary>
-        ILogger Logger { get; set; }
+        Action<string> Log { get; set; }
 
     }
 }

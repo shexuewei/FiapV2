@@ -61,7 +61,6 @@
     <Compile Include="DataAccessService\SQL\ISQLQuery.cs" />
     <Compile Include="DataAccessService\SQL\ISQLQueryDataAccessConnection.cs" />
     <Compile Include="DataAccessService\SQL\SQLServerDataExtension .cs" />
-    <Compile Include="DataAccessService\SQL\SQLDataAccessLoggerAttribute.cs" />
     <Compile Include="DataMappingService\SQL\EntityAttribute.cs" />
     <Compile Include="DataMappingService\SQL\ISQLCommandMapping.cs" />
     <Compile Include="DataMappingService\SQL\ISQLDataMappingExtension.cs" />

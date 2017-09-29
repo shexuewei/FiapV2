@@ -3,14 +3,16 @@ using System;
 using System.Data;
 using System.Data.SqlClient;
 
-
 namespace Eiap.NetFramework
 {
-    public class SQLServerQuery : ISQLQuery,IDisposable
+    public class SQLServerQuery : SQLServerBase, ISQLQuery
     {
         private ISQLQueryDataAccessConnection _ReadSQLDataAccessConnection;
 
-        public ILogger Logger { get; set; }
+        /// <summary>
+        /// 日志输出
+        /// </summary>
+        public Action<string> Log { get; set; }
 
         public SQLServerQuery(ISQLQueryDataAccessConnection ReadSQLDataAccessConnection)
         {
@@ -26,6 +28,7 @@ namespace Eiap.NetFramework
         /// <returns></returns>
         public virtual DataSet ExcuteGetDateSet(string cmdText, CommandType cmdType, IDataParameter[] paramters)
         {
+            PrintLog(Log, cmdText, paramters);
             _ReadSQLDataAccessConnection.Create();
             _ReadSQLDataAccessConnection.DBOpen();
             IDbCommand _DBCommand = _ReadSQLDataAccessConnection.CreateCommand();

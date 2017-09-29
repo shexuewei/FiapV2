@@ -7,7 +7,7 @@ namespace Eiap.NetFramework
     /// <summary>
     /// 数据查询
     /// </summary>
-    public class SQLServerDataQuery : ISQLDataQuery
+    public class SQLServerDataQuery : SQLServerBase, ISQLDataQuery
     {
         private ISQLDataQueryDataAccessConnection _SQLDataAccessConnection;
 
@@ -23,6 +23,7 @@ namespace Eiap.NetFramework
             IDataReader dr = null;
             try
             {
+                PrintLog(Log, cmdText, paramters);
                 CreateSQLDataQueryDataAccessConnection();
                 _SQLDataAccessConnection.Create();
                 IDbCommand _DbCommand = _SQLDataAccessConnection.CreateCommand();
@@ -48,6 +49,7 @@ namespace Eiap.NetFramework
             object retuObj = null;
             try
             {
+                PrintLog(Log, cmdText, paramters);
                 CreateSQLDataQueryDataAccessConnection();
                 _SQLDataAccessConnection.Create();
                 IDbCommand _DbCommand = _SQLDataAccessConnection.CreateCommand();
@@ -99,6 +101,9 @@ namespace Eiap.NetFramework
             }
         }
 
-        public ILogger Logger { get; set; }
+        /// <summary>
+        /// 日志输出
+        /// </summary>
+        public Action<string> Log { get; set; }
     }
 }

@@ -4,7 +4,7 @@ using System.Data;
 
 namespace Eiap.NetFramework
 {
-    public class SQLServerDataCommand : ISQLDataCommand
+    public class SQLServerDataCommand : SQLServerBase, ISQLDataCommand
     {
         private ISQLCommandDataAccessConnection _SQLDataAccessConnection;
 
@@ -20,6 +20,7 @@ namespace Eiap.NetFramework
             int res = 0;
             try
             {
+                PrintLog(Log, cmdText, paramters);
                 CreateSQLCommandDataAccessConnection();
                 _SQLDataAccessConnection.Create();
                 IDbCommand _DbCommand = _SQLDataAccessConnection.CreateCommand();
@@ -58,6 +59,7 @@ namespace Eiap.NetFramework
             object res = null;
             try
             {
+                PrintLog(Log, cmdText, paramters);
                 CreateSQLCommandDataAccessConnection();
                 _SQLDataAccessConnection.Create();
                 IDbCommand _DbCommand = _SQLDataAccessConnection.CreateCommand();
@@ -118,6 +120,9 @@ namespace Eiap.NetFramework
             }
         }
 
-        public ILogger Logger { get; set; }
+        /// <summary>
+        /// 日志输出
+        /// </summary>
+        public Action<string> Log { get; set; }
     }
 }

@@ -48,6 +48,7 @@
     <Compile Include="DataAccess.SQLServer\SQLServerDataCommand.cs" />
     <Compile Include="DataAccess.SQLServer\SQLServerDataQuery.cs" />
     <Compile Include="DataAccess.SQLServer\SQLServerDataQueryDataAccessConnection.cs" />
+    <Compile Include="DataAccess.SQLServer\SQLServerBase.cs" />
     <Compile Include="DataAccess.SQLServer\SQLServerQuery.cs" />
     <Compile Include="DataAccess.SQLServer\SQLServerQueryDataAccessConnection.cs" />
     <Compile Include="DataMapping.SQLServer\DataDescription.cs" />
