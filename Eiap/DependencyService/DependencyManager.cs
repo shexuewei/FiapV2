@@ -91,6 +91,10 @@ namespace Eiap
                 }
                 else
                 {
+                    if (tEntity.IsGenericType && genArgumentList == null)
+                    {
+                        genArgumentList = tEntity.GetGenericArguments();
+                    }
                     if (typeof(IRealtimeDependency).IsAssignableFrom(tEntity))
                     {
                         t = ResolverBy(tEntity, consParas, genArguments, genArgumentList);

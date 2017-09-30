@@ -1,4 +1,5 @@
 ﻿
+using Eiap.NetFramework;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -192,12 +193,12 @@ namespace Eiap.Test.Controllers
         public void RepositoryAddTest()
         {
 
-            using (IRepository<School, int> testschool = (IRepository<School, int>)DependencyManager.Instance.Resolver(typeof(IRepository<School, int>)))
+            using (Repository<School, int> testschool = (Repository<School, int>)DependencyManager.Instance.Resolver(typeof(Repository<School, int>)))
             {
                 for (int i = 0; i < 5; i++)
                 {
                     School school = testschool.Add(new School { Name = "School" + i.ToString() });
-                    using (IRepository<Class, int> testclass = (IRepository<Class, int>)DependencyManager.Instance.Resolver(typeof(IRepository<Class, int>)))
+                    using (IRepository<Class, int> testclass = (IRepository<Class, int>)DependencyManager.Instance.Resolver(typeof(Repository<Class, int>)))
                     {
                         for (int j = 0; j < 5; j++)
                         {
