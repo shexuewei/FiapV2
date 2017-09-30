@@ -75,7 +75,7 @@ namespace Eiap
                         Type classEntity = container.DependencyInterfaceClass;
                         if (classEntity != null)
                         {
-                            if (tEntity.IsGenericType)
+                            if (tEntity.IsGenericType && genArgumentList == null)
                             {
                                 genArgumentList = tEntity.GetGenericArguments();
                             }
@@ -188,7 +188,7 @@ namespace Eiap
                             {
                                 genericArguments = genArguments;
                             }
-                            depeobj = this.Resolver(container.DependencyInterfaceClass, genArguments: genericArguments);
+                            depeobj = this.Resolver(container.DependencyInterfaceClass, genArguments: genericArguments, genArgumentList: genArgumentList);
                         }
                         else
                         {
@@ -212,12 +212,11 @@ namespace Eiap
                 if (count == paracount)
                 {
                     object obj = null;
-                    Type objtype = null;
                     if (genArguments == null)
                     {
                         if (entiType.IsGenericType)
                         {
-                            objtype = entiType.GetGenericTypeDefinition().MakeGenericType(genArgumentList);
+                            Type objtype = entiType.GetGenericTypeDefinition().MakeGenericType(genArgumentList);
                             obj = Activator.CreateInstance(objtype, paraobj);
                         }
                         else
@@ -229,7 +228,15 @@ namespace Eiap
                     {
                         //TODO:匹配泛型参数类型
                         Type genType = consinfo.DeclaringType.GetGenericTypeDefinition();
-                        objtype = genType.MakeGenericType(genArguments);
+                        Type objtype = null;
+                        if (genArgumentList != null)
+                        {
+                            objtype = genType.MakeGenericType(genArgumentList);
+                        }
+                        else
+                        {
+                            objtype = genType.MakeGenericType(genArguments);
+                        }
                         obj = Activator.CreateInstance(objtype, paraobj);
                     }
                     t = obj;

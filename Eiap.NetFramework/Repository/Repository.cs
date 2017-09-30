@@ -32,37 +32,24 @@ namespace Eiap.NetFramework
             _QueryMapping = QueryMapping;
             _SQLQuery = SQLQuery;
             _CurrentUnitOfWork = DependencyManager.Instance.Resolver<ICurrentUnitOfWork>();
-            _CurrentUnitOfWork.CurrentUnitOfWork.SetRepository(this);
+            //_CurrentUnitOfWork.CurrentUnitOfWork.SetRepository(this);
             _MethodManager = methodManager;
         }
 
         public virtual tEntity Add(tEntity entity)
         {
-            if (_AddEntityList == null)
-            {
-                _AddEntityList = new List<tEntity>();
-            }
-            _AddEntityList.Add(entity);
-            return entity;
+            return _CommandMapping.InsertEntity(entity);
         }
 
         public virtual tEntity Update(tEntity entity)
         {
-            if (_UpdateEntityList == null)
-            {
-                _UpdateEntityList = new List<tEntity>();
-            }
-            _UpdateEntityList.Add(entity);
+            _CommandMapping.UpdateEntity(entity);
             return entity;
         }
 
         public virtual void Delete(TPrimarykey primarykey)
         {
-            if (_DeletePrimarykeyList == null)
-            {
-                _DeletePrimarykeyList = new List<TPrimarykey>();
-            }
-            _DeletePrimarykeyList.Add(primarykey);
+            _CommandMapping.DeleteEntity(primarykey);
         }
 
         public virtual ISQLDataQueryMapping<tEntity, TPrimarykey> Query()

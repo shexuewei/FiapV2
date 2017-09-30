@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
+using System.Text;
 
 namespace Eiap
 {
@@ -26,7 +27,7 @@ namespace Eiap
         {
             Type interceptorType = _InterceptorInstance.GetType();
             Type instanceType = objInstance == null ? interfaceType : objInstance.GetType();
-            string dynamicProxyTypeFullName = instanceType.Namespace + instanceType.Name + DynamicProxyName;
+            string dynamicProxyTypeFullName = GetDynamicProxyTypeFullName(instanceType);
             DynamicProxyContainer dynamicProxyContainer = _DynamicProxyContainerManager.GetDynamicProxyContainerByDynamicProxyTypeName(dynamicProxyTypeFullName);
             Type dynamicProxyType = null;
             if (dynamicProxyContainer == null)
@@ -263,6 +264,25 @@ namespace Eiap
                 res = true;
             }
             return res;
+        }
+
+        private string GetDynamicProxyTypeFullName(Type instanceType)
+        {
+            StringBuilder dynamicProxyTypeFullName = new StringBuilder(instanceType.Namespace);
+            dynamicProxyTypeFullName.Append(".");
+            dynamicProxyTypeFullName.Append(instanceType.Name);
+            dynamicProxyTypeFullName.Append(".");
+            if (instanceType.IsGenericType)
+            {
+                Type[] genericArguments = instanceType.GetGenericArguments();
+                foreach (Type genericArgument in genericArguments)
+                {
+                    dynamicProxyTypeFullName.Append(genericArgument.Name);
+                    dynamicProxyTypeFullName.Append(".");
+                }
+            }
+            dynamicProxyTypeFullName.Append(DynamicProxyName);
+            return dynamicProxyTypeFullName.ToString();
         }
     }
 }
