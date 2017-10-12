@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 
@@ -24,8 +25,7 @@ namespace Eiap.NetFramework
             Stack<char> jsonStringStack = new Stack<char>();
             Stack<DeserializeObjectContainer> containerStack = new Stack<DeserializeObjectContainer>();
             JsonDeserializeEventArgs args = new JsonDeserializeEventArgs { RootType = objectType, ContainerStack = containerStack, JsonStringStack = jsonStringStack, MethodManager = methodManager };
-            char[] jsonCharList = jsonString.ToCharArray();
-            foreach (char charitem in jsonCharList)
+            foreach (char charitem in jsonString)
             {
                 jsonStringStack.Push(charitem);
                 args.CurrentCharItem = charitem;
@@ -90,7 +90,7 @@ namespace Eiap.NetFramework
         {
             e.JsonStringStack.Pop();//[出栈
             Type currentObjectType = null;
-            if (e.ContainerStack.Count() == 0)
+            if (e.ContainerStack.Count == 0)
             {
                 currentObjectType = e.RootType;
             }
@@ -167,7 +167,7 @@ namespace Eiap.NetFramework
         public static void JsonDeserializeProcess_JsonDeserializeObjectSymbol_Begin_Event(object sender, JsonDeserializeEventArgs e)
         {
             Type currentObjectType = null;
-            if (e.ContainerStack.Count() == 0)
+            if (e.ContainerStack.Count == 0)
             {
                 currentObjectType = e.RootType;
             }
@@ -469,7 +469,7 @@ namespace Eiap.NetFramework
                     break;
                 }
             }
-            while (tmpDeserializeObjectContainerStack.Count() > 0)
+            while (tmpDeserializeObjectContainerStack.Count > 0)
             {
                 containerStack.Push(tmpDeserializeObjectContainerStack.Pop());
             }
@@ -571,161 +571,6 @@ namespace Eiap.NetFramework
         private static void PropertySetValue(object instanceObj, PropertyInfo currentPropertyInfo, object objvalue, IMethodManager methodManager, string instanceTypeName = null)
         {
             methodManager.MethodInvoke(instanceObj, new object[] { objvalue }, currentPropertyInfo.GetSetMethod(), instanceTypeName);
-        }
-
-        public static object Deserialize2(string jsonString, Type objectType, SerializationSetting setting, IMethodManager methodManager)
-        {
-            Stack<char> jsonStringStack = new Stack<char>();
-            Stack<DeserializeObjectContainer> containerStack = new Stack<DeserializeObjectContainer>();
-            char[] jsonCharList = jsonString.ToCharArray();
-            foreach (char charitem in jsonCharList)
-            {
-                jsonStringStack.Push(charitem);
-                //数组开始
-                if (charitem == JsonSymbol.JsonArraySymbol_Begin)
-                {
-                    jsonStringStack.Pop();//[出栈
-                    Type currentObjectType = null;
-                    if (containerStack.Count() == 0)
-                    {
-                        currentObjectType = objectType;
-                    }
-                    else
-                    {
-                        DeserializeObjectContainer container = containerStack.Peek();
-                        if (container.ContainerType == DeserializeObjectContainerType.Property)
-                        {
-                            PropertyInfo currentPropertyInfo = container.ContainerObject as PropertyInfo;
-                            if (currentPropertyInfo != null)
-                            {
-                                currentObjectType = currentPropertyInfo.PropertyType;
-                            }
-                        }
-                    }
-                    IList objectInstance = null;
-                    string typeName = null;
-                    if (currentObjectType.IsGenericType && !typeof(IDictionary).IsAssignableFrom(currentObjectType))
-                    {
-                        Type genType = currentObjectType.GetGenericTypeDefinition();
-                        Type[] genParaType = currentObjectType.GetGenericArguments();
-                        typeName = genParaType[0].FullName;
-                        Type objtype = typeof(List<>).MakeGenericType(genParaType);
-                        objectInstance = Activator.CreateInstance(objtype) as IList;
-                    }
-                    else if (currentObjectType.IsArray)
-                    {
-                        Type arrayElementType = currentObjectType.GetElementType();
-                        typeName = arrayElementType.FullName;
-                        Type[] genParaType = new Type[] { arrayElementType };
-                        Type objtype = typeof(List<>).MakeGenericType(genParaType);
-                        objectInstance = Activator.CreateInstance(objtype) as IList;
-                    }
-                    else if (typeof(IDictionary).IsAssignableFrom(currentObjectType))
-                    {
-                        //TODO:字典类型处理
-                        objectInstance = Activator.CreateInstance(currentObjectType) as IList;
-                    }
-                    else
-                    {
-                        objectInstance = Activator.CreateInstance(currentObjectType) as IList;
-                    }
-                    containerStack.Push(new DeserializeObjectContainer { ContainerType = DeserializeObjectContainerType.List, ContainerObject = objectInstance, ContainerObjectTypeName = typeName });
-                }
-                //对象开始
-                else if (charitem == JsonSymbol.JsonObjectSymbol_Begin)
-                {
-                    Type currentObjectType = null;
-                    if (containerStack.Count() == 0)
-                    {
-                        currentObjectType = objectType;
-                    }
-                    else
-                    {
-                        DeserializeObjectContainer container = containerStack.Peek();
-                        if (container.ContainerType == DeserializeObjectContainerType.Property)
-                        {
-                            PropertyInfo currentPropertyInfo = container.ContainerObject as PropertyInfo;
-                            if (currentPropertyInfo != null)
-                            {
-                                currentObjectType = currentPropertyInfo.PropertyType;
-                            }
-                        }
-                        else if (container.ContainerType == DeserializeObjectContainerType.List)
-                        {
-                            currentObjectType = container.ContainerObject.GetType().GetGenericArguments()[0];
-                        }
-                        else if (container.ContainerType == DeserializeObjectContainerType.DictionaryKey)
-                        {
-                            //TODO:字段类型待处理
-                        }
-                    }
-                    object objectInstance = Activator.CreateInstance(currentObjectType);
-                    containerStack.Push(new DeserializeObjectContainer { ContainerType = DeserializeObjectContainerType.Object, ContainerObject = objectInstance, ContainerObjectTypeName = currentObjectType.FullName });
-                    jsonStringStack.Pop();
-                }
-                //属性名
-                else if (charitem == JsonSymbol.JsonPropertySymbol && IsPropertyHandler(jsonStringStack))
-                {
-                    jsonStringStack.Pop();//属性分隔符出栈
-                    Stack<char> propertyNameList = new Stack<char>(); 
-
-                    //属性引号出栈
-                    while (true)
-                    {
-                        char beginQuotes = jsonStringStack.Pop();
-                        if (beginQuotes == JsonSymbol.JsonQuotesSymbol)
-                        {
-                            break;
-                        }
-                    }
-                    //属性引号出栈
-                    while (true)
-                    {
-                        char propertyNameChar = jsonStringStack.Pop();
-                        if (propertyNameChar == JsonSymbol.JsonQuotesSymbol)
-                        {
-                            break;
-                        }
-                        else if (propertyNameChar != JsonSymbol.JsonSpaceSymbol)
-                        {
-                            propertyNameList.Push(propertyNameChar);
-                        }
-                    }
-                    string propertyNameStr = new string(propertyNameList.ToArray());
-                    DeserializeObjectContainer currentObj = containerStack.Peek() as DeserializeObjectContainer;
-                    if (currentObj != null)
-                    {
-                        if (typeof(IDictionary).IsAssignableFrom(currentObj.ContainerObject.GetType()))
-                        {
-                            containerStack.Push(new DeserializeObjectContainer { ContainerType = DeserializeObjectContainerType.DictionaryKey, ContainerObject = propertyNameStr });
-                        }
-                        else
-                        {
-                            DeserializeObjectContainer currentObjectContainer = GetCurrentObject(containerStack);
-                            Type currentObjectType = currentObjectContainer.ContainerObject.GetType();
-                            string currentObjectTypeName = currentObjectContainer.ContainerObjectTypeName;
-                            PropertyInfo propertyinfo = currentObjectType.GetProperty(propertyNameStr);
-                            containerStack.Push(new DeserializeObjectContainer { ContainerType = DeserializeObjectContainerType.Property, ContainerObject = propertyinfo, ContainerObjectTypeName = currentObjectTypeName });
-                        }
-                    }
-                }
-                //逗号
-                else if (charitem == JsonSymbol.JsonSeparateSymbol)
-                {
-
-                }
-                //对象结束
-                else if (charitem == JsonSymbol.JsonObjectSymbol_End)
-                {
-
-                }
-                //数组结束
-                else if (charitem == JsonSymbol.JsonArraySymbol_End)
-                {
-                    
-                }
-            }
-            return null;
         }
     }
 }

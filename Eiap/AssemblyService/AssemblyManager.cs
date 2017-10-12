@@ -65,14 +65,14 @@ namespace Eiap
         /// </summary>
         /// <param name="assemblyPath"></param>
         /// <returns></returns>
-        public AssemblyManager AssemblyInitialize()
+        public AssemblyManager AssemblyInitialize(params Type[] moduleTypes)
         {
-            var loadDllList = AppDomain.CurrentDomain.GetAssemblies(); //Directory.GetFiles(AppDomain.CurrentDomain.RelativeSearchPath).Where(m => m.EndsWith(".dll") || m.EndsWith(".exe")).ToList();
+            //var loadDllList = AppDomain.CurrentDomain.GetAssemblies(); //Directory.GetFiles(AppDomain.CurrentDomain.RelativeSearchPath).Where(m => m.EndsWith(".dll") || m.EndsWith(".exe")).ToList();
             //初始化组件
-            foreach (Assembly assembly in loadDllList)
+            foreach (Type moduleType in moduleTypes)
             {
-                //Assembly assembly = Assembly.LoadFile(dllname);
-                ModuleInitialize(assembly);
+                Activator.CreateInstance(moduleType);
+                ModuleInitialize(moduleType.Assembly);
             }
             return Instance;
         }

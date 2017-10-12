@@ -1,9 +1,9 @@
 ﻿
 using System.Reflection;
 
-namespace Eiap.Test
+namespace Eiap.UnitTest
 {
-    public class EiapTestModule : IComponentModule
+    public class EiapUnitTestModule : IComponentModule
     {
         public void AssemblyInitialize()
         {

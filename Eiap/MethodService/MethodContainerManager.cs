@@ -34,24 +34,23 @@ namespace Eiap
         /// <returns></returns>
         public string GetMethodFullName(object instance, MethodInfo methodinfo, string instanceTypeName)
         {
-            StringBuilder methidFullNameStrBui = new StringBuilder();
+            string methidFullNameStrBui = "";
             if (string.IsNullOrWhiteSpace(instanceTypeName))
             {
-                methidFullNameStrBui.Append(instance.GetType().FullName);
+                methidFullNameStrBui += instance.GetType().FullName;
             }
             else
             {
-                methidFullNameStrBui.Append(instanceTypeName);
+                methidFullNameStrBui += instanceTypeName;
             }
-            methidFullNameStrBui.Append(".");
-            methidFullNameStrBui.Append(methodinfo.Name);
+            
+            methidFullNameStrBui += "."+ methodinfo.Name;
             ParameterInfo[] parametersList = methodinfo.GetParameters();
             foreach (ParameterInfo parameterItem in parametersList)
             {
-                methidFullNameStrBui.Append(".");
-                methidFullNameStrBui.Append(parameterItem.ParameterType.Name);
+                methidFullNameStrBui += "."+ parameterItem.ParameterType.Name;
             }
-            return methidFullNameStrBui.ToString();
+            return methidFullNameStrBui;
         }
 
         /// <summary>
