@@ -251,38 +251,38 @@ namespace Eiap.NetFramework
                 {
                     if (valuestring != JsonSymbol.JsonNullSymbol)
                     {
-                        objvalue = int.Parse(valuestring);
+                        PropertySetValue<int>(e.ContainerStack.Peek().ContainerObject, currentPropertyInfo, int.Parse(valuestring), e.MethodManager, currentObjectContainer.ContainerObjectTypeName);
                     }
                 }
                 else if (currentPropertyType == typeof(string))
                 {
                     if (valuestring != JsonSymbol.JsonNullSymbol)
                     {
-                        objvalue = valuestring;
+                        PropertySetValue<string>(e.ContainerStack.Peek().ContainerObject, currentPropertyInfo, valuestring, e.MethodManager, currentObjectContainer.ContainerObjectTypeName);
                     }
                 }
                 else if (currentPropertyType == typeof(DateTime))
                 {
                     if (valuestring != JsonSymbol.JsonNullSymbol)
                     {
-                        objvalue = DateTime.Parse(valuestring);
+                        PropertySetValue<DateTime>(e.ContainerStack.Peek().ContainerObject, currentPropertyInfo, DateTime.Parse(valuestring), e.MethodManager, currentObjectContainer.ContainerObjectTypeName);
                     }
                 }
                 else if (currentPropertyType == typeof(decimal))
                 {
                     if (valuestring != JsonSymbol.JsonNullSymbol)
                     {
-                        objvalue = Decimal.Parse(valuestring);
+                        PropertySetValue<decimal>(e.ContainerStack.Peek().ContainerObject, currentPropertyInfo, decimal.Parse(valuestring), e.MethodManager, currentObjectContainer.ContainerObjectTypeName);
                     }
                 }
                 else if (currentPropertyType == typeof(bool))
                 {
                     if (valuestring != JsonSymbol.JsonNullSymbol)
                     {
-                        objvalue = bool.Parse(valuestring);
+                        PropertySetValue<bool>(e.ContainerStack.Peek().ContainerObject, currentPropertyInfo, bool.Parse(valuestring), e.MethodManager, currentObjectContainer.ContainerObjectTypeName);
                     }
                 }
-                PropertySetValue(e.ContainerStack.Peek().ContainerObject, currentPropertyInfo, objvalue, e.MethodManager, currentObjectContainer.ContainerObjectTypeName);
+                
             }
         }
 
@@ -382,12 +382,60 @@ namespace Eiap.NetFramework
                 }
                 else
                 {
-                    objvalue = IListToArray(listvalue);
-                    currentObjectContainer = e.ContainerStack.Pop();
-                    if (currentObjectContainer.ContainerType == DeserializeObjectContainerType.Property)
+                    Type listToArrayType =  listvalue.GetType().GetGenericArguments()[0];
+                    if (listToArrayType == typeof(int))
                     {
-                        currentPropertyInfo = currentObjectContainer.ContainerObject as PropertyInfo;
-                        PropertySetValue(e.ContainerStack.Peek().ContainerObject, currentPropertyInfo, objvalue, e.MethodManager, e.ContainerStack.Peek().ContainerObjectTypeName);
+                        currentObjectContainer = e.ContainerStack.Pop();
+                        if (currentObjectContainer.ContainerType == DeserializeObjectContainerType.Property)
+                        {
+                            currentPropertyInfo = currentObjectContainer.ContainerObject as PropertyInfo;
+                            PropertySetValue<int[]>(e.ContainerStack.Peek().ContainerObject, currentPropertyInfo, IListToArray<int>(listvalue), e.MethodManager, e.ContainerStack.Peek().ContainerObjectTypeName);
+                        }
+                    }
+                    else if (listToArrayType == typeof(string))
+                    {
+                        currentObjectContainer = e.ContainerStack.Pop();
+                        if (currentObjectContainer.ContainerType == DeserializeObjectContainerType.Property)
+                        {
+                            currentPropertyInfo = currentObjectContainer.ContainerObject as PropertyInfo;
+                            PropertySetValue<string[]>(e.ContainerStack.Peek().ContainerObject, currentPropertyInfo, IListToArray<string>(listvalue), e.MethodManager, e.ContainerStack.Peek().ContainerObjectTypeName);
+                        }
+                    }
+                    else if (listToArrayType == typeof(DateTime))
+                    {
+                        currentObjectContainer = e.ContainerStack.Pop();
+                        if (currentObjectContainer.ContainerType == DeserializeObjectContainerType.Property)
+                        {
+                            currentPropertyInfo = currentObjectContainer.ContainerObject as PropertyInfo;
+                            PropertySetValue<DateTime[]>(e.ContainerStack.Peek().ContainerObject, currentPropertyInfo, IListToArray<DateTime>(listvalue), e.MethodManager, e.ContainerStack.Peek().ContainerObjectTypeName);
+                        }
+                    }
+                    else if (listToArrayType == typeof(bool))
+                    {
+                        currentObjectContainer = e.ContainerStack.Pop();
+                        if (currentObjectContainer.ContainerType == DeserializeObjectContainerType.Property)
+                        {
+                            currentPropertyInfo = currentObjectContainer.ContainerObject as PropertyInfo;
+                            PropertySetValue<bool[]>(e.ContainerStack.Peek().ContainerObject, currentPropertyInfo, IListToArray<bool>(listvalue), e.MethodManager, e.ContainerStack.Peek().ContainerObjectTypeName);
+                        }
+                    }
+                    else if (listToArrayType == typeof(decimal))
+                    {
+                        currentObjectContainer = e.ContainerStack.Pop();
+                        if (currentObjectContainer.ContainerType == DeserializeObjectContainerType.Property)
+                        {
+                            currentPropertyInfo = currentObjectContainer.ContainerObject as PropertyInfo;
+                            PropertySetValue<decimal[]>(e.ContainerStack.Peek().ContainerObject, currentPropertyInfo, IListToArray<decimal>(listvalue), e.MethodManager, e.ContainerStack.Peek().ContainerObjectTypeName);
+                        }
+                    }
+                    else 
+                    {
+                        currentObjectContainer = e.ContainerStack.Pop();
+                        if (currentObjectContainer.ContainerType == DeserializeObjectContainerType.Property)
+                        {
+                            currentPropertyInfo = currentObjectContainer.ContainerObject as PropertyInfo;
+                            PropertySetValue<IList>(e.ContainerStack.Peek().ContainerObject, currentPropertyInfo, listvalue, e.MethodManager, e.ContainerStack.Peek().ContainerObjectTypeName);
+                        }
                     }
                 }
             }
@@ -430,38 +478,38 @@ namespace Eiap.NetFramework
                 {
                     if (valuestring != JsonSymbol.JsonNullSymbol)
                     {
-                        objvalue = int.Parse(valuestring);
+                        PropertySetValue<int>(e.ContainerStack.Peek().ContainerObject, currentPropertyInfo, int.Parse(valuestring), e.MethodManager, currentObjectContainer.ContainerObjectTypeName);
                     }
                 }
                 else if (currentPropertyType == typeof(string))
                 {
                     if (valuestring != JsonSymbol.JsonNullSymbol)
                     {
-                        objvalue = valuestring;
+                        PropertySetValue<string>(e.ContainerStack.Peek().ContainerObject, currentPropertyInfo, valuestring, e.MethodManager, currentObjectContainer.ContainerObjectTypeName);
                     }
                 }
                 else if (currentPropertyType == typeof(DateTime))
                 {
                     if (valuestring != JsonSymbol.JsonNullSymbol)
                     {
-                        objvalue = DateTime.Parse(valuestring);
+                        PropertySetValue<DateTime>(e.ContainerStack.Peek().ContainerObject, currentPropertyInfo, DateTime.Parse(valuestring), e.MethodManager, currentObjectContainer.ContainerObjectTypeName);
                     }
                 }
                 else if (currentPropertyType == typeof(decimal))
                 {
                     if (valuestring != JsonSymbol.JsonNullSymbol)
                     {
-                        objvalue = Decimal.Parse(valuestring);
+                        PropertySetValue<decimal>(e.ContainerStack.Peek().ContainerObject, currentPropertyInfo, decimal.Parse(valuestring), e.MethodManager, currentObjectContainer.ContainerObjectTypeName);
                     }
                 }
                 else if (currentPropertyType == typeof(bool))
                 {
                     if (valuestring != JsonSymbol.JsonNullSymbol)
                     {
-                        objvalue = bool.Parse(valuestring);
+                        PropertySetValue<bool>(e.ContainerStack.Peek().ContainerObject, currentPropertyInfo, bool.Parse(valuestring), e.MethodManager, currentObjectContainer.ContainerObjectTypeName);
                     }
                 }
-                PropertySetValue(e.ContainerStack.Peek().ContainerObject, currentPropertyInfo, objvalue, e.MethodManager, currentObjectContainer.ContainerObjectTypeName);
+                
             }
         }
 
@@ -514,70 +562,22 @@ namespace Eiap.NetFramework
             return res;
         }
 
-        private static object IListToArray(IList list)
+        private static ListToArrayType[] IListToArray<ListToArrayType>(IList list)
         {
-            object arrayObj = null;
             Type listType = list.GetType().GetGenericArguments()[0];
             IEnumerator enumeratorList = list.GetEnumerator();
             int currentListIndex = 0;
-            if (listType == typeof(int))
+
+            ListToArrayType[] listToArray = new ListToArrayType[list.Count];
+            while (enumeratorList.MoveNext())
             {
-                int[] tmpIntArray = new int[list.Count];
-                while (enumeratorList.MoveNext())
-                {
-                    tmpIntArray[currentListIndex] = Convert.ToInt32(enumeratorList.Current);
-                    currentListIndex++;
-                }
-                arrayObj = tmpIntArray;
+                listToArray[currentListIndex] = (ListToArrayType)enumeratorList.Current;
+                currentListIndex++;
             }
-            else if (listType == typeof(string))
-            {
-                string[] tmpStringArray = new string[list.Count];
-                while (enumeratorList.MoveNext())
-                {
-                    tmpStringArray[currentListIndex] = Convert.ToString(enumeratorList.Current);
-                    currentListIndex++;
-                }
-                arrayObj = tmpStringArray;
-            }
-            else if (listType == typeof(DateTime))
-            {
-                DateTime[] tmpDTArray = new DateTime[list.Count];
-                while (enumeratorList.MoveNext())
-                {
-                    tmpDTArray[currentListIndex] = Convert.ToDateTime(enumeratorList.Current);
-                    currentListIndex++;
-                }
-                arrayObj = tmpDTArray;
-            }
-            else if (listType == typeof(decimal))
-            {
-                decimal[] tmpDecimalArray = new decimal[list.Count];
-                while (enumeratorList.MoveNext())
-                {
-                    tmpDecimalArray[currentListIndex] = Convert.ToDecimal(enumeratorList.Current);
-                    currentListIndex++;
-                }
-                arrayObj = tmpDecimalArray;
-            }
-            else if (listType == typeof(bool))
-            {
-                bool[] tmpBoolArray = new bool[list.Count];
-                while (enumeratorList.MoveNext())
-                {
-                    tmpBoolArray[currentListIndex] = Convert.ToBoolean(enumeratorList.Current);
-                    currentListIndex++;
-                }
-                arrayObj = tmpBoolArray;
-            }
-            else
-            {
-                arrayObj = list;
-            }
-            return arrayObj;
+            return listToArray;
         }
 
-        private static void PropertySetValue(object instanceObj, PropertyInfo currentPropertyInfo, object objvalue, IMethodManager methodManager, string instanceTypeName = null)
+        private static void PropertySetValue<ObjValueType>(object instanceObj, PropertyInfo currentPropertyInfo, ObjValueType objvalue, IMethodManager methodManager, string instanceTypeName = null)
         {
             methodManager.MethodInvoke(instanceObj, new object[] { objvalue }, currentPropertyInfo.GetSetMethod(), instanceTypeName);
         }
