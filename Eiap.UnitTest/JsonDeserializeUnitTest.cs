@@ -17,7 +17,7 @@ namespace Eiap.UnitTest
         }
     }
 
-    //[TestClass]
+    [TestClass]
     public class JsonDeserializeUnitTest
     {
         public JsonDeserializeUnitTest()
@@ -30,7 +30,7 @@ namespace Eiap.UnitTest
                .RegisterInitialize();
         }
 
-        //[TestMethod]
+        [TestMethod]
         public void JsonDeserializeTest()
         {
             #region 构造数据

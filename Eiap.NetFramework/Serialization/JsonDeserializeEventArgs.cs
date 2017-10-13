@@ -24,11 +24,6 @@ namespace Eiap.NetFramework
         public Type RootType { get; set; }
 
         /// <summary>
-        /// 当前字符
-        /// </summary>
-        public char CurrentCharItem { get; set; }
-
-        /// <summary>
         /// 方法管理对象
         /// </summary>
         public IMethodManager MethodManager { get; set; }

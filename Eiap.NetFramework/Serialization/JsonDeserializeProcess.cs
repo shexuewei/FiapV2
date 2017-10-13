@@ -22,59 +22,68 @@ namespace Eiap.NetFramework
 
         public static object Deserialize(string jsonString, Type objectType, SerializationSetting setting, IMethodManager methodManager)
         {
-            Stack<char> jsonStringStack = new Stack<char>();
+            Stack<char> jsonStringStack = new Stack<char>(jsonString.Length);
             Stack<DeserializeObjectContainer> containerStack = new Stack<DeserializeObjectContainer>();
             JsonDeserializeEventArgs args = new JsonDeserializeEventArgs { RootType = objectType, ContainerStack = containerStack, JsonStringStack = jsonStringStack, MethodManager = methodManager };
-            foreach (char charitem in jsonString)
+            using (StringReader stringreader = new StringReader(jsonString))
             {
-                jsonStringStack.Push(charitem);
-                args.CurrentCharItem = charitem;
-                //数组开始
-                if (charitem == JsonSymbol.JsonArraySymbol_Begin)
+                //foreach (char charitem in jsonString)
+                while (true)
                 {
-                    if (JsonDeserializeArraySymbol_Begin_Event != null)
+                    int charindex = stringreader.Read();
+                    if (charindex == -1)
                     {
-                        JsonDeserializeArraySymbol_Begin_Event(null, args);
+                        break;
                     }
-                }
-                //数组结束
-                else if (charitem == JsonSymbol.JsonArraySymbol_End)
-                {
-                    if (JsonDeserializeArraySymbol_End_Event != null)
+                    char charitem = (char)charindex;
+                    jsonStringStack.Push(charitem);
+                    //数组开始
+                    if (charitem == JsonSymbol.JsonArraySymbol_Begin)
                     {
-                        JsonDeserializeArraySymbol_End_Event(null, args);
+                        if (JsonDeserializeArraySymbol_Begin_Event != null)
+                        {
+                            JsonDeserializeArraySymbol_Begin_Event(null, args);
+                        }
                     }
-                }
-                //对象开始
-                else if (charitem == JsonSymbol.JsonObjectSymbol_Begin)
-                {
-                    if (JsonDeserializeObjectSymbol_Begin_Event != null)
+                    //数组结束
+                    else if (charitem == JsonSymbol.JsonArraySymbol_End)
                     {
-                        JsonDeserializeObjectSymbol_Begin_Event(null, args);
+                        if (JsonDeserializeArraySymbol_End_Event != null)
+                        {
+                            JsonDeserializeArraySymbol_End_Event(null, args);
+                        }
                     }
-                }
-                //属性名
-                else if (charitem == JsonSymbol.JsonPropertySymbol && IsPropertyHandler(args.JsonStringStack))
-                {
-                    if (JsonDeserializePropertySymbol_Event != null)
+                    //对象开始
+                    else if (charitem == JsonSymbol.JsonObjectSymbol_Begin)
                     {
-                        JsonDeserializePropertySymbol_Event(null, args);
+                        if (JsonDeserializeObjectSymbol_Begin_Event != null)
+                        {
+                            JsonDeserializeObjectSymbol_Begin_Event(null, args);
+                        }
                     }
-                }
-                //对象结束
-                else if (charitem == JsonSymbol.JsonObjectSymbol_End)
-                {
-                    if (JsonDeserializeObjectSymbol_End_Event != null)
+                    //属性名
+                    else if (charitem == JsonSymbol.JsonPropertySymbol && IsPropertyHandler(args.JsonStringStack))
                     {
-                        JsonDeserializeObjectSymbol_End_Event(null, args);
+                        if (JsonDeserializePropertySymbol_Event != null)
+                        {
+                            JsonDeserializePropertySymbol_Event(null, args);
+                        }
                     }
-                }
-                //逗号
-                else if (charitem == JsonSymbol.JsonSeparateSymbol)
-                {
-                    if (JsonDeserializeSeparateSymbol_Event != null)
+                    //对象结束
+                    else if (charitem == JsonSymbol.JsonObjectSymbol_End)
                     {
-                        JsonDeserializeSeparateSymbol_Event(null, args);
+                        if (JsonDeserializeObjectSymbol_End_Event != null)
+                        {
+                            JsonDeserializeObjectSymbol_End_Event(null, args);
+                        }
+                    }
+                    //逗号
+                    else if (charitem == JsonSymbol.JsonSeparateSymbol)
+                    {
+                        if (JsonDeserializeSeparateSymbol_Event != null)
+                        {
+                            JsonDeserializeSeparateSymbol_Event(null, args);
+                        }
                     }
                 }
             }
@@ -459,7 +468,7 @@ namespace Eiap.NetFramework
         private static DeserializeObjectContainer GetCurrentObject(Stack<DeserializeObjectContainer> containerStack)
         {
             DeserializeObjectContainer currentObjectContainer = null;
-            Stack<DeserializeObjectContainer> tmpDeserializeObjectContainerStack = new Stack<DeserializeObjectContainer>();
+            Stack<DeserializeObjectContainer> tmpDeserializeObjectContainerStack = new Stack<DeserializeObjectContainer>(containerStack.Count);
             while (true)
             {
                 currentObjectContainer = containerStack.Pop();
@@ -480,7 +489,7 @@ namespace Eiap.NetFramework
         {
             bool res = false;
             bool isQuotesSymbol = false;
-            Stack<char> charList = new Stack<char>();
+            Stack<char> charList = new Stack<char>(jsonStringStack.Count);
             while (true)
             {
                 var currentChar = jsonStringStack.Pop();
