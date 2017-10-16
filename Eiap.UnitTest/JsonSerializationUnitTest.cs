@@ -8,10 +8,19 @@ using Eiap.NetFramework;
 
 namespace Eiap.UnitTest
 {
-    [TestClass]
-    public class JsonDeserializeUnitTest
+    class Program
     {
-        public JsonDeserializeUnitTest()
+        static void Main(string[] args)
+        {
+            JsonSerializationUnitTest jsonSerializationUnitTest = new JsonSerializationUnitTest();
+            jsonSerializationUnitTest.JsonSerializationTest();
+        }
+    }
+
+    [TestClass]
+    public class JsonSerializationUnitTest
+    {
+        public JsonSerializationUnitTest()
         {
             EiapNetFrameworkModule xx = new EiapNetFrameworkModule();
             AssemblyManager.Instance
@@ -22,7 +31,7 @@ namespace Eiap.UnitTest
         }
 
         [TestMethod]
-        public void JsonDeserializeTest()
+        public void JsonSerializationTest()
         {
             #region 构造数据
             Students student1 = new Students { Age = 10, Birthday = DateTime.Now, Height = null, Name = "Student1" };
@@ -63,23 +72,23 @@ namespace Eiap.UnitTest
 
             StringBuilder sb = new StringBuilder();
             ISerializationManager serliz = DependencyManager.Instance.Resolver<ISerializationManager>();
-            var testobject = serliz.SerializeObject(schoolList);
+            
             int count = 10;
             int num = 10000;
-            //double sum1 = 0;
-            //for (int m = 0; m < count; m++)
-            //{
-            //    Stopwatch stopwatch1 = new Stopwatch();
-            //    stopwatch1.Start();
-            //    for (int i = 0; i < num; i++)
-            //    {
-            //        var xx = JsonConvert.DeserializeObject<List<Schools>>(testobject);
-            //    }
-            //    stopwatch1.Stop();
-            //    sb.Append("Newtonsoft:" + stopwatch1.Elapsed.TotalMilliseconds + "\r\n");
-            //    sum1 += stopwatch1.Elapsed.TotalMilliseconds;
-            //}
-            //sb.Append("Newtonsoft Avg:" + sum1 / count + "\r\n");
+            double sum1 = 0;
+            for (int m = 0; m < count; m++)
+            {
+                Stopwatch stopwatch1 = new Stopwatch();
+                stopwatch1.Start();
+                for (int i = 0; i < num; i++)
+                {
+                    var xx = JsonConvert.SerializeObject(schoolList);
+                }
+                stopwatch1.Stop();
+                sb.Append("Newtonsoft:" + stopwatch1.Elapsed.TotalMilliseconds + "\r\n");
+                sum1 += stopwatch1.Elapsed.TotalMilliseconds;
+            }
+            sb.Append("Newtonsoft Avg:" + sum1 / count + "\r\n");
 
             double sum2 = 0;
             for (int m = 0; m < count; m++)
@@ -88,7 +97,7 @@ namespace Eiap.UnitTest
                 stopwatch2.Start();
                 for (int i = 0; i < num; i++)
                 {
-                    var xx = serliz.DeserializeObject<List<Schools>>(testobject);
+                    var xx = serliz.SerializeObject(schoolList);
                 }
                 stopwatch2.Stop();
                 sb.Append("SXW:" + stopwatch2.Elapsed.TotalMilliseconds + "\r\n");

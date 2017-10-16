@@ -63,10 +63,10 @@ namespace Eiap.NetFramework
         public static void Serialize(object serializeObject, SerializationSetting setting, StringBuilder valueSb, IMethodManager methodManager)
         {
             Type serializeObjectType = serializeObject.GetType();
-            Stack<SerializeObjectContainer> serializeObjectList = new Stack<SerializeObjectContainer>();
-            Stack<SerializeObjectContainer> tmpSerializeObjectList = new Stack<SerializeObjectContainer>();
-            AddOrUpdateSerializeObjectList(serializeObject, valueSb, serializeObjectList, serializeObjectType, tmpSerializeObjectList);
-            Stack<object> currentObjectList = new Stack<object>();
+            Stack<SerializeObjectContainer> serializeObjectList = new Stack<SerializeObjectContainer>(1024);
+            Stack<SerializeObjectContainer> tmpSerializeObjectList = new Stack<SerializeObjectContainer>(1024);
+            AddOrUpdateSerializeObjectList(serializeObject, serializeObjectList, serializeObjectType, tmpSerializeObjectList);
+            Stack<object> currentObjectList = new Stack<object>(1024);
             while (serializeObjectList.Count > 0)
             {
                 SerializeObjectContainer currentSerializeObjectContainer = serializeObjectList.Pop();
@@ -100,11 +100,11 @@ namespace Eiap.NetFramework
                         else if (typeof(IDictionary).IsAssignableFrom(currentPropertyInfo.PropertyType))
                         {
                             currentObjectList.Push(currentSerializeObjectContainer.CurrentObject);
-                            AddOrUpdateSerializeObjectList(objectValue, valueSb, serializeObjectList, currentPropertyInfo.PropertyType, tmpSerializeObjectList);
+                            AddOrUpdateSerializeObjectList(objectValue, serializeObjectList, currentPropertyInfo.PropertyType, tmpSerializeObjectList);
                         }
                         else
                         {
-                            AddOrUpdateSerializeObjectList(objectValue, valueSb, serializeObjectList, currentPropertyInfo.PropertyType, tmpSerializeObjectList);
+                            AddOrUpdateSerializeObjectList(objectValue, serializeObjectList, currentPropertyInfo.PropertyType, tmpSerializeObjectList);
                         }
                         break;
                     case SerializeObjectFlag.Object:
@@ -143,7 +143,7 @@ namespace Eiap.NetFramework
                         }
                         else
                         {
-                            AddOrUpdateSerializeObjectList(dicValue.Value, valueSb, serializeObjectList, currentSerializeObjectContainer.CurrentObjectType, tmpSerializeObjectList);
+                            AddOrUpdateSerializeObjectList(dicValue.Value, serializeObjectList, currentSerializeObjectContainer.CurrentObjectType, tmpSerializeObjectList);
                         }
                         break;
                 }
@@ -157,7 +157,7 @@ namespace Eiap.NetFramework
         /// <param name="valueSb"></param>
         /// <param name="serializeObjectList"></param>
         /// <param name="serializeObjectType"></param>
-        private static void AddOrUpdateSerializeObjectList(object serializeObject, StringBuilder valueSb, Stack<SerializeObjectContainer> serializeObjectList, Type serializeObjectType, Stack<SerializeObjectContainer> tmpSerializeObjectList)
+        private static void AddOrUpdateSerializeObjectList(object serializeObject, Stack<SerializeObjectContainer> serializeObjectList, Type serializeObjectType, Stack<SerializeObjectContainer> tmpSerializeObjectList)
         {
             if (serializeObjectType.IsNormalType())
             {

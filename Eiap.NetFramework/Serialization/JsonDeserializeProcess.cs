@@ -579,7 +579,7 @@ namespace Eiap.NetFramework
 
         private static void PropertySetValue<ObjValueType>(object instanceObj, PropertyInfo currentPropertyInfo, ObjValueType objvalue, IMethodManager methodManager, string instanceTypeName = null)
         {
-            methodManager.MethodInvoke(instanceObj, new object[] { objvalue }, currentPropertyInfo.GetSetMethod(), instanceTypeName);
+            methodManager.MethodInvoke(instanceObj, new object[] { objvalue }, currentPropertyInfo.GetSetMethod());
         }
     }
 }

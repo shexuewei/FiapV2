@@ -14,20 +14,13 @@ namespace Eiap
         /// <param name="methodFullName"></param>
         /// <param name="methodInfo"></param>
         /// <returns></returns>
-        Func<object, object[], object> AddMethodContainer(string methodFullName, MethodInfo methodInfo);
+        Func<object, object[], object> AddMethodContainer(MethodInfo methodInfo);
 
         /// <summary>
         /// 获取通用方法容器
         /// </summary>
         /// <param name="methodFullName"></param>
         /// <returns></returns>
-        Func<object, object[], object> GetMethodByMethodFullName(string methodFullName);
-
-        /// <summary>
-        /// 根据方法和实例对象返回方法全名
-        /// </summary>
-        /// <param name="methodinfo"></param>
-        /// <returns></returns>
-        string GetMethodFullName(object instance, MethodInfo methodinfo, string instanceTypeName);
+        Func<object, object[], object> GetMethodByMethodFullName(MethodInfo methodInfo);
     }
 }

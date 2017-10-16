@@ -3,65 +3,40 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection;
-using System.Text;
 
 namespace Eiap
 {
     public class MethodContainerManager : IMethodContainerManager
     {
-        private ConcurrentDictionary<string, Func<object, object[], object>> _methodContainerList = null;
+        private ConcurrentDictionary<MethodInfo, Func<object, object[], object>> _methodContainerList = null;
 
         public MethodContainerManager()
         {
-            _methodContainerList = new ConcurrentDictionary<string, Func<object, object[], object>>();
+            _methodContainerList = new ConcurrentDictionary<MethodInfo, Func<object, object[], object>>();
         }
 
         /// <summary>
         /// 添加动态代理方法容器
         /// </summary>
         /// <param name="container"></param>
-        public Func<object, object[], object> AddMethodContainer(string methodFullName, MethodInfo methodInfo)
+        public Func<object, object[], object> AddMethodContainer(MethodInfo methodInfo)
         {
             Func<object, object[], object> method = GetExecuteDelegate(methodInfo);
-            _methodContainerList.TryAdd(methodFullName, method);
+            _methodContainerList.TryAdd(methodInfo, method);
             return method;
         }
 
-        /// <summary>
-        /// 根据方法和实例对象返回方法全名
-        /// </summary>
-        /// <param name="methodinfo"></param>
-        /// <returns></returns>
-        public string GetMethodFullName(object instance, MethodInfo methodinfo, string instanceTypeName)
-        {
-            string methidFullNameStrBui = "";
-            if (string.IsNullOrWhiteSpace(instanceTypeName))
-            {
-                methidFullNameStrBui += instance.GetType().FullName;
-            }
-            else
-            {
-                methidFullNameStrBui += instanceTypeName;
-            }
-            
-            methidFullNameStrBui += "."+ methodinfo.Name;
-            ParameterInfo[] parametersList = methodinfo.GetParameters();
-            foreach (ParameterInfo parameterItem in parametersList)
-            {
-                methidFullNameStrBui += "."+ parameterItem.ParameterType.Name;
-            }
-            return methidFullNameStrBui;
-        }
+        
 
         /// <summary>
         /// 获取动态代理方法容器
         /// </summary>
         /// <param name="dynamicProxyMethodFullName"></param>
         /// <returns></returns>
-        public Func<object, object[], object> GetMethodByMethodFullName(string methodFullName)
+        public Func<object, object[], object> GetMethodByMethodFullName(MethodInfo methodInfo)
         {
             Func<object, object[], object> retMethod = null;
-            _methodContainerList.TryGetValue(methodFullName, out retMethod);
+            _methodContainerList.TryGetValue(methodInfo, out retMethod);
             return retMethod;
         }
 

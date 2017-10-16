@@ -1,10 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Eiap.MethodService
 {
@@ -26,13 +21,12 @@ namespace Eiap.MethodService
         /// <param name="methodFullName"></param>
         /// <param name="methodInfo"></param>
         /// <returns></returns>
-        public object MethodInvoke(object instance,object[] paramsValue, MethodInfo methodInfo, string instanceTypeName = null)
+        public object MethodInvoke(object instance,object[] paramsValue, MethodInfo methodInfo)
         {
-            string methidFullName = _methodContainerManager.GetMethodFullName(instance, methodInfo, instanceTypeName);
-            Func<object, object[], object> methodFun = _methodContainerManager.GetMethodByMethodFullName(methidFullName);
+            Func<object, object[], object> methodFun = _methodContainerManager.GetMethodByMethodFullName(methodInfo);
             if (methodFun == null)
             {
-                methodFun = _methodContainerManager.AddMethodContainer(methidFullName, methodInfo);
+                methodFun = _methodContainerManager.AddMethodContainer(methodInfo);
             }
             var retvalue = methodFun(instance, paramsValue);
             return retvalue;

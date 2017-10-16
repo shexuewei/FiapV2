@@ -16,6 +16,6 @@ namespace Eiap
         /// <param name="paramsValue"></param>
         /// <param name="methodInfo"></param>
         /// <returns></returns>
-        object MethodInvoke(object instance, object[] paramsValue, MethodInfo methodInfo, string instanceTypeName = null);
+        object MethodInvoke(object instance, object[] paramsValue, MethodInfo methodInfo);
     }
 }
