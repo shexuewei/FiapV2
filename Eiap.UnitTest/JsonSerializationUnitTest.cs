@@ -75,20 +75,20 @@ namespace Eiap.UnitTest
             
             int count = 10;
             int num = 10000;
-            double sum1 = 0;
-            for (int m = 0; m < count; m++)
-            {
-                Stopwatch stopwatch1 = new Stopwatch();
-                stopwatch1.Start();
-                for (int i = 0; i < num; i++)
-                {
-                    var xx = JsonConvert.SerializeObject(schoolList);
-                }
-                stopwatch1.Stop();
-                sb.Append("Newtonsoft:" + stopwatch1.Elapsed.TotalMilliseconds + "\r\n");
-                sum1 += stopwatch1.Elapsed.TotalMilliseconds;
-            }
-            sb.Append("Newtonsoft Avg:" + sum1 / count + "\r\n");
+            //double sum1 = 0;
+            //for (int m = 0; m < count; m++)
+            //{
+            //    Stopwatch stopwatch1 = new Stopwatch();
+            //    stopwatch1.Start();
+            //    for (int i = 0; i < num; i++)
+            //    {
+            //        var xx = JsonConvert.SerializeObject(schoolList);
+            //    }
+            //    stopwatch1.Stop();
+            //    sb.Append("Newtonsoft:" + stopwatch1.Elapsed.TotalMilliseconds + "\r\n");
+            //    sum1 += stopwatch1.Elapsed.TotalMilliseconds;
+            //}
+            //sb.Append("Newtonsoft Avg:" + sum1 / count + "\r\n");
 
             double sum2 = 0;
             for (int m = 0; m < count; m++)
