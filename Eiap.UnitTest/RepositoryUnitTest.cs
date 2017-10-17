@@ -9,6 +9,16 @@ namespace Eiap.UnitTest
     [TestClass]
     public class RepositoryUnitTest
     {
+        public RepositoryUnitTest()
+        {
+            AssemblyManager.Instance
+               .AssemblyInitialize(typeof(EiapModule), typeof(EiapNetFrameworkModule), typeof(EiapUnitTestModule))
+               .Register(DependencyManager.Instance.Register)
+               .Register(InterceptorManager.Instance.Register)
+               .RegisterInitialize();
+
+        }
+
         [TestMethod]
         public void RepositoryAddTest()
         {
@@ -25,6 +35,29 @@ namespace Eiap.UnitTest
                         }
                     }
                 }
+            }
+        }
+
+        [TestMethod]
+        public void RepositoryUpdateTest()
+        {
+            using (IRepository<School, int> testschool = (IRepository<School, int>)DependencyManager.Instance.Resolver(typeof(IRepository<School, int>)))
+            {
+                List<School> schoollist = testschool.Query().Where(m => m.Id < 50).Top(100).GetEntityList();
+                foreach (School schoolentity in schoollist)
+                {
+                    schoolentity.Name = schoolentity.Name + new Random().Next(1, 100).ToString();
+                    testschool.Update(schoolentity);
+                }
+            }
+        }
+
+        [TestMethod]
+        public void RepositoryDeleteTest()
+        {
+            using (IRepository<Class, int> testschool = (IRepository<Class, int>)DependencyManager.Instance.Resolver(typeof(IRepository<Class, int>)))
+            {
+                testschool.Delete(5);
             }
         }
     }

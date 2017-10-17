@@ -32,7 +32,7 @@ namespace Eiap.NetFramework
             _QueryMapping = QueryMapping;
             _SQLQuery = SQLQuery;
             _CurrentUnitOfWork = DependencyManager.Instance.Resolver<ICurrentUnitOfWork>();
-            //_CurrentUnitOfWork.CurrentUnitOfWork.SetRepository(this);
+            _CurrentUnitOfWork.CurrentUnitOfWork.SetRepository(this);
             _MethodManager = methodManager;
         }
 
@@ -57,7 +57,7 @@ namespace Eiap.NetFramework
             return _QueryMapping;
         }
 
-        public virtual TResult Query<TResult>(string cmdText, System.Data.CommandType cmdType, System.Data.IDataParameter[] paramters = null)
+        public virtual TResult Query<TResult>(string cmdText, CommandType cmdType, IDataParameter[] paramters = null)
         {
             TResult result = default(TResult);
             DataSet dataset = _SQLQuery.ExcuteGetDateSet(cmdText, cmdType, paramters);

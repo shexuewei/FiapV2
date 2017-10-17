@@ -8,21 +8,11 @@ using Eiap.NetFramework;
 
 namespace Eiap.UnitTest
 {
-    class Program
-    {
-        static void Main(string[] args)
-        {
-            JsonSerializationUnitTest jsonSerializationUnitTest = new JsonSerializationUnitTest();
-            jsonSerializationUnitTest.JsonSerializationTest();
-        }
-    }
-
     [TestClass]
     public class JsonSerializationUnitTest
     {
         public JsonSerializationUnitTest()
         {
-            EiapNetFrameworkModule xx = new EiapNetFrameworkModule();
             AssemblyManager.Instance
                .AssemblyInitialize(typeof(EiapModule), typeof(EiapNetFrameworkModule), typeof(EiapUnitTestModule))
                .Register(DependencyManager.Instance.Register)

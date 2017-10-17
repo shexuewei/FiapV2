@@ -37,7 +37,19 @@ namespace Eiap
                 if (instance != null)
                 {
                     Type instanceType = instance.GetType();
-                    methodinfo = instanceType.GetMethod(name);
+                    if (parameters == null)
+                    {
+                        methodinfo = instanceType.GetMethod(name, new Type[] { });
+                    }
+                    else
+                    {
+                        Type[] paraTypes = new Type[parameters.Length];
+                        for (int i = 0; i < paraTypes.Length; i++)
+                        {
+                            paraTypes[i] = parameters[i].GetType();
+                        }
+                        methodinfo = instanceType.GetMethod(name, paraTypes);
+                    }
                     if (methodinfo != null)
                     {
                         if (methodinfo.IsGenericMethod)
