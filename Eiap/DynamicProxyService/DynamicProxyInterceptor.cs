@@ -24,7 +24,7 @@ namespace Eiap
             _InterceptorActionList = new List<Action<InterceptorMethodArgs>>();
         }
 
-        public object Invoke(object instance, string name, object[] parameters, Type[] parameterTypes)
+        public object Invoke(object instance, string name, object[] parameters, Type[] parameterTypes, Type[] methodGenericArgumentTypes)
         {
             object objres = null;
             MethodInfo methodinfo = null;
@@ -47,10 +47,9 @@ namespace Eiap
                     }
                     if (methodinfo != null)
                     {
-                        if (methodinfo.IsGenericMethod)
+                        if (methodinfo.IsGenericMethod && methodGenericArgumentTypes != null)
                         {
-                            Type[] genericArgumentsList = methodinfo.GetGenericArguments();
-                            excuMethod = methodinfo.MakeGenericMethod(genericArgumentsList);
+                            excuMethod = methodinfo.MakeGenericMethod(methodGenericArgumentTypes);
                         }
                         else
                         {

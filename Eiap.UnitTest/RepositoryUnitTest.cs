@@ -58,7 +58,7 @@ namespace Eiap.UnitTest
         {
             using (IRepository<Class, int> testclass = (IRepository<Class, int>)DependencyManager.Instance.Resolver(typeof(IRepository<Class, int>)))
             {
-                testclass.Delete(5);
+                testclass.Delete(6);
             }
         }
 

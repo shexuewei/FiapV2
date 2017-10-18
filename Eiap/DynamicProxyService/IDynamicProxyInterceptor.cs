@@ -8,6 +8,6 @@ namespace Eiap
     /// </summary>
     public interface IDynamicProxyInterceptor : IRealtimeDependency, IDynamicProxyDisable
     {
-        object Invoke(object instance, string name, object[] parameters, Type[] parameterTypes);
+        object Invoke(object instance, string name, object[] parameters, Type[] parameterTypes, Type[] methodGenericArgumentTypes);
     }
 }

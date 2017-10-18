@@ -98,13 +98,13 @@ namespace Eiap
                 //构造代理方法
                 for (var i = 0; i < methods.Count; i++)
                 {
-                    ParameterInfo[] parainfos = GetParameterInfos(methods[i]);
-                    Type[] paramtypes = GetParametersType(parainfos);
+                    Type[] paramtypes = GetParametersType(methods[i]);
                     MethodAttributes methodAttributes = MethodAttributes.Public | MethodAttributes.Virtual | MethodAttributes.HideBySig;
                     var methodbuilder = typeBuilder.DefineMethod(methods[i].Name, methodAttributes, CallingConventions.Standard, methods[i].ReturnType, paramtypes);
+                    Type[] methodGenericArguments = null;
                     if (methods[i].IsGenericMethod)
                     {
-                        Type[] methodGenericArguments = methods[i].GetGenericArguments();
+                        methodGenericArguments = methods[i].GetGenericArguments();
                         methodbuilder.DefineGenericParameters(methodGenericArguments.Select(m => m.Name).ToArray());
                     }
 
@@ -147,19 +147,19 @@ namespace Eiap
                             il.Emit(OpCodes.Ldloc, parameterTypes);
                             il.Emit(OpCodes.Ldc_I4, j);
 
-                            if (parainfos[j].ParameterType.Name.Contains("&"))
+                            if (paramtypes[j].Name.Contains("&"))
                             {
-                                string typstr = parainfos[j].ParameterType.FullName.Replace("&", "");
+                                string typstr = paramtypes[j].FullName.Replace("&", "");
                                 Type typetem = Type.GetType(typstr);
                                 il.Emit(OpCodes.Ldtoken, typetem);
                             }
                             else
                             {
-                                il.Emit(OpCodes.Ldtoken, parainfos[j].ParameterType);
+                                il.Emit(OpCodes.Ldtoken, paramtypes[j]);
                             }
 
                             il.Emit(OpCodes.Call, typeof(Type).GetMethod("GetTypeFromHandle", new Type[] { typeof(RuntimeTypeHandle) }));
-                            if (parainfos[j].ParameterType.Name.Contains("&"))
+                            if (paramtypes[j].Name.Contains("&"))
                             {
                                 il.Emit(OpCodes.Callvirt, typeof(Type).GetMethod("MakeByRefType"));
                             }
@@ -167,6 +167,43 @@ namespace Eiap
                         }
                         il.Emit(OpCodes.Ldloc, parameterTypes);
                     }
+
+                    if (methodGenericArguments == null)
+                    {
+                        il.Emit(OpCodes.Ldnull);
+                    }
+                    else if(methodGenericArguments!=null && methodGenericArguments.Length>0)
+                    {
+                        var methodGenericArgumentTypes = il.DeclareLocal(typeof(Type[]));
+                        il.Emit(OpCodes.Ldc_I4, methodGenericArguments.Length);
+                        il.Emit(OpCodes.Newarr, typeof(Type));
+                        il.Emit(OpCodes.Stloc, methodGenericArgumentTypes);
+                        for (int j = 0; j < methodGenericArguments.Length; j++)
+                        {
+                            il.Emit(OpCodes.Ldloc, methodGenericArgumentTypes);
+                            il.Emit(OpCodes.Ldc_I4, j);
+
+                            if (methodGenericArguments[j].Name.Contains("&"))
+                            {
+                                string typstr = methodGenericArguments[j].FullName.Replace("&", "");
+                                Type typetem = Type.GetType(typstr);
+                                il.Emit(OpCodes.Ldtoken, typetem);
+                            }
+                            else
+                            {
+                                il.Emit(OpCodes.Ldtoken, methodGenericArguments[j]);
+                            }
+
+                            il.Emit(OpCodes.Call, typeof(Type).GetMethod("GetTypeFromHandle", new Type[] { typeof(RuntimeTypeHandle) }));
+                            if (methodGenericArguments[j].Name.Contains("&"))
+                            {
+                                il.Emit(OpCodes.Callvirt, typeof(Type).GetMethod("MakeByRefType"));
+                            }
+                            il.Emit(OpCodes.Stelem_Ref);
+                        }
+                        il.Emit(OpCodes.Ldloc, methodGenericArgumentTypes);
+                    }
+
                     il.Emit(OpCodes.Callvirt, interceptorType.GetMethod("Invoke"));
                     if (methods[i].ReturnType == typeof(void))
                     {
@@ -242,35 +279,25 @@ namespace Eiap
         }
 
         /// <summary>
-        /// 获取方法参数信息
-        /// </summary>
-        /// <param name="method"></param>
-        /// <returns></returns>
-        private ParameterInfo[] GetParameterInfos(MethodInfo method)
-        {
-            if (method != null)
-            {
-                return method.GetParameters();
-            }
-            return null;
-        }
-
-        /// <summary>
         /// 获取方法参数类型
         /// </summary>
         /// <param name="method"></param>
         /// <returns></returns>
-        private Type[] GetParametersType(ParameterInfo[] param)
+        private Type[] GetParametersType(MethodInfo method)
         {
             Type[] types = null;
-            if (param != null && param.Length > 0)
+            if (method != null)
             {
-                if (param.Length > 0)
+                ParameterInfo[] param = method.GetParameters();
+                if (param != null && param.Length > 0)
                 {
-                    types = new Type[param.Length];
-                    for (var i = 0; i < param.Length; i++)
+                    if (param.Length > 0)
                     {
-                        types[i] = param[i].ParameterType;
+                        types = new Type[param.Length];
+                        for (var i = 0; i < param.Length; i++)
+                        {
+                            types[i] = param[i].ParameterType;
+                        }
                     }
                 }
             }
