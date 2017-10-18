@@ -98,7 +98,8 @@ namespace Eiap
                 //构造代理方法
                 for (var i = 0; i < methods.Count; i++)
                 {
-                    Type[] paramtypes = GetParametersType(methods[i]);
+                    ParameterInfo[] parainfos = GetParameterInfos(methods[i]);
+                    Type[] paramtypes = GetParametersType(parainfos);
                     MethodAttributes methodAttributes = MethodAttributes.Public | MethodAttributes.Virtual | MethodAttributes.HideBySig;
                     var methodbuilder = typeBuilder.DefineMethod(methods[i].Name, methodAttributes, CallingConventions.Standard, methods[i].ReturnType, paramtypes);
                     if (methods[i].IsGenericMethod)
@@ -118,14 +119,16 @@ namespace Eiap
                     if (paramtypes == null)
                     {
                         il.Emit(OpCodes.Ldnull);
+                        il.Emit(OpCodes.Ldnull);
                     }
                     else
                     {
+                        int paranum = paramtypes.Length;
                         var parameters = il.DeclareLocal(typeof(object[]));
-                        il.Emit(OpCodes.Ldc_I4, paramtypes.Length);
+                        il.Emit(OpCodes.Ldc_I4, paranum);
                         il.Emit(OpCodes.Newarr, typeof(object));
                         il.Emit(OpCodes.Stloc, parameters);
-                        for (var j = 0; j < paramtypes.Length; j++)
+                        for (var j = 0; j < paranum; j++)
                         {
                             il.Emit(OpCodes.Ldloc, parameters);
                             il.Emit(OpCodes.Ldc_I4, j);
@@ -134,6 +137,35 @@ namespace Eiap
                             il.Emit(OpCodes.Stelem_Ref);
                         }
                         il.Emit(OpCodes.Ldloc, parameters);
+
+                        var parameterTypes = il.DeclareLocal(typeof(Type[]));
+                        il.Emit(OpCodes.Ldc_I4, paranum);
+                        il.Emit(OpCodes.Newarr, typeof(Type));
+                        il.Emit(OpCodes.Stloc, parameterTypes);
+                        for (int j = 0; j < paranum; j++)
+                        {
+                            il.Emit(OpCodes.Ldloc, parameterTypes);
+                            il.Emit(OpCodes.Ldc_I4, j);
+
+                            if (parainfos[j].ParameterType.Name.Contains("&"))
+                            {
+                                string typstr = parainfos[j].ParameterType.FullName.Replace("&", "");
+                                Type typetem = Type.GetType(typstr);
+                                il.Emit(OpCodes.Ldtoken, typetem);
+                            }
+                            else
+                            {
+                                il.Emit(OpCodes.Ldtoken, parainfos[j].ParameterType);
+                            }
+
+                            il.Emit(OpCodes.Call, typeof(Type).GetMethod("GetTypeFromHandle", new Type[] { typeof(RuntimeTypeHandle) }));
+                            if (parainfos[j].ParameterType.Name.Contains("&"))
+                            {
+                                il.Emit(OpCodes.Callvirt, typeof(Type).GetMethod("MakeByRefType"));
+                            }
+                            il.Emit(OpCodes.Stelem_Ref);
+                        }
+                        il.Emit(OpCodes.Ldloc, parameterTypes);
                     }
                     il.Emit(OpCodes.Callvirt, interceptorType.GetMethod("Invoke"));
                     if (methods[i].ReturnType == typeof(void))
@@ -210,16 +242,29 @@ namespace Eiap
         }
 
         /// <summary>
-        /// 获取方法参数
+        /// 获取方法参数信息
         /// </summary>
         /// <param name="method"></param>
         /// <returns></returns>
-        private Type[] GetParametersType(MethodInfo method)
+        private ParameterInfo[] GetParameterInfos(MethodInfo method)
         {
-            Type[] types = null;
             if (method != null)
             {
-                var param = method.GetParameters();
+                return method.GetParameters();
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// 获取方法参数类型
+        /// </summary>
+        /// <param name="method"></param>
+        /// <returns></returns>
+        private Type[] GetParametersType(ParameterInfo[] param)
+        {
+            Type[] types = null;
+            if (param != null && param.Length > 0)
+            {
                 if (param.Length > 0)
                 {
                     types = new Type[param.Length];
@@ -228,7 +273,6 @@ namespace Eiap
                         types[i] = param[i].ParameterType;
                     }
                 }
-
             }
             return types;
         }

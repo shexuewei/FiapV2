@@ -3,6 +3,7 @@ using System.Text;
 using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Eiap.NetFramework;
+using System.Data;
 
 namespace Eiap.UnitTest
 {
@@ -55,9 +56,27 @@ namespace Eiap.UnitTest
         [TestMethod]
         public void RepositoryDeleteTest()
         {
-            using (IRepository<Class, int> testschool = (IRepository<Class, int>)DependencyManager.Instance.Resolver(typeof(IRepository<Class, int>)))
+            using (IRepository<Class, int> testclass = (IRepository<Class, int>)DependencyManager.Instance.Resolver(typeof(IRepository<Class, int>)))
             {
-                testschool.Delete(5);
+                testclass.Delete(5);
+            }
+        }
+
+        [TestMethod]
+        public void RepositoryQueryTest()
+        {
+            using (IRepository<Class, int> testclass = (IRepository<Class, int>)DependencyManager.Instance.Resolver(typeof(IRepository<Class, int>)))
+            {
+                List<Class> classList = testclass.Query().Where(m => m.Id >= 20).GetEntityList();
+            }
+        }
+
+        [TestMethod]
+        public void RepositoryQueryResultTest()
+        {
+            using (IRepository<Class, int> testclass = (IRepository<Class, int>)DependencyManager.Instance.Resolver(typeof(IRepository<Class, int>)))
+            {
+                Class class1 = testclass.Query<Class>("select top 1 * from class", CommandType.Text);
             }
         }
     }

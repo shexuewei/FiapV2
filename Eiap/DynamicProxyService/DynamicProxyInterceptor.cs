@@ -24,7 +24,7 @@ namespace Eiap
             _InterceptorActionList = new List<Action<InterceptorMethodArgs>>();
         }
 
-        public object Invoke(object instance, string name, object[] parameters)
+        public object Invoke(object instance, string name, object[] parameters, Type[] parameterTypes)
         {
             object objres = null;
             MethodInfo methodinfo = null;
@@ -43,18 +43,13 @@ namespace Eiap
                     }
                     else
                     {
-                        Type[] paraTypes = new Type[parameters.Length];
-                        for (int i = 0; i < paraTypes.Length; i++)
-                        {
-                            paraTypes[i] = parameters[i].GetType();
-                        }
-                        methodinfo = instanceType.GetMethod(name, paraTypes);
+                        methodinfo = instanceType.GetMethod(name, parameterTypes);
                     }
                     if (methodinfo != null)
                     {
                         if (methodinfo.IsGenericMethod)
                         {
-                            Type[] genericArgumentsList = methodinfo.GetGenericArguments().Select(m => m.DeclaringType).ToArray();
+                            Type[] genericArgumentsList = methodinfo.GetGenericArguments();
                             excuMethod = methodinfo.MakeGenericMethod(genericArgumentsList);
                         }
                         else

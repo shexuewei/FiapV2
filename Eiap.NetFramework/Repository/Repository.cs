@@ -32,7 +32,7 @@ namespace Eiap.NetFramework
             _QueryMapping = QueryMapping;
             _SQLQuery = SQLQuery;
             _CurrentUnitOfWork = DependencyManager.Instance.Resolver<ICurrentUnitOfWork>();
-            _CurrentUnitOfWork.CurrentUnitOfWork.SetRepository(this);
+           // _CurrentUnitOfWork.CurrentUnitOfWork.SetRepository(this);
             _MethodManager = methodManager;
         }
 

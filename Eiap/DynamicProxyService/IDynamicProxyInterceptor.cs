@@ -1,4 +1,6 @@
 ﻿
+using System;
+
 namespace Eiap
 {
     /// <summary>
@@ -6,6 +8,6 @@ namespace Eiap
     /// </summary>
     public interface IDynamicProxyInterceptor : IRealtimeDependency, IDynamicProxyDisable
     {
-        object Invoke(object instance, string name, object[] parameters);
+        object Invoke(object instance, string name, object[] parameters, Type[] parameterTypes);
     }
 }
