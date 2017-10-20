@@ -79,6 +79,7 @@
     <Compile Include="JsonSerializationUnitTest.cs" />
     <Compile Include="JsonDeserializeUnitTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UnitOfWorkUnitTest.cs" />
     <Compile Include="RepositoryUnitTest.cs" />
   </ItemGroup>
   <ItemGroup>

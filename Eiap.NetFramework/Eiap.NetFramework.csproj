@@ -73,6 +73,7 @@
     <Compile Include="Serialization\SerializationManager.cs" />
     <Compile Include="Serialization\SerializeObjectContainer.cs" />
     <Compile Include="Serialization\SerializeObjectFlag.cs" />
+    <Compile Include="UnitOfWork\UnitOfWorkManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Eiap\Eiap.csproj">

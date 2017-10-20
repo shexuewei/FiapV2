@@ -1,6 +1,5 @@
 ﻿
 using System;
-using System.Collections.Generic;
 using System.Data;
 
 namespace Eiap.NetFramework
@@ -14,25 +13,23 @@ namespace Eiap.NetFramework
         where tEntity : IEntity<TPrimarykey>
         where TPrimarykey : struct
     {
-        private List<tEntity> _AddEntityList;
-        private List<tEntity> _UpdateEntityList;
-        private List<TPrimarykey> _DeletePrimarykeyList;
         private ISQLCommandMapping<tEntity, TPrimarykey> _CommandMapping;
         private ISQLDataQueryMapping<tEntity, TPrimarykey> _QueryMapping;
         private ISQLQuery _SQLQuery;
-        private ICurrentUnitOfWork _CurrentUnitOfWork;
+        private IUnitOfWork _CurrentUnitOfWork;
         private readonly IMethodManager _MethodManager;
 
         public Repository(ISQLCommandMapping<tEntity, TPrimarykey> CommandMapping,
             ISQLDataQueryMapping<tEntity, TPrimarykey> QueryMapping,
             ISQLQuery SQLQuery,
-            IMethodManager methodManager)
+            IMethodManager methodManager,
+            IUnitOfWork CurrentUnitOfWork)
         {
             _CommandMapping = CommandMapping;
             _QueryMapping = QueryMapping;
             _SQLQuery = SQLQuery;
-            _CurrentUnitOfWork = DependencyManager.Instance.Resolver<ICurrentUnitOfWork>();
-           // _CurrentUnitOfWork.CurrentUnitOfWork.SetRepository(this);
+            _CurrentUnitOfWork = CurrentUnitOfWork;
+            _CurrentUnitOfWork.SetRepository(this);
             _MethodManager = methodManager;
         }
 
@@ -65,46 +62,8 @@ namespace Eiap.NetFramework
             return result;
         }
 
-        public virtual void Commit()
-        {
-            try
-            {
-                if (_AddEntityList != null && _AddEntityList.Count > 0)
-                {
-                    _CommandMapping.BatchInsertEntity(_AddEntityList);
-                    _AddEntityList.Clear();
-                }
-                if (_UpdateEntityList != null && _UpdateEntityList.Count > 0)
-                {
-                    _CommandMapping.BatchUpdateEntity(_UpdateEntityList);
-                    _UpdateEntityList.Clear();
-                }
-                if (_DeletePrimarykeyList != null && _DeletePrimarykeyList.Count > 0)
-                {
-                    _CommandMapping.BatchDeleteEntity(_DeletePrimarykeyList);
-                    _DeletePrimarykeyList.Clear();
-                }
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
-
         public void Dispose()
         {
-            if (_AddEntityList != null && _AddEntityList.Count > 0)
-            {
-                _AddEntityList.Clear();
-            }
-            if (_UpdateEntityList != null && _UpdateEntityList.Count > 0)
-            {
-                _UpdateEntityList.Clear();
-            }
-            if (_DeletePrimarykeyList != null && _DeletePrimarykeyList.Count > 0)
-            {
-                _DeletePrimarykeyList.Clear();
-            }
             _CommandMapping.Dispose();
             _QueryMapping.Dispose();
             _SQLQuery.Dispose();
@@ -116,11 +75,6 @@ namespace Eiap.NetFramework
             { 
                 _CommandMapping.SQLDataAccessConnection = value; 
             }
-        }
-
-        public virtual ICurrentUnitOfWork CurrentUnitOfWork
-        {
-            get { return _CurrentUnitOfWork; }
         }
 
         /// <summary>

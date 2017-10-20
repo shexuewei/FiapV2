@@ -54,7 +54,7 @@ namespace Eiap.NetFramework
         /// <param name="cmdType">执行类型</param>
         /// <param name="paramters">SQL参数</param>
         /// <returns>自增Id</returns>
-        public virtual ResultID ExcuteNonQuery<ResultID>(string cmdText, CommandType cmdType, IDataParameter[] paramters)
+        public virtual ResultID ExcuteGenericNonQuery<ResultID>(string cmdText, CommandType cmdType, IDataParameter[] paramters)
         {
             object res = null;
             try

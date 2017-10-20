@@ -39,7 +39,7 @@ namespace Eiap.Framework
                 IDataParameter[] para = _SQLDataMappingExtension.GetDataParameter(_MethodManager, entity, _DefaultIndex);
                 if (typeof(TPrimarykey) == typeof(int) || typeof(TPrimarykey) == typeof(long))
                 {
-                    eff = _SQLDataCommand.ExcuteNonQuery<TPrimarykey>(insertSql, CommandType.Text, para);
+                    eff = _SQLDataCommand.ExcuteGenericNonQuery<TPrimarykey>(insertSql, CommandType.Text, para);
                     entity.Id = eff;
                 }
                 else 

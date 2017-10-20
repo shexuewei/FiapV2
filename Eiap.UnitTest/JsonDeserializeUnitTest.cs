@@ -13,7 +13,6 @@ namespace Eiap.UnitTest
     {
         public JsonDeserializeUnitTest()
         {
-            EiapNetFrameworkModule xx = new EiapNetFrameworkModule();
             AssemblyManager.Instance
                .AssemblyInitialize(typeof(EiapModule), typeof(EiapNetFrameworkModule), typeof(EiapUnitTestModule))
                .Register(DependencyManager.Instance.Register)

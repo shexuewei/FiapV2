@@ -2,12 +2,23 @@
 using System.Text;
 using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Eiap.NetFramework;
 
 namespace Eiap.UnitTest
 {
     [TestClass]
     public class DataMappingUnitTest
     {
+        public DataMappingUnitTest()
+        {
+            AssemblyManager.Instance
+               .AssemblyInitialize(typeof(EiapModule), typeof(EiapNetFrameworkModule), typeof(EiapUnitTestModule))
+               .Register(DependencyManager.Instance.Register)
+               .Register(InterceptorManager.Instance.Register)
+               .RegisterInitialize();
+
+        }
+
         [TestMethod]
         public void InsertEntitySQLCommandMappingTest()
         {
@@ -29,46 +40,44 @@ namespace Eiap.UnitTest
         }
 
         [TestMethod]
-        public string UpdateEntitySQLCommandMappingTest()
+        public void UpdateEntitySQLCommandMappingTest()
         {
-            int res = 0;
             Student student = new Student { Age = 10, Birthday = DateTime.Now, Id = 20, Name = "XXXX" };
             using (ISQLCommandMapping<Student, int> test = (ISQLCommandMapping<Student, int>)DependencyManager.Instance.Resolver(typeof(ISQLCommandMapping<Student, int>)))
             {
-                res = test.UpdateEntity(student);
+                test.UpdateEntity(student);
             }
-            return res.ToString();
         }
 
         [TestMethod]
-        public string DeleteEntitySQLCommandMappingTest()
+        public void DeleteEntitySQLCommandMappingTest()
         {
-            int res = 0;
             int id = 30;
             using (ISQLCommandMapping<Student, int> test = (ISQLCommandMapping<Student, int>)DependencyManager.Instance.Resolver(typeof(ISQLCommandMapping<Student, int>)))
             {
-                res = test.DeleteEntity(id);
+                test.DeleteEntity(id);
             }
-            return res.ToString();
         }
 
         [TestMethod]
         public void BatchInsertEntitySQLCommandMappingTest()
         {
-            School school = new School { Name = "School1" };
+            List<School> schoollist = new List<School>() {
+                new School { Name = "School1"+ DateTime.Now.Millisecond.ToString() },
+                new School { Name = "School1"+ DateTime.Now.Millisecond.ToString() },
+                new School { Name = "School1"+ DateTime.Now.Millisecond.ToString() },
+                new School { Name = "School1"+ DateTime.Now.Millisecond.ToString() },
+                new School { Name = "School1"+ DateTime.Now.Millisecond.ToString() }
+            };
             using (ISQLCommandMapping<School, int> test = (ISQLCommandMapping<School, int>)DependencyManager.Instance.Resolver(typeof(ISQLCommandMapping<School, int>)))
             {
-                for (int i = 0; i < 100; i++)
-                {
-                    test.InsertEntity(school);
-                }
+                test.BatchInsertEntity(schoollist);
             }
         }
 
         [TestMethod]
-        public string BatchUpdateEntitySQLCommandMappingTest()
+        public void BatchUpdateEntitySQLCommandMappingTest()
         {
-            int res = 0;
             List<Student> list = new List<Student>();
             list.Add(new Student { Id = 2, Age = 10 });
             list.Add(new Student { Id = 3, Age = 20 });
@@ -76,36 +85,32 @@ namespace Eiap.UnitTest
             list.Add(new Student { Id = 5, Age = 40 });
             using (ISQLCommandMapping<Student, int> test = (ISQLCommandMapping<Student, int>)DependencyManager.Instance.Resolver(typeof(ISQLCommandMapping<Student, int>)))
             {
-                res = test.BatchUpdateEntity(list);
+                test.BatchUpdateEntity(list);
             }
-            return res.ToString();
         }
 
         [TestMethod]
-        public string BatchDeleteEntitySQLCommandMappingTest()
+        public void BatchDeleteEntitySQLCommandMappingTest()
         {
-            int res = 0;
             List<int> list = new List<int> { 2, 3, 4, 5 };
             using (ISQLCommandMapping<Student, int> test = (ISQLCommandMapping<Student, int>)DependencyManager.Instance.Resolver(typeof(ISQLCommandMapping<Student, int>)))
             {
-                res = test.BatchDeleteEntity(list);
+                test.BatchDeleteEntity(list);
             }
-            return res.ToString();
         }
 
         [TestMethod]
-        public string SQLDataQueryGetEntityAllListMappingTest()
+        public void SQLDataQueryGetEntityAllListMappingTest()
         {
             List<Student> list = null;
             using (ISQLDataQueryMapping<Student, int> test = (ISQLDataQueryMapping<Student, int>)DependencyManager.Instance.Resolver(typeof(ISQLDataQueryMapping<Student, int>)))
             {
                 list = test.GetEntityAllList();
             }
-            return "";
         }
 
         [TestMethod]
-        public string SQLDataQueryGetEntityListMappingTest()
+        public void SQLDataQueryGetEntityListMappingTest()
         {
             List<Class> list = null;
             using (ISQLDataQueryMapping<Class, int> test = (ISQLDataQueryMapping<Class, int>)DependencyManager.Instance.Resolver(typeof(ISQLDataQueryMapping<Class, int>)))
@@ -120,7 +125,6 @@ namespace Eiap.UnitTest
                     .Select(m => new Class { Id = m.Id, Name = m.Name, SchoolId = m.SchoolId })
                     .GetEntityList();
             }
-            return "";
         }
     }
 }

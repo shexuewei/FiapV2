@@ -26,7 +26,7 @@ namespace Eiap
         /// <param name="cmdType">执行类型</param>
         /// <param name="paramters">SQL参数</param>
         /// <returns>自增Id</returns>
-        ResultID ExcuteNonQuery<ResultID>(string cmdText, CommandType cmdType, IDataParameter[] paramters);
+        ResultID ExcuteGenericNonQuery<ResultID>(string cmdText, CommandType cmdType, IDataParameter[] paramters);
 
         /// <summary>
         /// SQL命令数据访问链接

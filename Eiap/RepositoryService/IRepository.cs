@@ -9,7 +9,7 @@ namespace Eiap
     /// </summary>
     /// <typeparam name="tEntity"></typeparam>
     /// <typeparam name="TPrimarykey"></typeparam>
-    public interface IRepository<tEntity, TPrimarykey> : IRepositoryCommit, IUnitOfWorkCommandConnection, IRealtimeDependency, IRepositoryLog, IDisposable
+    public interface IRepository<tEntity, TPrimarykey> : IUnitOfWorkCommandConnection, IRealtimeDependency, IRepositoryLog, IDisposable//, IRepositoryCommit
         where tEntity : IEntity<TPrimarykey>
         where TPrimarykey : struct
     {

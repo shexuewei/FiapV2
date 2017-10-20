@@ -9,6 +9,6 @@ namespace Eiap
         /// <summary>
         /// 当前工作单元
         /// </summary>
-        ICurrentUnitOfWork CurrentUnitOfWork { get; }
+        IUnitOfWork CurrentUnitOfWork { get; }
     }
 }

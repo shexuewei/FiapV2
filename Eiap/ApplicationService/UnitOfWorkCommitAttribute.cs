@@ -22,7 +22,7 @@ namespace Eiap
         public override void Execute(InterceptorMethodArgs args)
         {
             IAppService appinstance = args.InstanceObject as IAppService;
-            appinstance.CurrentUnitOfWork.CurrentUnitOfWork.Commit();
+            appinstance.CurrentUnitOfWork.Commit();
         }
     }
 }

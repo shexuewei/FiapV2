@@ -8,9 +8,9 @@ using System.Data;
 namespace Eiap.UnitTest
 {
     [TestClass]
-    public class RepositoryUnitTest
+    public class UnitOfWorkUnitTest
     {
-        public RepositoryUnitTest()
+        public UnitOfWorkUnitTest()
         {
             AssemblyManager.Instance
                .AssemblyInitialize(typeof(EiapModule), typeof(EiapNetFrameworkModule), typeof(EiapUnitTestModule))
@@ -21,26 +21,28 @@ namespace Eiap.UnitTest
         }
 
         [TestMethod]
-        public void RepositoryAddTest()
+        public void UnitOfWorkRepositoryAddTest()
         {
-            using (IRepository<School, int> testschool = (IRepository<School, int>)DependencyManager.Instance.Resolver(typeof(IRepository<School, int>)))
+            using (IUnitOfWork uof = DependencyManager.Instance.Resolver<IUnitOfWork>())
             {
+                IRepository<School, int> testschool = DependencyManager.Instance.Resolver<IRepository<School, int>>();
+                uof.Open();
                 for (int i = 0; i < 5; i++)
                 {
                     School school = testschool.Add(new School { Name = "School" + i.ToString() });
-                    using (IRepository<Class, int> testclass = (IRepository<Class, int>)DependencyManager.Instance.Resolver(typeof(IRepository<Class, int>)))
+                    IRepository<Class, int> testclass = (IRepository<Class, int>)DependencyManager.Instance.Resolver(typeof(IRepository<Class, int>));
+                    for (int j = 0; j < 5; j++)
                     {
-                        for (int j = 0; j < 5; j++)
-                        {
-                            Class cla = testclass.Add(new Class { Name = "Class" + j.ToString(), SchoolId = school.Id });
-                        }
+                        Class cla = testclass.Add(new Class { Name = "Class" + j.ToString(), SchoolId = school.Id });
                     }
+
                 }
+                uof.Commit();
             }
         }
 
         [TestMethod]
-        public void RepositoryUpdateTest()
+        public void UnitOfWorkRepositoryUpdateTest()
         {
             using (IRepository<School, int> testschool = (IRepository<School, int>)DependencyManager.Instance.Resolver(typeof(IRepository<School, int>)))
             {
@@ -54,7 +56,7 @@ namespace Eiap.UnitTest
         }
 
         [TestMethod]
-        public void RepositoryDeleteTest()
+        public void UnitOfWorkRepositoryDeleteTest()
         {
             using (IRepository<Class, int> testclass = (IRepository<Class, int>)DependencyManager.Instance.Resolver(typeof(IRepository<Class, int>)))
             {
@@ -63,7 +65,7 @@ namespace Eiap.UnitTest
         }
 
         [TestMethod]
-        public void RepositoryQueryTest()
+        public void UnitOfWorkRepositoryQueryTest()
         {
             using (IRepository<Class, int> testclass = (IRepository<Class, int>)DependencyManager.Instance.Resolver(typeof(IRepository<Class, int>)))
             {
@@ -72,7 +74,7 @@ namespace Eiap.UnitTest
         }
 
         [TestMethod]
-        public void RepositoryQueryResultTest()
+        public void UnitOfWorkRepositoryQueryResultTest()
         {
             using (IRepository<Class, int> testclass = (IRepository<Class, int>)DependencyManager.Instance.Resolver(typeof(IRepository<Class, int>)))
             {
@@ -81,7 +83,7 @@ namespace Eiap.UnitTest
         }
 
         [TestMethod]
-        public void RepositoryQueryListResultTest()
+        public void UnitOfWorkRepositoryQueryListResultTest()
         {
             using (IRepository<Class, int> testclass = (IRepository<Class, int>)DependencyManager.Instance.Resolver(typeof(IRepository<Class, int>)))
             {

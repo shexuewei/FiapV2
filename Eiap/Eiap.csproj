@@ -130,12 +130,10 @@
     <Compile Include="MethodService\MethodManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RepositoryService\IRepository.cs" />
-    <Compile Include="RepositoryService\IRepositoryCommit.cs" />
     <Compile Include="RepositoryService\IRepositoryLog.cs" />
     <Compile Include="SerializationService\ISerializationManager.cs" />
     <Compile Include="SerializationService\SerializationSetting.cs" />
     <Compile Include="SerializationService\SerializationType.cs" />
-    <Compile Include="UnitOfWorkService\ICurrentUnitOfWork.cs" />
     <Compile Include="UnitOfWorkService\IUnitOfWork.cs" />
     <Compile Include="UnitOfWorkService\IUnitOfWorkCommandConnection.cs" />
     <Compile Include="UnitTestService\IUnitTestCaseContainerManager.cs" />

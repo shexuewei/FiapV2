@@ -2,28 +2,38 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Text;
 using System.Data;
+using Eiap.NetFramework;
 
 namespace Eiap.UnitTest
 {
     [TestClass]
     public class DataAccessUnitTest
     {
+        public DataAccessUnitTest()
+        {
+            AssemblyManager.Instance
+               .AssemblyInitialize(typeof(EiapModule), typeof(EiapNetFrameworkModule), typeof(EiapUnitTestModule))
+               .Register(DependencyManager.Instance.Register)
+               .Register(InterceptorManager.Instance.Register)
+               .RegisterInitialize();
+
+        }
+
         [TestMethod]
-        public string SQLDataCommandTest()
+        public void SQLDataCommandTest()
         {
             int res = 0;
             using (ISQLDataCommand test = (ISQLDataCommand)DependencyManager.Instance.Resolver(typeof(ISQLDataCommand)))
             {
                 for (int i = 0; i < 100; i++)
                 {
-                    res += test.ExcuteNonQuery("insert into student values('Sxw'," + DateTime.Now.Millisecond.ToString() + ",'1984-03-02 00:00:00')", CommandType.Text, null);
+                    res += test.ExcuteNonQuery("insert into School values('School" + DateTime.Now.Millisecond.ToString() + "')", CommandType.Text, null);
                 }
             }
-            return res.ToString();
         }
 
         [TestMethod]
-        public string SQLDataQueryTest()
+        public void SQLDataQueryTest()
         {
             StringBuilder res = new StringBuilder();
             using (ISQLDataQuery test = (ISQLDataQuery)DependencyManager.Instance.Resolver(typeof(ISQLDataQuery)))
@@ -44,11 +54,10 @@ namespace Eiap.UnitTest
                     }
                 }
             }
-            return res.ToString();
         }
 
         [TestMethod]
-        public string SQLQueryTest()
+        public void SQLQueryTest()
         {
             StringBuilder res = new StringBuilder();
             using (ISQLQuery test = (ISQLQuery)DependencyManager.Instance.Resolver(typeof(ISQLQuery)))
@@ -66,7 +75,6 @@ namespace Eiap.UnitTest
                     }
                 }
             }
-            return res.ToString();
         }
     }
 }
