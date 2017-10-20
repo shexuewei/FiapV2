@@ -41,6 +41,13 @@ namespace Eiap.NetFramework
                 {
                     _DbConnection = new SqlConnection(_ConnectionString);
                 }
+                else
+                {
+                    if (string.IsNullOrEmpty(_DbConnection.ConnectionString))
+                    {
+                        _DbConnection.ConnectionString = _ConnectionString;
+                    }
+                }
             }
             catch (Exception ex)
             {
@@ -57,6 +64,7 @@ namespace Eiap.NetFramework
             CheckDbConnection();
             if (_DbConnection.State != ConnectionState.Open)
             {
+                
                 _DbConnection.Open();
             }
         }
