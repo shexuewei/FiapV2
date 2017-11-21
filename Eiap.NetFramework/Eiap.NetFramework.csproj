@@ -57,6 +57,8 @@
     <Compile Include="DataMapping.SQLServer\SQLDataMappingExtension.cs" />
     <Compile Include="DataMapping.SQLServer\SQLServerCommandMapping.cs" />
     <Compile Include="DataMapping.SQLServer\SQLServerQueryMapping.cs" />
+    <Compile Include="DomainEvent\DomainEventContainerManager.cs" />
+    <Compile Include="DomainEvent\DomainEventManager.cs" />
     <Compile Include="EiapNetFrameworkModule.cs" />
     <Compile Include="Logging.LocalFile\ILoggerConfigeration.cs" />
     <Compile Include="Logging.LocalFile\Logger.cs" />

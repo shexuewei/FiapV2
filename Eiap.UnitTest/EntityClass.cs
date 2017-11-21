@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace Eiap.UnitTest
 {
@@ -65,5 +66,23 @@ namespace Eiap.UnitTest
         public int? Height { get; set; }
     }
     #endregion
+
+    public class SchoolDomainEventData : IDomainEventData
+    {
+        public string Name { get; set; }
+    }
+
+    public interface ISchoolDomainEventHandler : IDomainEventHandler<SchoolDomainEventData>
+    { }
+
+    public class SchoolDomainEventHandler : ISchoolDomainEventHandler
+    {
+        public ILogger Log { get; set; }
+
+        public void ProcessEvent(SchoolDomainEventData eventData)
+        {
+            Debug.WriteLine(eventData.Name + "1111");
+        }
+    }
 
 }

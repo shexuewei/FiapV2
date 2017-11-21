@@ -76,6 +76,7 @@
     <Compile Include="EiapUnitTestModule.cs" />
     <Compile Include="EntityClass.cs" />
     <Compile Include="DataAccessUnitTest.cs" />
+    <Compile Include="DomainEventUnitTest.cs" />
     <Compile Include="JsonSerializationUnitTest.cs" />
     <Compile Include="JsonDeserializeUnitTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
