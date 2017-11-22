@@ -100,7 +100,7 @@ namespace Eiap.NetFramework
             domainEventContList.ForEach(m => {
                 object handler = DependencyManager.Instance.Resolver(m.DomainEventHandlerType);
                 //TODO:可以用更合理的方式获取处理方法名称
-                MethodInfo processEventMethodInfo = m.InterfaceDomainEventHandlerType.GetMethod("ProcessEvent");
+                MethodInfo processEventMethodInfo = m.InterfaceDomainEventHandlerType.GetMethod("ProcessEvent", new Type[] {typeof(TDomainEventData) });
                 Type methodParaType = processEventMethodInfo.GetParameters()[0].ParameterType;
                 m.DomainEventHandlerType.GetMethod(processEventMethodInfo.Name, new Type[] { methodParaType }).Invoke(handler, new object[] { domainEventData });
             });

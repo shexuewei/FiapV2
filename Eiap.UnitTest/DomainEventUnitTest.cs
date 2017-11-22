@@ -20,8 +20,8 @@ namespace Eiap.UnitTest
         [TestMethod]
         public void DomainEventTest()
         {
-            DomainEventManager.Instance.SubscribeEvent<SchoolDomainEventData, SchoolDomainEventHandler>();
             DomainEventManager.Instance.Trigger<SchoolDomainEventData>(new SchoolDomainEventData { Name = "SSS" });
+            DomainEventManager.Instance.Trigger<StudentDomainEventData>(new StudentDomainEventData { Name = "AAA" });
         }
     }
 }
