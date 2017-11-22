@@ -77,13 +77,7 @@ namespace Eiap.UnitTest
         public string Name { get; set; }
     }
 
-    public interface ISchoolDomainEventHandler : IDomainEventHandler<SchoolDomainEventData>
-    { }
-
-    public interface IStudentDomainEventHandler : IDomainEventHandler<StudentDomainEventData>
-    { }
-
-    public class SchoolDomainEventHandler : ISchoolDomainEventHandler, IStudentDomainEventHandler
+    public class SchoolDomainEventHandler : IDomainEventHandler<SchoolDomainEventData>
     {
         public ILogger Log { get; set; }
 
@@ -92,9 +86,19 @@ namespace Eiap.UnitTest
             Debug.WriteLine(eventData.Name + "1111");
         }
 
+        //public void ProcessEvent(StudentDomainEventData eventData)
+        //{
+        //    Debug.WriteLine(eventData.Name + "2222");
+        //}
+    }
+
+    public class StudentDomainEventHandler : IDomainEventHandler<StudentDomainEventData>
+    {
+        public ILogger Log { get; set; }
+
         public void ProcessEvent(StudentDomainEventData eventData)
         {
-            Debug.WriteLine(eventData.Name + "2222");
+            Debug.WriteLine(eventData.Name + "3333");
         }
     }
 

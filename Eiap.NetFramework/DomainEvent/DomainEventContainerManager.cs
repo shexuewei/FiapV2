@@ -37,8 +37,8 @@ namespace Eiap.NetFramework
             foreach (DomainEventContainer containerItem in _DomainEventContList)
             {
                 if (containerItem.DomainEventDataTypeName == domainEventDataTypeItem.FullName
-                    && containerItem.InterfaceDomainEventHandlerName == classItem.Namespace + "." + classItem.Name
-                    && containerItem.DomainEventHandlerTypeName == interfaceItem.FullName)
+                    && containerItem.InterfaceDomainEventHandlerName == interfaceItem.Namespace+ interfaceItem.Name
+                    && containerItem.DomainEventHandlerTypeName == classItem.FullName)
                 {
                     return;
                 }
@@ -46,8 +46,8 @@ namespace Eiap.NetFramework
             _DomainEventContList.Add(new DomainEventContainer()
             {
                 DomainEventDataTypeHandle = domainEventDataTypeItem.TypeHandle,
-                DomainEventHandlerTypeHandle = interfaceItem.TypeHandle,
-                InterfaceDomainEventHandlerTypeHandle = classItem.TypeHandle
+                DomainEventHandlerTypeHandle = classItem.TypeHandle,
+                InterfaceDomainEventHandlerTypeHandle = interfaceItem.TypeHandle
             });
         }
 

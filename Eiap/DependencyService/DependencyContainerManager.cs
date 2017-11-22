@@ -98,10 +98,10 @@ namespace Eiap
                 {
                     if (interfaceType.IsGenericType)
                     {
-                        container = _DepeDicList.FirstOrDefault(m => m.DependencyInterface.Namespace + "." + m.DependencyInterface.Name == interfaceType.Namespace + "." + interfaceType.Name && m.IsDirectRelation);
+                        container = _DepeDicList.FirstOrDefault(m => m.DependencyInterface.Namespace + "." + m.DependencyInterface.FullName == interfaceType.Namespace + "." + interfaceType.FullName && m.IsDirectRelation);
                         if (container == null)
                         {
-                            container = _DepeDicList.FirstOrDefault(m => m.DependencyInterface.Namespace + "." + m.DependencyInterface.Name == interfaceType.Namespace + "." + interfaceType.Name);
+                            container = _DepeDicList.FirstOrDefault(m => m.DependencyInterface.Namespace + "." + m.DependencyInterface.FullName == interfaceType.Namespace + "." + interfaceType.FullName);
                         }
                         
                     }
