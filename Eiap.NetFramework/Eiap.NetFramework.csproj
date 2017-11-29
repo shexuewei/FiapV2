@@ -60,6 +60,8 @@
     <Compile Include="DomainEvent\DomainEventContainerManager.cs" />
     <Compile Include="DomainEvent\DomainEventManager.cs" />
     <Compile Include="EiapNetFrameworkModule.cs" />
+    <Compile Include="LocalCache\CacheEntity.cs" />
+    <Compile Include="LocalCache\LocalCacheManager.cs" />
     <Compile Include="Logging.LocalFile\ILoggerConfigeration.cs" />
     <Compile Include="Logging.LocalFile\Logger.cs" />
     <Compile Include="Logging.LocalFile\LoggerConfigeration.cs" />

@@ -46,6 +46,7 @@
     <Compile Include="ApplicationService\UnitOfWorkCommitAttribute.cs" />
     <Compile Include="AssemblyService\AssemblyManager.cs" />
     <Compile Include="AssemblyService\IComponentModule.cs" />
+    <Compile Include="CacheService\CacheClearPolicy.cs" />
     <Compile Include="CacheService\ICacheManager.cs" />
     <Compile Include="ConfigurationService\ConfigurationContainer.cs" />
     <Compile Include="ConfigurationService\IConfigurationContainerManager.cs" />

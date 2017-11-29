@@ -73,6 +73,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DataMappingUnitTest.cs" />
+    <Compile Include="LocalCacheUnitTest.cs" />
     <Compile Include="DependencyServiceUnitTest.cs" />
     <Compile Include="EiapUnitTestModule.cs" />
     <Compile Include="EntityClass.cs" />
